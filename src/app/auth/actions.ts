@@ -26,7 +26,18 @@ export async function signInWithSheetAction(formData: FormData) {
     encodedRedirect("/login", "error", "กรุณากรอกรหัสผู้ใช้และรหัสผ่าน");
   }
 
-  const account = await findAccountByCredentials(userCode, password);
+  let account: Awaited<ReturnType<typeof findAccountByCredentials>>;
+
+  try {
+    account = await findAccountByCredentials(userCode, password);
+  } catch (error) {
+    console.error("Login backend error", error);
+    encodedRedirect(
+      "/login",
+      "error",
+      "ระบบเชื่อมต่อฐานข้อมูลไม่ได้ กรุณาตรวจค่า Environment Variables บน Vercel",
+    );
+  }
 
   if (!account) {
     encodedRedirect("/login", "error", "รหัสผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
