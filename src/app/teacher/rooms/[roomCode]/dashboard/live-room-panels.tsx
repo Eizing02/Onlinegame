@@ -74,10 +74,20 @@ function ControlButton({
 
 export function LiveRoomPanels({
   initialSnapshot,
+  teacherAccessToken,
 }: {
   initialSnapshot: TeacherDashboardSnapshot;
+  teacherAccessToken: string;
 }) {
   const roomCode = initialSnapshot.roomCode;
+  const dashboardApiUrl = `/api/teacher/rooms/${encodeURIComponent(
+    roomCode,
+  )}/dashboard?teacher_access_token=${encodeURIComponent(
+    teacherAccessToken,
+  )}`;
+  const controlApiUrl = `/api/teacher/rooms/${encodeURIComponent(
+    roomCode,
+  )}/control`;
   const [snapshot, setSnapshot] = useState(initialSnapshot);
   const [syncLabel, setSyncLabel] = useState("กำลังเชื่อมต่อข้อมูลห้อง...");
   const [controlMessage, setControlMessage] = useState<string | null>(null);
@@ -111,10 +121,7 @@ export function LiveRoomPanels({
 
     async function loadSnapshot() {
       try {
-        const response = await fetch(
-          `/api/teacher/rooms/${encodeURIComponent(roomCode)}/dashboard`,
-          { cache: "no-store" },
-        );
+        const response = await fetch(dashboardApiUrl, { cache: "no-store" });
 
         if (!response.ok) {
           if (isActive) {
@@ -146,27 +153,27 @@ export function LiveRoomPanels({
     }
 
     void loadSnapshot();
-    const intervalId = window.setInterval(loadSnapshot, 2500);
+    const intervalId = window.setInterval(loadSnapshot, 1000);
 
     return () => {
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [roomCode]);
+  }, [dashboardApiUrl]);
 
   async function runCommand(command: TeacherCommand) {
     setPendingCommand(command);
     setControlMessage(null);
 
     try {
-      const response = await fetch(
-        `/api/teacher/rooms/${encodeURIComponent(roomCode)}/control`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ command }),
+      const response = await fetch(controlApiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-teacher-access-token": teacherAccessToken,
         },
-      );
+        body: JSON.stringify({ command }),
+      });
       const data = (await response.json()) as
         | TeacherDashboardSnapshot
         | { error?: string };

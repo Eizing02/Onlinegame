@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/session";
+import { getSessionFromTeacherRoomAccessToken } from "@/lib/auth/teacher-room-access";
 import {
   advanceLocalGameQuestion,
   endLocalGameSession,
+  getLocalTeacherGameSession,
   getTeacherDashboardSnapshot,
   lockLocalGameAnswers,
   showLocalGameAnswer,
@@ -29,10 +31,26 @@ function isTeacherCommand(command: unknown): command is TeacherCommand {
 
 export async function POST(request: Request, { params }: ControlApiProps) {
   const teacher = await getSession();
+  const { roomCode } = await params;
+  const normalizedRoomCode = normalizeRoomCode(roomCode);
+  const token = request.headers.get("x-teacher-access-token");
+  const session =
+    teacher?.role === "teacher"
+      ? await getLocalTeacherGameSession(teacher.userCode, normalizedRoomCode)
+      : await getSessionFromTeacherRoomAccessToken({
+          roomCode: normalizedRoomCode,
+          token,
+        });
+  const authorizedSession =
+    session ??
+    (await getSessionFromTeacherRoomAccessToken({
+      roomCode: normalizedRoomCode,
+      token,
+    }));
 
-  if (!teacher || teacher.role !== "teacher") {
+  if (!authorizedSession) {
     return NextResponse.json(
-      { error: "กรุณาเข้าสู่ระบบครูก่อน" },
+      { error: "สิทธิ์ครูของห้องนี้หมดอายุ กรุณารีเฟรชหน้า dashboard ครู" },
       { status: 401 },
     );
   }
@@ -46,10 +64,9 @@ export async function POST(request: Request, { params }: ControlApiProps) {
     return NextResponse.json({ error: "คำสั่งไม่ถูกต้อง" }, { status: 400 });
   }
 
-  const { roomCode } = await params;
   const payload = {
-    teacherCode: teacher.userCode,
-    roomCode: normalizeRoomCode(roomCode),
+    teacherCode: authorizedSession.teacherCode,
+    roomCode: normalizedRoomCode,
   };
   const result =
     command === "start"

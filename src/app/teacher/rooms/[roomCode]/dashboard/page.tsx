@@ -4,6 +4,7 @@ import { LiveRoomPanels } from "@/app/teacher/rooms/[roomCode]/dashboard/live-ro
 import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
 import { requireRole } from "@/lib/auth/session";
+import { createTeacherRoomAccessToken } from "@/lib/auth/teacher-room-access";
 import {
   getLocalTeacherGameSession,
   getTeacherDashboardSnapshot,
@@ -29,6 +30,7 @@ export default async function TeacherDashboardPage({
   }
 
   const snapshot = await getTeacherDashboardSnapshot(session);
+  const teacherAccessToken = createTeacherRoomAccessToken(session);
 
   return (
     <AppShell>
@@ -48,7 +50,10 @@ export default async function TeacherDashboardPage({
           </ButtonLink>
         </div>
 
-        <LiveRoomPanels initialSnapshot={snapshot} />
+        <LiveRoomPanels
+          initialSnapshot={snapshot}
+          teacherAccessToken={teacherAccessToken}
+        />
       </section>
     </AppShell>
   );

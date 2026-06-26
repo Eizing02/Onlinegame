@@ -67,7 +67,7 @@ export function PlayRoom({
       }
     }
 
-    const intervalId = window.setInterval(loadSnapshot, 2000);
+    const intervalId = window.setInterval(loadSnapshot, 1000);
 
     return () => {
       isActive = false;
