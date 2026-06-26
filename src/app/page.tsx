@@ -1,65 +1,112 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  BarChart3,
+  BookOpenCheck,
+  PlayCircle,
+  UsersRound,
+} from "lucide-react";
+
+import { AppShell } from "@/components/layout/app-shell";
+import { Panel } from "@/components/ui/panel";
 
 export default function Home() {
+  const workflow = [
+    "ครูสร้างห้อง",
+    "นักเรียนเข้าด้วยรหัส",
+    "ระบบจัดกลุ่ม",
+    "ครูเริ่มคำถาม",
+    "นักเรียนตอบ",
+    "คะแนนอัปเดตสด",
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <AppShell>
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-10 lg:px-8">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-md border border-border bg-white px-3 py-2 text-sm font-medium text-primary">
+              <UsersRound size={18} />
+              เกมตอบคำถามออนไลน์แบบกลุ่ม
+            </div>
+            <div className="space-y-4">
+              <h1 className="max-w-3xl text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-5xl">
+                ห้องเรียนตอบคำถามแบบทีม พร้อมคะแนน Real-time
+              </h1>
+              <p className="max-w-2xl text-lg leading-8 text-muted">
+                โครงแรกของระบบสำหรับครูสร้างห้อง ควบคุมคำถาม จัดกลุ่มนักเรียน
+                และดูคะแนนสดจาก Dashboard เดียว
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/login"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+              >
+                <BookOpenCheck size={18} />
+                เข้าฝั่งครู
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-border bg-white px-5 text-sm font-semibold text-foreground transition hover:bg-surface"
+              >
+                <PlayCircle size={18} />
+                เข้าร่วมเกม
+              </Link>
+            </div>
+          </div>
+
+          <Panel className="space-y-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted">ห้องตัวอย่าง</p>
+                <p className="text-3xl font-semibold text-foreground">A1B2C3</p>
+              </div>
+              <div className="rounded-md bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
+                LIVE
+              </div>
+            </div>
+            <div className="space-y-3">
+              {workflow.map((item, index) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 rounded-md border border-border bg-white p-3"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-50 text-sm font-semibold text-primary">
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-medium text-foreground">
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Panel>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Panel>
+            <BookOpenCheck className="mb-4 text-primary" size={28} />
+            <h2 className="text-lg font-semibold">ชุดคำถาม</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              ครูสร้างคำถาม คำตอบที่ถูก คะแนน และเวลาต่อข้อ
+            </p>
+          </Panel>
+          <Panel>
+            <UsersRound className="mb-4 text-emerald-600" size={28} />
+            <h2 className="text-lg font-semibold">จัดกลุ่มอัตโนมัติ</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              นักเรียนเข้าด้วยรหัสแล้วระบบจัดเข้ากลุ่มที่ว่าง
+            </p>
+          </Panel>
+          <Panel>
+            <BarChart3 className="mb-4 text-amber-600" size={28} />
+            <h2 className="text-lg font-semibold">คะแนนสด</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Dashboard ครูเห็นคะแนนและอันดับแบบ Real-time
+            </p>
+          </Panel>
         </div>
-      </main>
-    </div>
+      </section>
+    </AppShell>
   );
 }
