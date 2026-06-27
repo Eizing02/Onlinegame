@@ -12,10 +12,11 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Panel } from "@/components/ui/panel";
 import type { TeacherDashboardSnapshot } from "@/lib/data/game-sessions";
+import { subscribeToGameSessionChanges } from "@/lib/supabase/realtime-game";
 
 type TeacherCommand = "start" | "lock" | "reveal" | "next" | "end";
 
@@ -94,6 +95,7 @@ export function LiveRoomPanels({
   const [pendingCommand, setPendingCommand] = useState<TeacherCommand | null>(
     null,
   );
+  const refreshTimerRef = useRef<number | null>(null);
   const visibleParticipants = useMemo(
     () =>
       snapshot.participants.filter(
@@ -153,13 +155,76 @@ export function LiveRoomPanels({
     }
 
     void loadSnapshot();
-    const intervalId = window.setInterval(loadSnapshot, 1000);
+    const intervalId = window.setInterval(loadSnapshot, 10000);
 
     return () => {
       isActive = false;
       window.clearInterval(intervalId);
     };
   }, [dashboardApiUrl]);
+
+  const requestRealtimeRefresh = useCallback(() => {
+    if (refreshTimerRef.current) {
+      window.clearTimeout(refreshTimerRef.current);
+    }
+
+    refreshTimerRef.current = window.setTimeout(async () => {
+      refreshTimerRef.current = null;
+
+      try {
+        const response = await fetch(dashboardApiUrl, { cache: "no-store" });
+
+        if (!response.ok) {
+          setSyncLabel("อัปเดตห้องไม่ได้");
+          return;
+        }
+
+        const nextSnapshot =
+          (await response.json()) as TeacherDashboardSnapshot;
+
+        setSnapshot(nextSnapshot);
+        setSyncLabel(
+          `Realtime • ${new Date(nextSnapshot.updatedAt).toLocaleTimeString(
+            "th-TH",
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            },
+          )}`,
+        );
+      } catch {
+        setSyncLabel("รอเชื่อมต่อห้องอีกครั้ง");
+      }
+    }, 80);
+  }, [dashboardApiUrl]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToGameSessionChanges({
+      roomCode,
+      sessionId: snapshot.sessionId,
+      onChange: requestRealtimeRefresh,
+      onStatusChange(status) {
+        if (status === "SUBSCRIBED") {
+          setSyncLabel("Realtime พร้อมใช้งาน");
+          return;
+        }
+
+        if (status === "fallback") {
+          setSyncLabel("ใช้โหมดสำรอง");
+        }
+      },
+    });
+
+    return () => {
+      unsubscribe();
+
+      if (refreshTimerRef.current) {
+        window.clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
+    };
+  }, [requestRealtimeRefresh, roomCode, snapshot.sessionId]);
 
   async function runCommand(command: TeacherCommand) {
     setPendingCommand(command);

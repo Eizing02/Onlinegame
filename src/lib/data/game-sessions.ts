@@ -121,6 +121,7 @@ export type AnswerProgress = {
 };
 
 export type TeacherDashboardSnapshot = {
+  sessionId: string;
   roomCode: string;
   questionSetTitle: string;
   questionCount: number;
@@ -144,6 +145,7 @@ export type TeacherDashboardSnapshot = {
 };
 
 export type StudentPlaySnapshot = {
+  sessionId: string;
   roomCode: string;
   questionSetTitle: string;
   activityName: string | null;
@@ -1074,6 +1076,7 @@ export async function getTeacherDashboardSnapshot(
     session.status === "showing_answer" || session.status === "ended";
 
   return {
+    sessionId: session.id,
     roomCode: session.roomCode,
     questionSetTitle: session.questionSetTitle,
     questionCount: session.questionCount,
@@ -1217,6 +1220,7 @@ async function buildStudentPlaySnapshot({
     ) ?? null;
 
   return {
+    sessionId: session.id,
     roomCode: session.roomCode,
     questionSetTitle: session.questionSetTitle,
     activityName: session.activityName,

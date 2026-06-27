@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Realtime Quiz Game",
-  description: "ระบบเกมตอบคำถามออนไลน์แบบกลุ่มสำหรับห้องเรียน",
+  description: "เกมตอบคำถามแบบทีมสำหรับห้องเรียน",
 };
 
 export default function RootLayout({

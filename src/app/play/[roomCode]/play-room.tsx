@@ -9,10 +9,11 @@ import {
   Trophy,
   XCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Panel } from "@/components/ui/panel";
 import type { StudentPlaySnapshot } from "@/lib/data/game-sessions";
+import { subscribeToGameSessionChanges } from "@/lib/supabase/realtime-game";
 
 const statusLabel = {
   lobby: "รอครูเริ่มเกม",
@@ -36,20 +37,19 @@ export function PlayRoom({
   const [answerText, setAnswerText] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const refreshTimerRef = useRef<number | null>(null);
   const canSubmit =
     snapshot.canSubmitAnswer && answerText.trim().length > 0 && !isSubmitting;
   const showCorrectAnswer =
     snapshot.status === "showing_answer" || snapshot.status === "ended";
+  const playApiUrl = `/api/play/${encodeURIComponent(snapshot.roomCode)}`;
 
   useEffect(() => {
     let isActive = true;
 
     async function loadSnapshot() {
       try {
-        const response = await fetch(
-          `/api/play/${encodeURIComponent(snapshot.roomCode)}`,
-          { cache: "no-store" },
-        );
+        const response = await fetch(playApiUrl, { cache: "no-store" });
 
         if (!response.ok) {
           return;
@@ -67,13 +67,53 @@ export function PlayRoom({
       }
     }
 
-    const intervalId = window.setInterval(loadSnapshot, 1000);
+    const intervalId = window.setInterval(loadSnapshot, 10000);
 
     return () => {
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [snapshot.roomCode]);
+  }, [playApiUrl]);
+
+  const requestRealtimeRefresh = useCallback(() => {
+    if (refreshTimerRef.current) {
+      window.clearTimeout(refreshTimerRef.current);
+    }
+
+    refreshTimerRef.current = window.setTimeout(async () => {
+      refreshTimerRef.current = null;
+
+      try {
+        const response = await fetch(playApiUrl, { cache: "no-store" });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const nextSnapshot = (await response.json()) as StudentPlaySnapshot;
+        setSnapshot(nextSnapshot);
+      } catch {
+        setMessage("รอเชื่อมต่อห้องอีกครั้ง");
+      }
+    }, 80);
+  }, [playApiUrl]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToGameSessionChanges({
+      roomCode: snapshot.roomCode,
+      sessionId: snapshot.sessionId,
+      onChange: requestRealtimeRefresh,
+    });
+
+    return () => {
+      unsubscribe();
+
+      if (refreshTimerRef.current) {
+        window.clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
+    };
+  }, [requestRealtimeRefresh, snapshot.roomCode, snapshot.sessionId]);
 
   async function submitAnswer() {
     if (!canSubmit) {
@@ -85,7 +125,7 @@ export function PlayRoom({
 
     try {
       const response = await fetch(
-        `/api/play/${encodeURIComponent(snapshot.roomCode)}`,
+        playApiUrl,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

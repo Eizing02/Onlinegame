@@ -19,10 +19,10 @@ export function ButtonLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex h-11 items-center justify-center rounded-md px-4 text-sm font-semibold transition",
+        "inline-flex h-11 items-center justify-center rounded-lg px-4 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan",
         variant === "primary"
-          ? "bg-primary text-white hover:bg-primary-dark"
-          : "border border-border bg-white text-foreground hover:bg-surface",
+          ? "bg-gradient-to-r from-primary to-primary-blue text-white shadow-[0_0_30px_rgba(124,60,255,0.34)] hover:brightness-110"
+          : "border border-border bg-panel/70 text-foreground hover:border-primary/70 hover:bg-primary/15",
         className,
       )}
     >

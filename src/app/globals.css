@@ -1,15 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --muted: #64748b;
-  --surface: #f8fafc;
-  --border: #e2e8f0;
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --success: #10b981;
-  --warning: #f59e0b;
+  --background: #070815;
+  --foreground: #f8fbff;
+  --muted: #a9b5d8;
+  --surface: #0d1024;
+  --panel: #131833;
+  --panel-strong: #192046;
+  --border: rgba(153, 170, 255, 0.2);
+  --primary: #7c3cff;
+  --primary-dark: #5728d8;
+  --primary-blue: #2f7cff;
+  --cyan: #36d8ff;
+  --success: #35e7a8;
+  --warning: #ffd166;
+  --danger: #ff6b8b;
+  --ring: rgba(54, 216, 255, 0.36);
+  --shadow-glow: 0 20px 70px rgba(84, 56, 255, 0.28);
 }
 
 @theme inline {
@@ -17,17 +24,32 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-surface: var(--surface);
+  --color-panel: var(--panel);
+  --color-panel-strong: var(--panel-strong);
   --color-border: var(--border);
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);
+  --color-primary-blue: var(--primary-blue);
+  --color-cyan: var(--cyan);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-body {
+html {
+  min-height: 100%;
   background: var(--background);
+}
+
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(124, 60, 255, 0.2), transparent 30rem),
+    radial-gradient(circle at 82% 8%, rgba(47, 124, 255, 0.22), transparent 28rem),
+    radial-gradient(circle at 60% 92%, rgba(54, 216, 255, 0.12), transparent 26rem),
+    linear-gradient(135deg, #070815 0%, #0b0e22 46%, #050611 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
@@ -39,7 +61,130 @@ textarea {
   font: inherit;
 }
 
+input,
+select,
+textarea {
+  color: var(--foreground);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(209, 219, 255, 0.52);
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  outline-color: var(--ring);
+}
+
 ::selection {
-  background: #bfdbfe;
-  color: #0f172a;
+  background: rgba(54, 216, 255, 0.34);
+  color: #ffffff;
+}
+
+@layer utilities {
+  .bg-white {
+    background-color: var(--panel);
+  }
+
+  .bg-surface {
+    background-color: var(--surface);
+  }
+
+  .bg-blue-50,
+  .bg-slate-50,
+  .bg-slate-100 {
+    background-color: rgba(47, 124, 255, 0.11);
+  }
+
+  .bg-emerald-50 {
+    background-color: rgba(53, 231, 168, 0.12);
+  }
+
+  .bg-amber-50 {
+    background-color: rgba(255, 209, 102, 0.13);
+  }
+
+  .bg-red-50 {
+    background-color: rgba(255, 107, 139, 0.13);
+  }
+
+  .bg-slate-300 {
+    background-color: rgba(169, 181, 216, 0.24);
+  }
+
+  .hover\:bg-surface:hover {
+    background-color: var(--panel-strong);
+  }
+
+  .hover\:bg-blue-50:hover {
+    background-color: rgba(47, 124, 255, 0.16);
+  }
+
+  .hover\:bg-red-50:hover,
+  .hover\:bg-red-100:hover {
+    background-color: rgba(255, 107, 139, 0.18);
+  }
+
+  .disabled\:bg-slate-50:disabled,
+  .disabled\:bg-slate-100:disabled,
+  .disabled\:bg-slate-300:disabled {
+    background-color: rgba(169, 181, 216, 0.14);
+  }
+
+  .border-border {
+    border-color: var(--border);
+  }
+
+  .border-blue-200,
+  .border-emerald-200,
+  .border-amber-200,
+  .border-red-200 {
+    border-color: rgba(153, 170, 255, 0.22);
+  }
+
+  .text-foreground {
+    color: var(--foreground);
+  }
+
+  .text-muted {
+    color: var(--muted);
+  }
+
+  .text-primary {
+    color: #9fb8ff;
+  }
+
+  .text-emerald-600,
+  .text-emerald-700 {
+    color: var(--success);
+  }
+
+  .text-amber-600,
+  .text-amber-700,
+  .text-amber-800 {
+    color: var(--warning);
+  }
+
+  .text-red-700 {
+    color: var(--danger);
+  }
+
+  .shadow-sm {
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

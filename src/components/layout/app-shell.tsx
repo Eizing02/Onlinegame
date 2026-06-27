@@ -1,26 +1,26 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, LogIn } from "lucide-react";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-surface text-foreground">
-      <header className="border-b border-border bg-white">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-white">
+    <div className="min-h-screen text-foreground">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/82 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="group flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-blue text-white shadow-[0_0_28px_rgba(124,60,255,0.4)] transition group-hover:scale-105">
               <GraduationCap size={22} />
             </span>
-            <span className="text-base font-semibold">Realtime Quiz Game</span>
+            <span className="text-sm font-semibold tracking-wide text-white sm:text-base">
+              Realtime Quiz Game
+            </span>
           </Link>
-          <nav className="hidden items-center gap-2 text-sm font-medium text-muted sm:flex">
+          <nav className="flex items-center gap-2 text-sm font-medium text-muted">
             <Link
-              className="rounded-md px-3 py-2 hover:bg-surface"
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-panel/70 px-3 text-white transition hover:border-primary/70 hover:bg-primary/20"
               href="/login"
             >
-              ครู
-            </Link>
-            <Link className="rounded-md px-3 py-2 hover:bg-surface" href="/login">
-              นักเรียน
+              <LogIn size={16} />
+              <span className="hidden sm:inline">เข้าสู่ระบบ</span>
             </Link>
           </nav>
         </div>
