@@ -40,8 +40,24 @@ const statusLabel = {
   ended: "จบเกม",
 };
 
+const statusBadgeClassName: Record<
+  TeacherDashboardSnapshot["status"],
+  string
+> = {
+  lobby: "border-amber-200 bg-amber-50 text-amber-700",
+  playing: "border-cyan/40 bg-cyan/10 text-cyan",
+  question_active: "border-cyan/40 bg-cyan/10 text-cyan",
+  answer_locked: "border-amber-200 bg-amber-50 text-amber-700",
+  showing_answer: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  ended: "border-red-200 bg-red-50 text-red-700",
+};
+
 function formatScore(score: number) {
   return Number.isInteger(score) ? score.toString() : score.toFixed(2);
+}
+
+function getTeacherPollInterval(status: TeacherDashboardSnapshot["status"]) {
+  return status === "ended" ? 10000 : 3000;
 }
 
 function ControlButton({
@@ -97,6 +113,7 @@ export function LiveRoomPanels({
     null,
   );
   const refreshTimerRef = useRef<number | null>(null);
+  const pollIntervalMs = getTeacherPollInterval(snapshot.status);
   const visibleParticipants = useMemo(
     () =>
       snapshot.participants.filter(
@@ -158,13 +175,13 @@ export function LiveRoomPanels({
     }
 
     void loadSnapshot();
-    const intervalId = window.setInterval(loadSnapshot, 10000);
+    const intervalId = window.setInterval(loadSnapshot, pollIntervalMs);
 
     return () => {
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [dashboardApiUrl]);
+  }, [dashboardApiUrl, pollIntervalMs]);
 
   const requestRealtimeRefresh = useCallback(() => {
     if (refreshTimerRef.current) {
@@ -329,7 +346,9 @@ export function LiveRoomPanels({
               {statusLabel[snapshot.status]}
             </h2>
           </div>
-          <span className="rounded-md bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-700">
+          <span
+            className={`rounded-md border px-3 py-2 text-sm font-semibold ${statusBadgeClassName[snapshot.status]}`}
+          >
             {snapshot.status.toUpperCase()}
           </span>
         </div>
@@ -473,7 +492,7 @@ export function LiveRoomPanels({
           </div>
           <div className="space-y-3">
             {snapshot.teamSummaries.map((team) => (
-              <div className="rounded-md border border-border p-3" key={team.id}>
+              <div className="rounded-md border border-border bg-surface p-3" key={team.id}>
                 <div className="flex justify-between gap-3 text-sm">
                   <span className="font-semibold">{team.teamName}</span>
                   <span className="text-muted">
@@ -509,7 +528,10 @@ export function LiveRoomPanels({
           </div>
           <div className="space-y-3">
             {snapshot.teamSummaries.map((team) => (
-              <div key={team.id} className="space-y-1">
+              <div
+                key={team.id}
+                className="rounded-md border border-border bg-surface p-3"
+              >
                 <div className="flex justify-between gap-3 text-sm">
                   <span>{team.teamName}</span>
                   <span>
@@ -538,7 +560,7 @@ export function LiveRoomPanels({
           <div className="space-y-3">
             {snapshot.rankedTeams.map((team) => (
               <div
-                className="rounded-md border border-border p-3 text-sm"
+                className="rounded-md border border-border bg-surface p-3 text-sm"
                 key={team.id}
               >
                 <div className="flex justify-between gap-3">

@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #070815;
+  --background: #050716;
   --foreground: #f8fbff;
-  --muted: #a9b5d8;
-  --surface: #0d1024;
-  --panel: #131833;
-  --panel-strong: #192046;
-  --border: rgba(153, 170, 255, 0.2);
-  --primary: #7c3cff;
-  --primary-dark: #5728d8;
-  --primary-blue: #2f7cff;
-  --cyan: #36d8ff;
-  --success: #35e7a8;
-  --warning: #ffd166;
-  --danger: #ff6b8b;
+  --muted: #b9c8ee;
+  --surface: #081126;
+  --panel: #111f42;
+  --panel-strong: #172a55;
+  --border: rgba(159, 184, 255, 0.32);
+  --primary: #8b5cff;
+  --primary-dark: #6d3df1;
+  --primary-blue: #4d8dff;
+  --cyan: #43ddff;
+  --success: #3df0ad;
+  --warning: #ffcb57;
+  --danger: #ff6686;
   --ring: rgba(54, 216, 255, 0.36);
-  --shadow-glow: 0 20px 70px rgba(84, 56, 255, 0.28);
+  --shadow-glow: 0 20px 70px rgba(40, 72, 180, 0.28);
 }
 
 @theme inline {
@@ -46,10 +46,10 @@ html {
 body {
   min-height: 100%;
   background:
-    linear-gradient(115deg, rgba(124, 60, 255, 0.16), transparent 42%),
-    linear-gradient(245deg, rgba(47, 124, 255, 0.14), transparent 38%),
-    linear-gradient(180deg, rgba(54, 216, 255, 0.08), transparent 58%),
-    linear-gradient(135deg, #070815 0%, #0b0e22 46%, #050611 100%);
+    linear-gradient(115deg, rgba(139, 92, 255, 0.14), transparent 42%),
+    linear-gradient(245deg, rgba(77, 141, 255, 0.16), transparent 40%),
+    linear-gradient(180deg, rgba(67, 221, 255, 0.07), transparent 58%),
+    linear-gradient(135deg, #050716 0%, #091126 48%, #030510 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
@@ -87,7 +87,7 @@ textarea {
 
 @layer utilities {
   .bg-white {
-    background-color: var(--panel);
+    background-color: var(--panel-strong);
   }
 
   .bg-surface {
@@ -97,19 +97,19 @@ textarea {
   .bg-blue-50,
   .bg-slate-50,
   .bg-slate-100 {
-    background-color: rgba(47, 124, 255, 0.11);
+    background-color: rgba(77, 141, 255, 0.18);
   }
 
   .bg-emerald-50 {
-    background-color: rgba(53, 231, 168, 0.12);
+    background-color: rgba(61, 240, 173, 0.17);
   }
 
   .bg-amber-50 {
-    background-color: rgba(255, 209, 102, 0.13);
+    background-color: rgba(255, 203, 87, 0.18);
   }
 
   .bg-red-50 {
-    background-color: rgba(255, 107, 139, 0.13);
+    background-color: rgba(255, 102, 134, 0.18);
   }
 
   .bg-slate-300 {
@@ -140,10 +140,23 @@ textarea {
   }
 
   .border-blue-200,
+  .border-blue-300 {
+    border-color: rgba(77, 141, 255, 0.48);
+  }
+
   .border-emerald-200,
+  .border-emerald-300 {
+    border-color: rgba(61, 240, 173, 0.48);
+  }
+
   .border-amber-200,
-  .border-red-200 {
-    border-color: rgba(153, 170, 255, 0.22);
+  .border-amber-300 {
+    border-color: rgba(255, 203, 87, 0.52);
+  }
+
+  .border-red-200,
+  .border-red-300 {
+    border-color: rgba(255, 102, 134, 0.52);
   }
 
   .text-foreground {
@@ -155,7 +168,7 @@ textarea {
   }
 
   .text-primary {
-    color: #9fb8ff;
+    color: #adc3ff;
   }
 
   .text-emerald-600,
@@ -174,7 +187,7 @@ textarea {
   }
 
   .shadow-sm {
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
   }
 }
 

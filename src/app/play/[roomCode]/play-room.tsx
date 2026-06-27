@@ -38,6 +38,39 @@ function formatRemainingTime(totalSeconds: number) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
+function getRemainingSeconds({
+  endsAt,
+  nowMs,
+  startedAt,
+  timeLimitSeconds,
+}: {
+  endsAt: string | null;
+  nowMs: number;
+  startedAt: string | null;
+  timeLimitSeconds?: number;
+}) {
+  const endsAtMs = endsAt ? new Date(endsAt).getTime() : NaN;
+
+  if (Number.isFinite(endsAtMs)) {
+    return Math.max(0, Math.ceil((endsAtMs - nowMs) / 1000));
+  }
+
+  const startedAtMs = startedAt ? new Date(startedAt).getTime() : NaN;
+
+  if (Number.isFinite(startedAtMs) && typeof timeLimitSeconds === "number") {
+    return Math.max(
+      0,
+      Math.ceil((startedAtMs + timeLimitSeconds * 1000 - nowMs) / 1000),
+    );
+  }
+
+  return null;
+}
+
+function getStudentPollInterval(status: StudentPlaySnapshot["status"]) {
+  return status === "ended" ? 10000 : 3000;
+}
+
 export function PlayRoom({
   initialSnapshot,
 }: {
@@ -61,12 +94,14 @@ export function PlayRoom({
       ? answerDraft.text
       : "";
   const refreshTimerRef = useRef<number | null>(null);
-  const remainingSeconds = snapshot.currentQuestionEndsAt
-    ? Math.max(
-        0,
-        Math.ceil((new Date(snapshot.currentQuestionEndsAt).getTime() - nowMs) / 1000),
-      )
-    : null;
+  const teamNameSnapshotRef = useRef(initialSnapshot.team.teamName);
+  const pollIntervalMs = getStudentPollInterval(snapshot.status);
+  const remainingSeconds = getRemainingSeconds({
+    endsAt: snapshot.currentQuestionEndsAt,
+    nowMs,
+    startedAt: snapshot.currentQuestionStartedAt,
+    timeLimitSeconds: snapshot.currentQuestion?.timeLimitSeconds,
+  });
   const isTimerExpired =
     snapshot.status === "question_active" &&
     remainingSeconds !== null &&
@@ -84,6 +119,10 @@ export function PlayRoom({
   const isResultOpen =
     snapshot.status === "ended" && closedResultSessionId !== snapshot.sessionId;
   const playApiUrl = `/api/play/${encodeURIComponent(snapshot.roomCode)}`;
+  const applySnapshot = useCallback((nextSnapshot: StudentPlaySnapshot) => {
+    setSnapshot(nextSnapshot);
+    setNowMs(Date.now());
+  }, []);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -92,6 +131,13 @@ export function PlayRoom({
 
     return () => window.clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    if (teamNameSnapshotRef.current !== snapshot.team.teamName) {
+      teamNameSnapshotRef.current = snapshot.team.teamName;
+      setTeamName(snapshot.team.teamName);
+    }
+  }, [snapshot.team.teamName]);
 
   useEffect(() => {
     let isActive = true;
@@ -107,7 +153,7 @@ export function PlayRoom({
         const nextSnapshot = (await response.json()) as StudentPlaySnapshot;
 
         if (isActive) {
-          setSnapshot(nextSnapshot);
+          applySnapshot(nextSnapshot);
         }
       } catch {
         if (isActive) {
@@ -116,13 +162,13 @@ export function PlayRoom({
       }
     }
 
-    const intervalId = window.setInterval(loadSnapshot, 10000);
+    const intervalId = window.setInterval(loadSnapshot, pollIntervalMs);
 
     return () => {
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [playApiUrl]);
+  }, [applySnapshot, playApiUrl, pollIntervalMs]);
 
   const requestRealtimeRefresh = useCallback(() => {
     if (refreshTimerRef.current) {
@@ -140,12 +186,12 @@ export function PlayRoom({
         }
 
         const nextSnapshot = (await response.json()) as StudentPlaySnapshot;
-        setSnapshot(nextSnapshot);
+        applySnapshot(nextSnapshot);
       } catch {
         setMessage("รอเชื่อมต่อห้องอีกครั้ง");
       }
     }, 80);
-  }, [playApiUrl]);
+  }, [applySnapshot, playApiUrl]);
 
   useEffect(() => {
     const unsubscribe = subscribeToGameSessionChanges({
@@ -190,7 +236,7 @@ export function PlayRoom({
         return;
       }
 
-      setSnapshot(data as StudentPlaySnapshot);
+      applySnapshot(data as StudentPlaySnapshot);
       setAnswerDraft({
         questionIndex: (data as StudentPlaySnapshot).currentQuestionIndex,
         text: "",
@@ -228,7 +274,7 @@ export function PlayRoom({
         return;
       }
 
-      setSnapshot(data as StudentPlaySnapshot);
+      applySnapshot(data as StudentPlaySnapshot);
       setMessage("เปลี่ยนชื่อทีมแล้ว");
     } catch {
       setMessage("เชื่อมต่อการเปลี่ยนชื่อทีมไม่ได้ ลองอีกครั้ง");
@@ -267,7 +313,7 @@ export function PlayRoom({
         return;
       }
 
-      setSnapshot(data as StudentPlaySnapshot);
+      applySnapshot(data as StudentPlaySnapshot);
     } catch {
       setMessage("เชื่อมต่อการออกจากทีมไม่ได้ ลองอีกครั้ง");
     } finally {
@@ -476,7 +522,7 @@ export function PlayRoom({
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-md border border-border p-4">
+          <div className="rounded-md border border-border bg-surface p-4">
             <p className="text-sm text-muted">สถานะผู้เล่น</p>
             <p className="mt-1 font-semibold text-emerald-700">
               {snapshot.participant.isScoreEligible
@@ -484,13 +530,13 @@ export function PlayRoom({
                 : "ร่วมเล่น ไม่นับคะแนน"}
             </p>
           </div>
-          <div className="rounded-md border border-border p-4">
+          <div className="rounded-md border border-border bg-surface p-4">
             <p className="text-sm text-muted">คะแนนเฉลี่ยทีม</p>
             <p className="mt-1 font-semibold">
               {formatScore(snapshot.teamScore.averageScore)} คะแนน
             </p>
           </div>
-          <div className="rounded-md border border-border p-4">
+          <div className="rounded-md border border-border bg-surface p-4">
             <p className="text-sm text-muted">ตอบแล้ว</p>
             <p className="mt-1 font-semibold">
               {snapshot.answerProgress.answeredCount}/
@@ -509,7 +555,7 @@ export function PlayRoom({
           <div className="space-y-3">
             {snapshot.rankedTeams.map((team) => (
               <div
-                className="rounded-md border border-border p-3 text-sm"
+                className="rounded-md border border-border bg-surface p-3 text-sm"
                 key={team.id}
               >
                 <div className="flex justify-between gap-3">
@@ -529,6 +575,12 @@ export function PlayRoom({
               </div>
             ))}
           </div>
+          <a
+            className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-md border border-cyan/40 bg-cyan/10 px-4 text-sm font-semibold text-cyan transition hover:bg-cyan/15"
+            href="/join"
+          >
+            กลับหน้าเข้าห้อง
+          </a>
         </Panel>
       ) : null}
 
@@ -561,6 +613,12 @@ export function PlayRoom({
             >
               ดูสรุปเต็ม
             </button>
+            <a
+              className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md border border-cyan/40 bg-cyan/10 px-4 text-sm font-semibold text-cyan transition hover:bg-cyan/15"
+              href="/join"
+            >
+              กลับหน้าเข้าห้อง
+            </a>
           </div>
         </div>
       ) : null}

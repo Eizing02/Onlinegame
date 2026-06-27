@@ -279,6 +279,16 @@ async function insertEvent(
   });
 
   if (error) throw error;
+  await touchSession(sessionId);
+}
+
+async function touchSession(sessionId: string, now = new Date().toISOString()) {
+  const { error } = await createSupabaseAdminClient()
+    .from("game_sessions")
+    .update({ updated_at: now })
+    .eq("id", sessionId);
+
+  if (error) throw error;
 }
 
 async function recalculateTeamScores(sessionId: string) {
