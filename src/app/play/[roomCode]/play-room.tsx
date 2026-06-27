@@ -10,8 +10,11 @@ import {
   PartyPopper,
   Send,
   Trophy,
+  Volume2,
+  VolumeX,
   XCircle,
 } from "lucide-react";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Panel } from "@/components/ui/panel";
@@ -26,6 +29,23 @@ const statusLabel = {
   showing_answer: "เฉลยคำตอบ",
   ended: "จบเกม",
 };
+
+const AUDIO_ASSETS = {
+  background: "/assets/audio/bg-sci-fi.wav",
+  answer: "/assets/audio/answer-sci-fi.wav",
+} as const;
+
+const REVEAL_GIF_ASSETS = {
+  correct: "/assets/gifs/reveal-correct.gif",
+  wrong: "/assets/gifs/reveal-wrong.gif",
+} as const;
+
+const RANK_ASSETS = {
+  first: "/assets/ranks/rank-1.png",
+  second: "/assets/ranks/rank-2.png",
+  third: "/assets/ranks/rank-3.png",
+  fourthPlus: "/assets/gifs/rank-4-plus.gif",
+} as const;
 
 function formatScore(score: number) {
   return Number.isInteger(score) ? score.toString() : score.toFixed(2);
@@ -71,6 +91,14 @@ function getStudentPollInterval(status: StudentPlaySnapshot["status"]) {
   return status === "ended" ? 10000 : 3000;
 }
 
+function getRankAsset(rank: number | null | undefined) {
+  if (rank === 1) return RANK_ASSETS.first;
+  if (rank === 2) return RANK_ASSETS.second;
+  if (rank === 3) return RANK_ASSETS.third;
+
+  return RANK_ASSETS.fourthPlus;
+}
+
 export function PlayRoom({
   initialSnapshot,
 }: {
@@ -85,6 +113,7 @@ export function PlayRoom({
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTeamUpdating, setIsTeamUpdating] = useState(false);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
   const [closedResultSessionId, setClosedResultSessionId] = useState<
     string | null
   >(null);
@@ -94,6 +123,9 @@ export function PlayRoom({
       ? answerDraft.text
       : "";
   const refreshTimerRef = useRef<number | null>(null);
+  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
+  const answerAudioRef = useRef<HTMLAudioElement | null>(null);
+  const revealedAnswerKeyRef = useRef<string | null>(null);
   const teamNameSnapshotRef = useRef(initialSnapshot.team.teamName);
   const pollIntervalMs = getStudentPollInterval(snapshot.status);
   const remainingSeconds = getRemainingSeconds({
@@ -116,6 +148,18 @@ export function PlayRoom({
   const ownRank = snapshot.rankedTeams.find(
     (team) => team.id === snapshot.team.id,
   );
+  const rankAsset = getRankAsset(ownRank?.rank);
+  const revealGifSrc =
+    snapshot.status === "showing_answer" &&
+    snapshot.isAnswerRevealed &&
+    snapshot.currentAnswer
+      ? snapshot.currentAnswer.isCorrect
+        ? REVEAL_GIF_ASSETS.correct
+        : REVEAL_GIF_ASSETS.wrong
+      : null;
+  const revealGifAlt = snapshot.currentAnswer?.isCorrect
+    ? "ตอบถูก"
+    : "ตอบผิด";
   const isResultOpen =
     snapshot.status === "ended" && closedResultSessionId !== snapshot.sessionId;
   const playApiUrl = `/api/play/${encodeURIComponent(snapshot.roomCode)}`;
@@ -123,6 +167,52 @@ export function PlayRoom({
     setSnapshot(nextSnapshot);
     setNowMs(Date.now());
   }, []);
+  const playAnswerAudio = useCallback(
+    (durationMs = 2400) => {
+      if (!isSoundEnabled) {
+        return;
+      }
+
+      const audio = answerAudioRef.current;
+
+      if (!audio) {
+        return;
+      }
+
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 0.24;
+      void audio.play().then(() => {
+        window.setTimeout(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }, durationMs);
+      }).catch(() => undefined);
+    },
+    [isSoundEnabled],
+  );
+
+  function toggleSound() {
+    const backgroundAudio = backgroundAudioRef.current;
+    const answerAudio = answerAudioRef.current;
+
+    if (isSoundEnabled) {
+      backgroundAudio?.pause();
+      answerAudio?.pause();
+      setIsSoundEnabled(false);
+      return;
+    }
+
+    setIsSoundEnabled(true);
+
+    if (backgroundAudio) {
+      backgroundAudio.volume = 0.16;
+      backgroundAudio.loop = true;
+      void backgroundAudio.play().catch(() => {
+        setIsSoundEnabled(false);
+      });
+    }
+  }
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -131,6 +221,62 @@ export function PlayRoom({
 
     return () => window.clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    const backgroundAudio = backgroundAudioRef.current;
+    const answerAudio = answerAudioRef.current;
+
+    return () => {
+      backgroundAudio?.pause();
+      answerAudio?.pause();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isSoundEnabled) {
+      return;
+    }
+
+    const backgroundAudio = backgroundAudioRef.current;
+
+    if (!backgroundAudio) {
+      return;
+    }
+
+    backgroundAudio.volume = 0.16;
+    backgroundAudio.loop = true;
+    void backgroundAudio.play().catch(() => {
+      setIsSoundEnabled(false);
+    });
+  }, [isSoundEnabled]);
+
+  useEffect(() => {
+    const currentAnswer = snapshot.currentAnswer;
+
+    if (
+      snapshot.status !== "showing_answer" ||
+      !snapshot.isAnswerRevealed ||
+      !currentAnswer
+    ) {
+      return;
+    }
+
+    const revealedAnswerKey = `${snapshot.sessionId}:${snapshot.currentQuestionIndex}:${currentAnswer.id}:${currentAnswer.isCorrect}`;
+
+    if (revealedAnswerKeyRef.current === revealedAnswerKey) {
+      return;
+    }
+
+    revealedAnswerKeyRef.current = revealedAnswerKey;
+    playAnswerAudio(2800);
+  }, [
+    playAnswerAudio,
+    snapshot.currentAnswer,
+    snapshot.currentQuestionIndex,
+    snapshot.isAnswerRevealed,
+    snapshot.sessionId,
+    snapshot.status,
+  ]);
 
   useEffect(() => {
     if (teamNameSnapshotRef.current !== snapshot.team.teamName) {
@@ -237,6 +383,7 @@ export function PlayRoom({
       }
 
       applySnapshot(data as StudentPlaySnapshot);
+      playAnswerAudio(1800);
       setAnswerDraft({
         questionIndex: (data as StudentPlaySnapshot).currentQuestionIndex,
         text: "",
@@ -323,13 +470,24 @@ export function PlayRoom({
 
   return (
     <>
+      <audio ref={backgroundAudioRef} preload="auto" src={AUDIO_ASSETS.background} />
+      <audio ref={answerAudioRef} preload="auto" src={AUDIO_ASSETS.answer} />
       <Panel className="space-y-5">
         <div className="flex flex-col justify-between gap-4 sm:flex-row">
           <div>
             <p className="text-sm font-medium text-muted">ห้องที่เข้าร่วม</p>
-            <h1 className="mt-1 text-3xl font-semibold">
-              {snapshot.roomCode}
-            </h1>
+            <div className="mt-1 flex items-center gap-3">
+              <h1 className="text-3xl font-semibold">{snapshot.roomCode}</h1>
+              <button
+                aria-label={isSoundEnabled ? "ปิดเสียง" : "เปิดเสียง"}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface text-cyan transition hover:border-cyan/50 hover:bg-cyan/10"
+                onClick={toggleSound}
+                title={isSoundEnabled ? "ปิดเสียง" : "เปิดเสียง"}
+                type="button"
+              >
+                {isSoundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+              </button>
+            </div>
             <p className="mt-2 text-sm text-muted">
               {snapshot.activityName || snapshot.questionSetTitle}
             </p>
@@ -453,6 +611,19 @@ export function PlayRoom({
               {showCorrectAnswer && snapshot.currentQuestion.correctAnswer ? (
                 <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
                   เฉลย: {snapshot.currentQuestion.correctAnswer}
+                </div>
+              ) : null}
+
+              {revealGifSrc ? (
+                <div className="rounded-md border border-border bg-surface p-4">
+                  <Image
+                    alt={revealGifAlt}
+                    className="mx-auto max-h-56 w-full max-w-xs rounded-md object-contain"
+                    height={240}
+                    src={revealGifSrc}
+                    unoptimized
+                    width={320}
+                  />
                 </div>
               ) : null}
 
@@ -588,11 +759,28 @@ export function PlayRoom({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/72 px-4">
           <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-border bg-panel p-6 text-center shadow-sm">
             <div className="absolute inset-x-0 top-0 h-1 bg-primary-blue" />
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success/15 text-success">
-              <PartyPopper size={28} />
+            <p className="text-sm font-semibold text-cyan">จบเกมแล้ว</p>
+            <div className="mt-4 rounded-lg border border-border bg-surface p-3">
+              <Image
+                alt={
+                  ownRank?.rank
+                    ? ownRank.rank <= 3
+                      ? `อันดับ ${ownRank.rank}`
+                      : "อันดับที่ 4 ขึ้นไป"
+                    : "สรุปอันดับ"
+                }
+                className="mx-auto max-h-72 w-full max-w-xs rounded-md object-contain"
+                height={360}
+                priority
+                src={rankAsset}
+                unoptimized
+                width={360}
+              />
             </div>
-            <p className="mt-5 text-sm font-semibold text-cyan">จบเกมแล้ว</p>
-            <h2 className="mt-2 text-2xl font-semibold">
+            <div className="mx-auto mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-success/15 text-success">
+              <PartyPopper size={24} />
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold">
               {snapshot.team.teamName}
             </h2>
             <p className="mt-3 text-lg font-semibold">
