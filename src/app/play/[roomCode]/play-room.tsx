@@ -4,7 +4,10 @@ import {
   CheckCircle2,
   Clock,
   Eye,
+  LogOut,
   Lock,
+  Pencil,
+  PartyPopper,
   Send,
   Trophy,
   XCircle,
@@ -28,21 +31,67 @@ function formatScore(score: number) {
   return Number.isInteger(score) ? score.toString() : score.toFixed(2);
 }
 
+function formatRemainingTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
 export function PlayRoom({
   initialSnapshot,
 }: {
   initialSnapshot: StudentPlaySnapshot;
 }) {
   const [snapshot, setSnapshot] = useState(initialSnapshot);
-  const [answerText, setAnswerText] = useState("");
+  const [answerDraft, setAnswerDraft] = useState({
+    questionIndex: initialSnapshot.currentQuestionIndex,
+    text: "",
+  });
+  const [teamName, setTeamName] = useState(initialSnapshot.team.teamName);
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTeamUpdating, setIsTeamUpdating] = useState(false);
+  const [closedResultSessionId, setClosedResultSessionId] = useState<
+    string | null
+  >(null);
+  const [nowMs, setNowMs] = useState(() => Date.now());
+  const answerText =
+    answerDraft.questionIndex === snapshot.currentQuestionIndex
+      ? answerDraft.text
+      : "";
   const refreshTimerRef = useRef<number | null>(null);
+  const remainingSeconds = snapshot.currentQuestionEndsAt
+    ? Math.max(
+        0,
+        Math.ceil((new Date(snapshot.currentQuestionEndsAt).getTime() - nowMs) / 1000),
+      )
+    : null;
+  const isTimerExpired =
+    snapshot.status === "question_active" &&
+    remainingSeconds !== null &&
+    remainingSeconds <= 0;
   const canSubmit =
-    snapshot.canSubmitAnswer && answerText.trim().length > 0 && !isSubmitting;
+    snapshot.canSubmitAnswer &&
+    !isTimerExpired &&
+    answerText.trim().length > 0 &&
+    !isSubmitting;
   const showCorrectAnswer =
     snapshot.status === "showing_answer" || snapshot.status === "ended";
+  const ownRank = snapshot.rankedTeams.find(
+    (team) => team.id === snapshot.team.id,
+  );
+  const isResultOpen =
+    snapshot.status === "ended" && closedResultSessionId !== snapshot.sessionId;
   const playApiUrl = `/api/play/${encodeURIComponent(snapshot.roomCode)}`;
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setNowMs(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     let isActive = true;
@@ -142,12 +191,87 @@ export function PlayRoom({
       }
 
       setSnapshot(data as StudentPlaySnapshot);
-      setAnswerText("");
+      setAnswerDraft({
+        questionIndex: (data as StudentPlaySnapshot).currentQuestionIndex,
+        text: "",
+      });
       setMessage("ส่งคำตอบแล้ว");
     } catch {
       setMessage("เชื่อมต่อการส่งคำตอบไม่ได้ ลองอีกครั้ง");
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function renameTeam() {
+    if (!snapshot.canRenameTeam || isTeamUpdating) {
+      return;
+    }
+
+    setIsTeamUpdating(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch(playApiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "rename_team", teamName }),
+      });
+      const data = (await response.json()) as
+        | StudentPlaySnapshot
+        | { error?: string };
+
+      if (!response.ok) {
+        setMessage(
+          "error" in data && data.error ? data.error : "เปลี่ยนชื่อทีมไม่ได้",
+        );
+        return;
+      }
+
+      setSnapshot(data as StudentPlaySnapshot);
+      setMessage("เปลี่ยนชื่อทีมแล้ว");
+    } catch {
+      setMessage("เชื่อมต่อการเปลี่ยนชื่อทีมไม่ได้ ลองอีกครั้ง");
+    } finally {
+      setIsTeamUpdating(false);
+    }
+  }
+
+  async function leaveTeam() {
+    if (!snapshot.canChangeTeam || isTeamUpdating) {
+      return;
+    }
+
+    setIsTeamUpdating(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch(playApiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "leave_team" }),
+      });
+      const data = (await response.json()) as
+        | { redirectTo?: string; error?: string }
+        | StudentPlaySnapshot;
+
+      if (!response.ok) {
+        setMessage(
+          "error" in data && data.error ? data.error : "ออกจากทีมไม่ได้",
+        );
+        return;
+      }
+
+      if ("redirectTo" in data && data.redirectTo) {
+        window.location.href = data.redirectTo;
+        return;
+      }
+
+      setSnapshot(data as StudentPlaySnapshot);
+    } catch {
+      setMessage("เชื่อมต่อการออกจากทีมไม่ได้ ลองอีกครั้ง");
+    } finally {
+      setIsTeamUpdating(false);
     }
   }
 
@@ -164,8 +288,51 @@ export function PlayRoom({
               {snapshot.activityName || snapshot.questionSetTitle}
             </p>
           </div>
-          <div className="rounded-md bg-blue-50 px-4 py-3 text-sm font-semibold text-primary">
-            {snapshot.team.teamName}
+          <div className="w-full rounded-md border border-border bg-blue-50 p-3 sm:max-w-sm">
+            {snapshot.canRenameTeam ? (
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted" htmlFor="team_name">
+                  ชื่อทีม
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    id="team_name"
+                    className="h-11 min-w-0 flex-1 rounded-md border border-border bg-background/70 px-3 text-sm outline-none focus:border-cyan"
+                    maxLength={30}
+                    onChange={(event) => setTeamName(event.target.value)}
+                    value={teamName}
+                  />
+                  <button
+                    aria-label="เปลี่ยนชื่อทีม"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={isTeamUpdating || teamName.trim() === snapshot.team.teamName}
+                    onClick={() => void renameTeam()}
+                    title="เปลี่ยนชื่อทีม"
+                    type="button"
+                  >
+                    <Pencil size={17} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p className="text-xs text-muted">ทีม</p>
+                <p className="mt-1 text-sm font-semibold text-primary">
+                  {snapshot.team.teamName}
+                </p>
+              </div>
+            )}
+            {snapshot.canChangeTeam ? (
+              <button
+                className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-panel px-3 text-sm font-semibold transition hover:bg-primary/15 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={isTeamUpdating}
+                onClick={() => void leaveTeam()}
+                type="button"
+              >
+                <LogOut size={16} />
+                ออกจากทีม
+              </button>
+            ) : null}
           </div>
         </div>
 
@@ -207,14 +374,34 @@ export function PlayRoom({
           {snapshot.currentQuestion ? (
             <div className="mt-5 space-y-4">
               <div>
-                <p className="text-sm font-medium text-muted">
-                  ข้อ {snapshot.currentQuestion.questionNumber}/
-                  {snapshot.currentQuestion.totalQuestions} •{" "}
-                  {snapshot.currentQuestion.points} คะแนน
-                </p>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-sm font-medium text-muted">
+                    ข้อ {snapshot.currentQuestion.questionNumber}/
+                    {snapshot.currentQuestion.totalQuestions} •{" "}
+                    {snapshot.currentQuestion.points} คะแนน
+                  </p>
+                  {remainingSeconds !== null &&
+                  snapshot.status === "question_active" ? (
+                    <span
+                      className={
+                        remainingSeconds <= 10
+                          ? "inline-flex h-11 items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700"
+                          : "inline-flex h-11 items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-sm font-semibold text-cyan"
+                      }
+                    >
+                      <Clock size={17} />
+                      {formatRemainingTime(remainingSeconds)}
+                    </span>
+                  ) : null}
+                </div>
                 <h3 className="mt-2 text-2xl font-semibold leading-9">
                   {snapshot.currentQuestion.questionText}
                 </h3>
+                {isTimerExpired ? (
+                  <p className="mt-3 text-sm font-semibold text-warning">
+                    หมดเวลาตอบคำถามข้อนี้แล้ว
+                  </p>
+                ) : null}
               </div>
 
               {showCorrectAnswer && snapshot.currentQuestion.correctAnswer ? (
@@ -226,12 +413,18 @@ export function PlayRoom({
               {snapshot.currentAnswer ? (
                 <div className="rounded-md border border-border bg-white p-4">
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    {snapshot.currentAnswer.isCorrect ? (
+                    {!snapshot.isAnswerRevealed ? (
+                      <Lock className="text-cyan" size={18} />
+                    ) : snapshot.currentAnswer.isCorrect ? (
                       <CheckCircle2 className="text-emerald-700" size={18} />
                     ) : (
                       <XCircle className="text-red-700" size={18} />
                     )}
-                    ส่งคำตอบแล้ว
+                    {snapshot.isAnswerRevealed
+                      ? snapshot.currentAnswer.isCorrect
+                        ? "ตอบถูก"
+                        : "ยังไม่ถูก"
+                      : "ส่งคำตอบแล้ว รอครูเฉลย"}
                   </div>
                   <p className="mt-2 text-sm text-muted">
                     คำตอบของคุณ: {snapshot.currentAnswer.answerText}
@@ -246,10 +439,17 @@ export function PlayRoom({
                 <div className="space-y-3">
                   <textarea
                     className="min-h-32 w-full rounded-md border border-border bg-white p-3 outline-none focus:border-primary disabled:bg-slate-50"
-                    disabled={!snapshot.canSubmitAnswer}
-                    onChange={(event) => setAnswerText(event.target.value)}
+                    disabled={!snapshot.canSubmitAnswer || isTimerExpired}
+                    onChange={(event) =>
+                      setAnswerDraft({
+                        questionIndex: snapshot.currentQuestionIndex,
+                        text: event.target.value,
+                      })
+                    }
                     placeholder={
-                      snapshot.status === "question_active"
+                      isTimerExpired
+                        ? "หมดเวลาตอบแล้ว"
+                        : snapshot.status === "question_active"
                         ? "พิมพ์คำตอบ..."
                         : "รอคำถามจากครู..."
                     }
@@ -330,6 +530,39 @@ export function PlayRoom({
             ))}
           </div>
         </Panel>
+      ) : null}
+
+      {snapshot.status === "ended" && isResultOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/72 px-4">
+          <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-border bg-panel p-6 text-center shadow-sm">
+            <div className="absolute inset-x-0 top-0 h-1 bg-primary-blue" />
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success/15 text-success">
+              <PartyPopper size={28} />
+            </div>
+            <p className="mt-5 text-sm font-semibold text-cyan">จบเกมแล้ว</p>
+            <h2 className="mt-2 text-2xl font-semibold">
+              {snapshot.team.teamName}
+            </h2>
+            <p className="mt-3 text-lg font-semibold">
+              {ownRank?.rank
+                ? ownRank.isTied
+                  ? `อันดับร่วม ${ownRank.rank}`
+                  : `อันดับ ${ownRank.rank}`
+                : "ยังไม่จัดอันดับ"}
+            </p>
+            <p className="mt-2 text-sm text-muted">
+              คะแนนเฉลี่ย {formatScore(snapshot.teamScore.averageScore)} • รวม{" "}
+              {snapshot.teamScore.rawScore}
+            </p>
+            <button
+              className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-dark"
+              onClick={() => setClosedResultSessionId(snapshot.sessionId)}
+              type="button"
+            >
+              ดูสรุปเต็ม
+            </button>
+          </div>
+        </div>
       ) : null}
     </>
   );

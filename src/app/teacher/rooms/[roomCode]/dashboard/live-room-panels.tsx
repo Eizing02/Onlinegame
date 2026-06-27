@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { ButtonLink } from "@/components/ui/button-link";
 import { Panel } from "@/components/ui/panel";
 import type { TeacherDashboardSnapshot } from "@/lib/data/game-sessions";
 import { subscribeToGameSessionChanges } from "@/lib/supabase/realtime-game";
@@ -114,7 +115,9 @@ export function LiveRoomPanels({
   const canReveal =
     snapshot.status === "question_active" || snapshot.status === "answer_locked";
   const canGoNext =
-    snapshot.status === "showing_answer" || snapshot.status === "answer_locked";
+    snapshot.status === "showing_answer" ||
+    snapshot.status === "answer_locked" ||
+    snapshot.status === "question_active";
   const isLastQuestion =
     snapshot.currentQuestionIndex >= snapshot.questionCount - 1;
 
@@ -358,6 +361,15 @@ export function LiveRoomPanels({
           >
             {controlMessage}
           </div>
+        ) : null}
+
+        {snapshot.status === "ended" ? (
+          <ButtonLink
+            className="w-full"
+            href={`/teacher/rooms/${snapshot.roomCode}/results`}
+          >
+            ดูสรุปผล
+          </ButtonLink>
         ) : null}
 
         <div className="rounded-lg border border-border bg-surface p-5">

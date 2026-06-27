@@ -3,6 +3,7 @@ import { Search, Shuffle, UsersRound } from "lucide-react";
 import {
   chooseTeamAction,
   findRoomAction,
+  leaveTeamAction,
   randomTeamAction,
 } from "@/app/join/actions";
 import { AppShell } from "@/components/layout/app-shell";
@@ -38,6 +39,9 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
     ? gameSession.participants.find(
         (participant) => participant.studentCode === student.userCode,
       )
+    : null;
+  const currentTeam = existingParticipant?.teamId
+    ? teamSummaries.find((team) => team.id === existingParticipant.teamId)
     : null;
   const isLateJoin = gameSession ? gameSession.status !== "lobby" : false;
   const roomError =
@@ -121,21 +125,34 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                     ชุดคำถาม {gameSession.questionSetTitle}
                   </p>
                 </div>
-                {existingParticipant?.teamId ? (
+                {existingParticipant?.teamId && isLateJoin ? (
                   <ButtonLink href={`/play/${roomCode}`} variant="secondary">
                     กลับเข้าเกม
                   </ButtonLink>
                 ) : (
-                  <form action={randomTeamAction}>
-                    <input name="room_code" type="hidden" value={roomCode} />
-                    <button
-                      className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-white px-3 text-sm font-semibold transition hover:bg-surface"
-                      type="submit"
-                    >
-                      <Shuffle size={17} />
-                      สุ่มทีมให้ฉัน
-                    </button>
-                  </form>
+                  <div className="flex flex-wrap gap-2">
+                    {existingParticipant?.teamId ? (
+                      <form action={leaveTeamAction}>
+                        <input name="room_code" type="hidden" value={roomCode} />
+                        <button
+                          className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-white px-3 text-sm font-semibold transition hover:bg-surface"
+                          type="submit"
+                        >
+                          ออกจากทีม
+                        </button>
+                      </form>
+                    ) : null}
+                    <form action={randomTeamAction}>
+                      <input name="room_code" type="hidden" value={roomCode} />
+                      <button
+                        className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-white px-3 text-sm font-semibold transition hover:bg-surface"
+                        type="submit"
+                      >
+                        <Shuffle size={17} />
+                        สุ่มทีมให้ฉัน
+                      </button>
+                    </form>
+                  </div>
                 )}
               </div>
 
@@ -170,7 +187,9 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
 
               {existingParticipant?.teamId ? (
                 <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-                  คุณอยู่ในทีมแล้ว ระบบจะพากลับเข้าห้องเดิมและทีมเดิมเมื่อเข้าเล่น
+                  {isLateJoin
+                    ? "คุณอยู่ในทีมแล้ว ระบบจะพากลับเข้าห้องเดิมและทีมเดิมเมื่อเข้าเล่น"
+                    : `คุณอยู่ใน ${currentTeam?.teamName ?? "ทีมเดิม"} หากเข้าผิดกลุ่มสามารถเลือกทีมใหม่หรือออกจากทีมได้`}
                 </div>
               ) : null}
 
@@ -180,8 +199,15 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                     <input name="room_code" type="hidden" value={roomCode} />
                     <input name="team_id" type="hidden" value={team.id} />
                     <button
-                      className="flex min-h-28 w-full flex-col items-start justify-between rounded-md border border-border bg-white p-4 text-left transition hover:border-primary hover:bg-blue-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-muted"
-                      disabled={team.isFull}
+                      className="flex min-h-28 w-full flex-col items-start justify-between rounded-md border border-border bg-white p-4 text-left transition hover:border-primary hover:bg-blue-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-muted data-[current=true]:border-primary data-[current=true]:bg-blue-50"
+                      data-current={existingParticipant?.teamId === team.id}
+                      disabled={
+                        (team.isFull &&
+                          existingParticipant?.teamId !== team.id) ||
+                        (isLateJoin &&
+                          Boolean(existingParticipant?.teamId) &&
+                          existingParticipant?.teamId !== team.id)
+                      }
                       type="submit"
                     >
                       <span className="flex items-center gap-2 font-semibold">
@@ -193,11 +219,17 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                       </span>
                       {team.isFull ? (
                         <span className="text-sm font-semibold text-red-700">
-                          ทีมเต็มแล้ว
+                          {existingParticipant?.teamId === team.id
+                            ? "ทีมปัจจุบัน"
+                            : "ทีมเต็มแล้ว"}
                         </span>
                       ) : (
                         <span className="text-sm font-semibold text-primary">
-                          {isLateJoin ? "เข้าทีมนี้เพื่อดูเกม" : "เลือกทีมนี้"}
+                          {existingParticipant?.teamId === team.id
+                            ? "ทีมปัจจุบัน"
+                            : isLateJoin
+                              ? "เข้าทีมนี้เพื่อดูเกม"
+                              : "เลือกทีมนี้"}
                         </span>
                       )}
                     </button>

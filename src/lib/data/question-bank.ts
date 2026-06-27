@@ -7,6 +7,8 @@ import {
   addSupabaseQuestion,
   createSupabaseQuestionSet,
   deleteSupabaseQuestion,
+  deleteSupabaseQuestions,
+  deleteSupabaseQuestionSet,
   getSupabaseQuestionSet,
   getSupabaseQuestionSetSummaries,
 } from "@/lib/data/supabase-question-bank";
@@ -198,6 +200,68 @@ export async function deleteLocalQuestion(
   questionSet.questions = nextQuestions;
   questionSet.updatedAt = new Date().toISOString();
   await writeQuestionBank(questionSets);
+  return true;
+}
+
+export async function deleteLocalQuestions(
+  teacherCode: string,
+  questionSetId: string,
+  questionIds: string[],
+) {
+  if (isSupabaseDataBackend()) {
+    return deleteSupabaseQuestions(teacherCode, questionSetId, questionIds);
+  }
+
+  const uniqueQuestionIds = new Set(questionIds.filter(Boolean));
+
+  if (uniqueQuestionIds.size === 0) {
+    return false;
+  }
+
+  const questionSets = await readQuestionBank();
+  const questionSet = questionSets.find(
+    (set) => set.teacherCode === teacherCode && set.id === questionSetId,
+  );
+
+  if (!questionSet) {
+    return false;
+  }
+
+  const nextQuestions = questionSet.questions
+    .filter((question) => !uniqueQuestionIds.has(question.id))
+    .map((question, index) => ({
+      ...question,
+      orderIndex: index,
+    }));
+
+  if (nextQuestions.length === questionSet.questions.length) {
+    return false;
+  }
+
+  questionSet.questions = nextQuestions;
+  questionSet.updatedAt = new Date().toISOString();
+  await writeQuestionBank(questionSets);
+  return true;
+}
+
+export async function deleteLocalQuestionSet(
+  teacherCode: string,
+  questionSetId: string,
+) {
+  if (isSupabaseDataBackend()) {
+    return deleteSupabaseQuestionSet(teacherCode, questionSetId);
+  }
+
+  const questionSets = await readQuestionBank();
+  const nextQuestionSets = questionSets.filter(
+    (set) => !(set.teacherCode === teacherCode && set.id === questionSetId),
+  );
+
+  if (nextQuestionSets.length === questionSets.length) {
+    return false;
+  }
+
+  await writeQuestionBank(nextQuestionSets);
   return true;
 }
 

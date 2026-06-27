@@ -4,6 +4,8 @@ import { notFound, redirect } from "next/navigation";
 import {
   addQuestionAction,
   deleteQuestionAction,
+  deleteQuestionSetAction,
+  deleteSelectedQuestionsAction,
 } from "@/app/teacher/actions";
 import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -61,17 +63,29 @@ export default async function QuestionSetDetailPage({
               {questionSet.description || "ยังไม่มีคำอธิบายชุดคำถาม"}
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-3 text-sm sm:w-64">
-            <div className="rounded-md border border-border bg-white p-3">
-              <p className="text-muted">จำนวนคำถาม</p>
-              <p className="mt-1 text-2xl font-semibold">
-                {questionSet.questions.length}
-              </p>
+          <div className="space-y-3 sm:w-72">
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="rounded-md border border-border bg-white p-3">
+                <p className="text-muted">จำนวนคำถาม</p>
+                <p className="mt-1 text-2xl font-semibold">
+                  {questionSet.questions.length}
+                </p>
+              </div>
+              <div className="rounded-md border border-border bg-white p-3">
+                <p className="text-muted">คะแนนรวม</p>
+                <p className="mt-1 text-2xl font-semibold">{totalPoints}</p>
+              </div>
             </div>
-            <div className="rounded-md border border-border bg-white p-3">
-              <p className="text-muted">คะแนนรวม</p>
-              <p className="mt-1 text-2xl font-semibold">{totalPoints}</p>
-            </div>
+            <form action={deleteQuestionSetAction}>
+              <input name="question_set_id" type="hidden" value={questionSet.id} />
+              <button
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+                type="submit"
+              >
+                <Trash2 size={17} />
+                ลบชุดคำถามนี้
+              </button>
+            </form>
           </div>
         </div>
 
@@ -161,17 +175,47 @@ export default async function QuestionSetDetailPage({
           </form>
         </Panel>
 
+        <form id="bulk-delete-questions" action={deleteSelectedQuestionsAction}>
+          <input name="question_set_id" type="hidden" value={questionSet.id} />
+        </form>
+
+        {questionSet.questions.length > 0 ? (
+          <div className="flex flex-col justify-between gap-3 rounded-xl border border-border bg-panel/70 p-4 sm:flex-row sm:items-center">
+            <p className="text-sm text-muted">
+              เลือกคำถามหลายข้อแล้วลบพร้อมกันได้
+            </p>
+            <button
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+              form="bulk-delete-questions"
+              type="submit"
+            >
+              <Trash2 size={17} />
+              ลบข้อที่เลือก
+            </button>
+          </div>
+        ) : null}
+
         <div className="space-y-4">
           {questionSet.questions.map((question, index) => (
             <Panel key={question.id} className="space-y-4">
               <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-primary">
-                    ข้อ {index + 1}
-                  </p>
-                  <h2 className="mt-1 text-lg font-semibold leading-7">
-                    {question.questionText}
-                  </h2>
+                <div className="flex min-w-0 gap-3">
+                  <input
+                    aria-label={`เลือกคำถามข้อ ${index + 1}`}
+                    className="mt-1 h-5 w-5 rounded border-border bg-background"
+                    form="bulk-delete-questions"
+                    name="question_ids"
+                    type="checkbox"
+                    value={question.id}
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-primary">
+                      ข้อ {index + 1}
+                    </p>
+                    <h2 className="mt-1 text-lg font-semibold leading-7">
+                      {question.questionText}
+                    </h2>
+                  </div>
                 </div>
                 <form action={deleteQuestionAction}>
                   <input
@@ -181,7 +225,8 @@ export default async function QuestionSetDetailPage({
                   />
                   <input name="question_id" type="hidden" value={question.id} />
                   <button
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 transition hover:bg-red-100"
+                    aria-label={`ลบคำถามข้อ ${index + 1}`}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 transition hover:bg-red-100"
                     title="ลบคำถาม"
                     type="submit"
                   >

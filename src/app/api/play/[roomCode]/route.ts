@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import {
   getStudentPlaySnapshot,
+  leaveLocalTeam,
+  renameLocalTeam,
   submitLocalAnswer,
 } from "@/lib/data/game-sessions";
 import { normalizeRoomCode } from "@/lib/game/room-code";
@@ -55,24 +57,48 @@ export async function POST(request: Request, { params }: PlayApiProps) {
   }
 
   const body = (await request.json().catch(() => null)) as {
+    action?: unknown;
     answerText?: unknown;
+    teamName?: unknown;
   } | null;
+  const action = typeof body?.action === "string" ? body.action : "answer";
   const answerText =
     typeof body?.answerText === "string" ? body.answerText.trim() : "";
 
   const { roomCode } = await params;
-  const result = await submitLocalAnswer({
-    roomCode: normalizeRoomCode(roomCode),
-    studentCode: auth.student.userCode,
-    answerText,
-  });
+  const normalizedRoomCode = normalizeRoomCode(roomCode);
+  const result =
+    action === "rename_team"
+      ? await renameLocalTeam({
+          roomCode: normalizedRoomCode,
+          studentCode: auth.student.userCode,
+          teamName: typeof body?.teamName === "string" ? body.teamName : "",
+        })
+      : action === "leave_team"
+        ? await leaveLocalTeam({
+            roomCode: normalizedRoomCode,
+            studentCode: auth.student.userCode,
+          })
+        : action === "answer"
+          ? await submitLocalAnswer({
+              roomCode: normalizedRoomCode,
+              studentCode: auth.student.userCode,
+              answerText,
+            })
+          : { ok: false as const, reason: "คำสั่งไม่ถูกต้อง" };
 
   if (!result.ok) {
     return NextResponse.json({ error: result.reason }, { status: 400 });
   }
 
+  if (action === "leave_team") {
+    return NextResponse.json({
+      redirectTo: `/join?room_code=${normalizedRoomCode}`,
+    });
+  }
+
   const snapshotResult = await getStudentPlaySnapshot({
-    roomCode: normalizeRoomCode(roomCode),
+    roomCode: normalizedRoomCode,
     studentCode: auth.student.userCode,
   });
 

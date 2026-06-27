@@ -46,9 +46,9 @@ html {
 body {
   min-height: 100%;
   background:
-    radial-gradient(circle at 18% 14%, rgba(124, 60, 255, 0.2), transparent 30rem),
-    radial-gradient(circle at 82% 8%, rgba(47, 124, 255, 0.22), transparent 28rem),
-    radial-gradient(circle at 60% 92%, rgba(54, 216, 255, 0.12), transparent 26rem),
+    linear-gradient(115deg, rgba(124, 60, 255, 0.16), transparent 42%),
+    linear-gradient(245deg, rgba(47, 124, 255, 0.14), transparent 38%),
+    linear-gradient(180deg, rgba(54, 216, 255, 0.08), transparent 58%),
     linear-gradient(135deg, #070815 0%, #0b0e22 46%, #050611 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -174,7 +174,7 @@ textarea {
   }
 
   .shadow-sm {
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.22);
   }
 }
 

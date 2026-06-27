@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { requireRole } from "@/lib/auth/session";
-import { joinLocalGameSession } from "@/lib/data/game-sessions";
+import { joinLocalGameSession, leaveLocalTeam } from "@/lib/data/game-sessions";
 import { isValidRoomCode, normalizeRoomCode } from "@/lib/game/room-code";
 
 function getFormString(formData: FormData, key: string) {
@@ -76,4 +76,24 @@ export async function randomTeamAction(formData: FormData) {
   }
 
   redirect(`/play/${result.roomCode}`);
+}
+
+export async function leaveTeamAction(formData: FormData) {
+  const student = await requireRole("student");
+  const roomCode = normalizeRoomCode(getFormString(formData, "room_code"));
+
+  if (!isValidRoomCode(roomCode)) {
+    encodedRedirect("/join", "error", "รหัสห้องไม่ถูกต้อง");
+  }
+
+  const result = await leaveLocalTeam({
+    roomCode,
+    studentCode: student.userCode,
+  });
+
+  if (!result.ok) {
+    encodedRedirect(`/join?room_code=${roomCode}`, "error", result.reason);
+  }
+
+  encodedRedirect(`/join?room_code=${roomCode}`, "notice", "ออกจากทีมแล้ว เลือกทีมใหม่ได้เลย");
 }

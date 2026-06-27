@@ -63,6 +63,8 @@ create table public.game_sessions (
   team_count integer not null check (team_count > 0),
   max_members_per_team integer not null check (max_members_per_team > 0),
   current_question_index integer not null default 0 check (current_question_index >= 0),
+  current_question_started_at timestamptz,
+  current_question_ends_at timestamptz,
   started_at timestamptz,
   ended_at timestamptz,
   created_at timestamptz not null default now(),
@@ -124,6 +126,8 @@ create table public.game_events (
       'start_question',
       'lock_answers',
       'submit_answer',
+      'rename_team',
+      'leave_team',
       'reveal_answer',
       'next_question',
       'end_game'
@@ -186,55 +190,27 @@ alter table public.game_events enable row level security;
 create policy "active sessions are visible"
 on public.game_sessions for select
 to anon, authenticated
-using (status <> 'ended');
+using (true);
 
 create policy "active teams are visible"
 on public.teams for select
 to anon, authenticated
-using (
-  exists (
-    select 1
-    from public.game_sessions gs
-    where gs.id = session_id
-      and gs.status <> 'ended'
-  )
-);
+using (true);
 
 create policy "active participants are visible"
 on public.participants for select
 to anon, authenticated
-using (
-  exists (
-    select 1
-    from public.game_sessions gs
-    where gs.id = session_id
-      and gs.status <> 'ended'
-  )
-);
+using (true);
 
 create policy "active answers are visible"
 on public.answers for select
 to anon, authenticated
-using (
-  exists (
-    select 1
-    from public.game_sessions gs
-    where gs.id = session_id
-      and gs.status <> 'ended'
-  )
-);
+using (true);
 
 create policy "active events are visible"
 on public.game_events for select
 to anon, authenticated
-using (
-  exists (
-    select 1
-    from public.game_sessions gs
-    where gs.id = session_id
-      and gs.status <> 'ended'
-  )
-);
+using (true);
 
 alter publication supabase_realtime add table public.game_sessions;
 alter publication supabase_realtime add table public.teams;

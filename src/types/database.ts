@@ -55,6 +55,8 @@ export type GameSessionRow = {
   team_count: number;
   max_members_per_team: number;
   current_question_index: number;
+  current_question_started_at: string | null;
+  current_question_ends_at: string | null;
   started_at: string | null;
   ended_at: string | null;
   created_at: string;
@@ -110,6 +112,8 @@ export type GameEventRow = {
     | "start_question"
     | "lock_answers"
     | "submit_answer"
+    | "rename_team"
+    | "leave_team"
     | "reveal_answer"
     | "next_question"
     | "end_game";

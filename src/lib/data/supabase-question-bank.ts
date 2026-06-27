@@ -240,3 +240,90 @@ export async function deleteSupabaseQuestion(
 
   return true;
 }
+
+export async function deleteSupabaseQuestions(
+  teacherCode: string,
+  questionSetId: string,
+  questionIds: string[],
+) {
+  const questionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
+  const uniqueQuestionIds = [...new Set(questionIds.filter(Boolean))];
+
+  if (!questionSet || uniqueQuestionIds.length === 0) {
+    return false;
+  }
+
+  const existingQuestionIds = new Set(
+    questionSet.questions.map((question) => question.id),
+  );
+  const targetQuestionIds = uniqueQuestionIds.filter((questionId) =>
+    existingQuestionIds.has(questionId),
+  );
+
+  if (targetQuestionIds.length === 0) {
+    return false;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from("questions")
+    .delete()
+    .eq("question_set_id", questionSetId)
+    .in("id", targetQuestionIds);
+
+  if (error) {
+    throw error;
+  }
+
+  const remaining = questionSet.questions
+    .filter((question) => !targetQuestionIds.includes(question.id))
+    .map((question, index) => ({
+      id: question.id,
+      order_index: index,
+    }));
+
+  for (const question of remaining) {
+    const { error: updateError } = await supabase
+      .from("questions")
+      .update({ order_index: question.order_index })
+      .eq("id", question.id);
+
+    if (updateError) {
+      throw updateError;
+    }
+  }
+
+  await supabase
+    .from("question_sets")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", questionSetId);
+
+  return true;
+}
+
+export async function deleteSupabaseQuestionSet(
+  teacherCode: string,
+  questionSetId: string,
+) {
+  const questionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
+
+  if (!questionSet) {
+    return false;
+  }
+
+  const { error } = await createSupabaseAdminClient()
+    .from("question_sets")
+    .delete()
+    .eq("teacher_code", teacherCode)
+    .eq("id", questionSetId);
+
+  if (error) {
+    if (error.code === "23503") {
+      return false;
+    }
+
+    throw error;
+  }
+
+  return true;
+}

@@ -22,6 +22,8 @@ type SessionRow = {
   team_count: number;
   max_members_per_team: number;
   current_question_index: number;
+  current_question_started_at: string | null;
+  current_question_ends_at: string | null;
   started_at: string | null;
   ended_at: string | null;
   created_at: string;
@@ -145,6 +147,8 @@ async function mapSession(row: SessionRow): Promise<StoredGameSession> {
     teamCount: row.team_count,
     maxMembersPerTeam: row.max_members_per_team,
     currentQuestionIndex: row.current_question_index,
+    currentQuestionStartedAt: row.current_question_started_at,
+    currentQuestionEndsAt: row.current_question_ends_at,
     teams: (teamsResult.data ?? []).map(mapTeam),
     participants: (participantsResult.data ?? []).map(mapParticipant),
     answers: (answersResult.data ?? []).map(mapAnswer),
@@ -160,7 +164,7 @@ async function fetchSessionByRoomCode(roomCode: string) {
   const { data, error } = await supabase
     .from("game_sessions")
     .select(
-      "id, room_code, teacher_code, question_set_id, question_set_title, question_count, activity_name, status, team_count, max_members_per_team, current_question_index, started_at, ended_at, created_at, updated_at",
+      "id, room_code, teacher_code, question_set_id, question_set_title, question_count, activity_name, status, team_count, max_members_per_team, current_question_index, current_question_started_at, current_question_ends_at, started_at, ended_at, created_at, updated_at",
     )
     .eq("room_code", normalizeRoomCode(roomCode))
     .order("created_at", { ascending: false })
@@ -176,7 +180,7 @@ async function fetchSessionById(sessionId: string) {
   const { data, error } = await supabase
     .from("game_sessions")
     .select(
-      "id, room_code, teacher_code, question_set_id, question_set_title, question_count, activity_name, status, team_count, max_members_per_team, current_question_index, started_at, ended_at, created_at, updated_at",
+      "id, room_code, teacher_code, question_set_id, question_set_title, question_count, activity_name, status, team_count, max_members_per_team, current_question_index, current_question_started_at, current_question_ends_at, started_at, ended_at, created_at, updated_at",
     )
     .eq("id", sessionId)
     .maybeSingle<SessionRow>();
@@ -190,6 +194,58 @@ function getTeamMemberCount(session: StoredGameSession, teamId: string) {
     (participant) =>
       participant.teamId === teamId && participant.connectionStatus !== "left",
   ).length;
+}
+
+function getTeamMembers(session: StoredGameSession, teamId: string) {
+  return session.participants
+    .filter(
+      (participant) =>
+        participant.teamId === teamId &&
+        participant.connectionStatus !== "left",
+    )
+    .toSorted(
+      (a, b) =>
+        new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime(),
+    );
+}
+
+function getTeamCaptain(session: StoredGameSession, teamId: string) {
+  return getTeamMembers(session, teamId)[0] ?? null;
+}
+
+function isTeamCaptain(
+  session: StoredGameSession,
+  participant: StoredParticipant,
+) {
+  if (!participant.teamId) {
+    return false;
+  }
+
+  return getTeamCaptain(session, participant.teamId)?.id === participant.id;
+}
+
+function isQuestionTimerExpired(session: StoredGameSession, now = new Date()) {
+  return Boolean(
+    session.currentQuestionEndsAt &&
+      now.getTime() > new Date(session.currentQuestionEndsAt).getTime(),
+  );
+}
+
+function getQuestionTimerWindow({
+  timeLimitSeconds,
+  nowIso,
+}: {
+  timeLimitSeconds: number;
+  nowIso: string;
+}) {
+  const startedAt = new Date(nowIso);
+
+  return {
+    current_question_started_at: nowIso,
+    current_question_ends_at: new Date(
+      startedAt.getTime() + timeLimitSeconds * 1000,
+    ).toISOString(),
+  };
 }
 
 function hasGameStarted(session: StoredGameSession) {
@@ -328,7 +384,7 @@ export async function getSupabaseActiveTeacherGameSession(teacherCode: string) {
   const { data, error } = await supabase
     .from("game_sessions")
     .select(
-      "id, room_code, teacher_code, question_set_id, question_set_title, question_count, activity_name, status, team_count, max_members_per_team, current_question_index, started_at, ended_at, created_at, updated_at",
+      "id, room_code, teacher_code, question_set_id, question_set_title, question_count, activity_name, status, team_count, max_members_per_team, current_question_index, current_question_started_at, current_question_ends_at, started_at, ended_at, created_at, updated_at",
     )
     .eq("teacher_code", teacherCode)
     .neq("status", "ended")
@@ -502,6 +558,11 @@ export async function startSupabaseGameSession({
 
   const supabase = createSupabaseAdminClient();
   const now = new Date().toISOString();
+  const firstQuestion = questionSet.questions[0];
+  const questionTimer = getQuestionTimerWindow({
+    timeLimitSeconds: firstQuestion.timeLimitSeconds,
+    nowIso: now,
+  });
 
   for (const team of session.teams) {
     const { error } = await supabase
@@ -543,6 +604,7 @@ export async function startSupabaseGameSession({
     .update({
       status: "question_active",
       current_question_index: 0,
+      ...questionTimer,
       started_at: now,
       ended_at: null,
     })
@@ -652,19 +714,55 @@ export async function advanceSupabaseGameQuestion(payload: {
     async update(session) {
       if (
         session.status !== "showing_answer" &&
-        session.status !== "answer_locked"
+        session.status !== "answer_locked" &&
+        session.status !== "question_active"
       ) {
         return "ต้องล็อกคำตอบหรือเฉลยก่อนข้อต่อไป";
       }
 
       const now = new Date().toISOString();
-      const values =
-        session.currentQuestionIndex >= session.questionCount - 1
-          ? { status: "ended", ended_at: now }
-          : {
-              status: "question_active",
-              current_question_index: session.currentQuestionIndex + 1,
-            };
+      let values:
+        | {
+            status: "ended";
+            ended_at: string;
+            current_question_started_at: null;
+            current_question_ends_at: null;
+          }
+        | {
+            status: "question_active";
+            current_question_index: number;
+            current_question_started_at: string;
+            current_question_ends_at: string;
+          };
+
+      if (session.currentQuestionIndex >= session.questionCount - 1) {
+        values = {
+          status: "ended",
+          ended_at: now,
+          current_question_started_at: null,
+          current_question_ends_at: null,
+        };
+      } else {
+        const nextQuestionIndex = session.currentQuestionIndex + 1;
+        const questionSet = await getSupabaseQuestionSet(
+          session.teacherCode,
+          session.questionSetId,
+        );
+        const nextQuestion = questionSet?.questions[nextQuestionIndex];
+
+        if (!nextQuestion) {
+          return "ไม่พบคำถามข้อถัดไป";
+        }
+
+        values = {
+          status: "question_active",
+          current_question_index: nextQuestionIndex,
+          ...getQuestionTimerWindow({
+            timeLimitSeconds: nextQuestion.timeLimitSeconds,
+            nowIso: now,
+          }),
+        };
+      }
       const { error } = await createSupabaseAdminClient()
         .from("game_sessions")
         .update(values)
@@ -686,13 +784,149 @@ export async function endSupabaseGameSession(payload: {
     async update(session) {
       const { error } = await createSupabaseAdminClient()
         .from("game_sessions")
-        .update({ status: "ended", ended_at: new Date().toISOString() })
+        .update({
+          status: "ended",
+          ended_at: new Date().toISOString(),
+          current_question_started_at: null,
+          current_question_ends_at: null,
+        })
         .eq("id", session.id);
 
       if (error) throw error;
       return null;
     },
   });
+}
+
+export async function leaveSupabaseTeam({
+  roomCode,
+  studentCode,
+}: {
+  roomCode: string;
+  studentCode: string;
+}) {
+  const session = await fetchSessionByRoomCode(roomCode);
+
+  if (!session || session.status === "ended") {
+    return { ok: false as const, reason: "ไม่พบห้อง หรือเกมจบแล้ว" };
+  }
+
+  if (session.status !== "lobby") {
+    return { ok: false as const, reason: "เริ่มเกมแล้ว ไม่สามารถเปลี่ยนทีมได้" };
+  }
+
+  const participant = session.participants.find(
+    (item) => item.studentCode === studentCode,
+  );
+
+  if (!participant) {
+    return { ok: false as const, reason: "ยังไม่ได้เข้าห้องนี้" };
+  }
+
+  const { error } = await createSupabaseAdminClient()
+    .from("participants")
+    .update({
+      team_id: null,
+      connection_status: "online",
+      last_seen_at: new Date().toISOString(),
+    })
+    .eq("id", participant.id);
+
+  if (error) throw error;
+
+  await insertEvent(session.id, "leave_team", { studentCode });
+  const nextSession = await fetchSessionById(session.id);
+
+  if (!nextSession) {
+    throw new Error("ออกจากทีมแล้วแต่โหลดข้อมูลห้องไม่สำเร็จ");
+  }
+
+  return { ok: true as const, session: nextSession };
+}
+
+export async function renameSupabaseTeam({
+  roomCode,
+  studentCode,
+  teamName,
+}: {
+  roomCode: string;
+  studentCode: string;
+  teamName: string;
+}) {
+  const nextTeamName = teamName.trim().replace(/\s+/g, " ");
+
+  if (nextTeamName.length < 2 || nextTeamName.length > 30) {
+    return { ok: false as const, reason: "ชื่อทีมต้องมี 2-30 ตัวอักษร" };
+  }
+
+  const session = await fetchSessionByRoomCode(roomCode);
+
+  if (!session || session.status === "ended") {
+    return { ok: false as const, reason: "ไม่พบห้อง หรือเกมจบแล้ว" };
+  }
+
+  if (session.status !== "lobby") {
+    return { ok: false as const, reason: "เริ่มเกมแล้ว ไม่สามารถเปลี่ยนชื่อทีมได้" };
+  }
+
+  const participant = session.participants.find(
+    (item) => item.studentCode === studentCode,
+  );
+
+  if (!participant?.teamId) {
+    return { ok: false as const, reason: "กรุณาเลือกทีมก่อนเปลี่ยนชื่อทีม" };
+  }
+
+  if (!isTeamCaptain(session, participant)) {
+    return { ok: false as const, reason: "เฉพาะคนแรกของทีมเท่านั้นที่เปลี่ยนชื่อทีมได้" };
+  }
+
+  const { error } = await createSupabaseAdminClient()
+    .from("teams")
+    .update({ team_name: nextTeamName })
+    .eq("id", participant.teamId);
+
+  if (error) throw error;
+
+  await insertEvent(session.id, "rename_team", {
+    studentCode,
+    teamId: participant.teamId,
+    teamName: nextTeamName,
+  });
+  const nextSession = await fetchSessionById(session.id);
+
+  if (!nextSession) {
+    throw new Error("เปลี่ยนชื่อทีมแล้วแต่โหลดข้อมูลห้องไม่สำเร็จ");
+  }
+
+  return { ok: true as const, session: nextSession };
+}
+
+export async function deleteSupabaseGameSession({
+  teacherCode,
+  roomCode,
+}: {
+  teacherCode: string;
+  roomCode: string;
+}) {
+  const session = await getSupabaseTeacherGameSession(teacherCode, roomCode);
+
+  if (!session) {
+    return { ok: false as const, reason: "ไม่พบห้องนี้" };
+  }
+
+  if (session.status !== "ended") {
+    return { ok: false as const, reason: "ลบห้องได้หลังจบเกมเท่านั้น" };
+  }
+
+  const { error } = await createSupabaseAdminClient()
+    .from("game_sessions")
+    .delete()
+    .eq("id", session.id);
+
+  if (error) throw error;
+
+  return { ok: true as const };
 }
 
 export async function submitSupabaseAnswer({
@@ -740,6 +974,10 @@ export async function submitSupabaseAnswer({
 
   if (!currentQuestion) {
     return { ok: false as const, reason: "ไม่พบคำถามปัจจุบัน" };
+  }
+
+  if (isQuestionTimerExpired(session)) {
+    return { ok: false as const, reason: "หมดเวลาตอบคำถามข้อนี้แล้ว" };
   }
 
   const trimmedAnswer = answerText.trim();

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Realtime Quiz Game",
-  description: "เกมตอบคำถามแบบทีมสำหรับห้องเรียน",
+  title: "KruEIonline",
+  description: "ร่วมกันตอบ ทำคะแนนสูงสุดเพื่อทีม",
 };
 
 export default function RootLayout({

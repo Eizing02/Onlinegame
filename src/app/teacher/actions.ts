@@ -8,10 +8,13 @@ import {
   addLocalQuestion,
   createLocalQuestionSet,
   deleteLocalQuestion,
+  deleteLocalQuestions,
+  deleteLocalQuestionSet,
   getLocalQuestionSet,
 } from "@/lib/data/question-bank";
 import {
   createLocalGameSession,
+  deleteLocalGameSession,
   getActiveTeacherGameSession,
 } from "@/lib/data/game-sessions";
 import { createRoomSchema } from "@/lib/validations/room";
@@ -115,6 +118,84 @@ export async function deleteQuestionAction(formData: FormData) {
 
   revalidatePath(redirectPath);
   encodedRedirect(redirectPath, "notice", "ลบคำถามแล้ว");
+}
+
+export async function deleteSelectedQuestionsAction(formData: FormData) {
+  const session = await requireRole("teacher");
+  const questionSetId = getFormString(formData, "question_set_id");
+  const questionIds = formData
+    .getAll("question_ids")
+    .filter((value): value is string => typeof value === "string");
+  const redirectPath = `/teacher/question-sets/${questionSetId}`;
+
+  if (!questionSetId || questionIds.length === 0) {
+    encodedRedirect(redirectPath, "error", "กรุณาเลือกคำถามที่ต้องการลบ");
+  }
+
+  const deleted = await deleteLocalQuestions(
+    session.userCode,
+    questionSetId,
+    questionIds,
+  );
+
+  if (!deleted) {
+    encodedRedirect(redirectPath, "error", "ไม่พบคำถามที่ต้องการลบ");
+  }
+
+  revalidatePath(redirectPath);
+  encodedRedirect(redirectPath, "notice", "ลบคำถามที่เลือกแล้ว");
+}
+
+export async function deleteQuestionSetAction(formData: FormData) {
+  const session = await requireRole("teacher");
+  const questionSetId = getFormString(formData, "question_set_id");
+
+  if (!questionSetId) {
+    encodedRedirect("/teacher/question-sets", "error", "ข้อมูลชุดคำถามไม่ครบ");
+  }
+
+  const deleted = await deleteLocalQuestionSet(session.userCode, questionSetId);
+
+  if (!deleted) {
+    encodedRedirect(
+      `/teacher/question-sets/${questionSetId}`,
+      "error",
+      "ลบชุดคำถามไม่ได้ อาจยังถูกใช้กับห้องที่ยังไม่ลบ",
+    );
+  }
+
+  revalidatePath("/teacher/question-sets");
+  encodedRedirect("/teacher/question-sets", "notice", "ลบชุดคำถามแล้ว");
+}
+
+export async function deleteRoomAction(formData: FormData) {
+  const session = await requireRole("teacher");
+  const roomCode = getFormString(formData, "room_code");
+
+  if (!roomCode) {
+    encodedRedirect("/teacher/rooms/new", "error", "ข้อมูลห้องไม่ครบ");
+  }
+
+  const deleted = await deleteLocalGameSession({
+    teacherCode: session.userCode,
+    roomCode,
+  });
+
+  if (!deleted.ok) {
+    encodedRedirect(
+      `/teacher/rooms/${roomCode}/results`,
+      "error",
+      deleted.reason,
+    );
+  }
+
+  revalidatePath("/teacher");
+  revalidatePath("/teacher/rooms/new");
+  encodedRedirect(
+    "/teacher/rooms/new",
+    "notice",
+    "ลบห้องและข้อมูลรอบเล่นนี้แล้ว",
+  );
 }
 
 export async function createRoomAction(formData: FormData) {

@@ -19,6 +19,9 @@ import {
   showSupabaseGameAnswer,
   startSupabaseGameSession,
   submitSupabaseAnswer,
+  deleteSupabaseGameSession,
+  leaveSupabaseTeam,
+  renameSupabaseTeam,
 } from "@/lib/data/supabase-game-sessions";
 import { generateRoomCode, normalizeRoomCode } from "@/lib/game/room-code";
 import { calculateAwardedPoints } from "@/lib/game/scoring";
@@ -76,6 +79,8 @@ export type StoredGameSession = {
   teamCount: number;
   maxMembersPerTeam: number;
   currentQuestionIndex: number;
+  currentQuestionStartedAt: string | null;
+  currentQuestionEndsAt: string | null;
   teams: StoredTeam[];
   participants: StoredParticipant[];
   answers: StoredAnswer[];
@@ -130,6 +135,8 @@ export type TeacherDashboardSnapshot = {
   teamCount: number;
   maxMembersPerTeam: number;
   currentQuestionIndex: number;
+  currentQuestionStartedAt: string | null;
+  currentQuestionEndsAt: string | null;
   currentQuestion: QuestionSnapshot | null;
   answerProgress: AnswerProgress;
   canStart: boolean;
@@ -153,9 +160,15 @@ export type StudentPlaySnapshot = {
   participant: StoredParticipant;
   team: StoredTeam;
   currentQuestionIndex: number;
+  currentQuestionStartedAt: string | null;
+  currentQuestionEndsAt: string | null;
   currentQuestion: QuestionSnapshot | null;
   currentAnswer: StoredAnswer | null;
+  isAnswerRevealed: boolean;
   canSubmitAnswer: boolean;
+  canRenameTeam: boolean;
+  canChangeTeam: boolean;
+  isTeamCaptain: boolean;
   answerProgress: AnswerProgress;
   teamScore: {
     rawScore: number;
@@ -166,6 +179,18 @@ export type StudentPlaySnapshot = {
   startedAt: string | null;
   endedAt: string | null;
   updatedAt: string;
+};
+
+export type ParticipantScoreSummary = {
+  participantId: string;
+  studentCode: string;
+  displayName: string;
+  teamId: string | null;
+  teamName: string;
+  isScoreEligible: boolean;
+  answeredCount: number;
+  correctCount: number;
+  rawScore: number;
 };
 
 function normalizeTeam(team: Partial<StoredTeam>, index: number): StoredTeam {
@@ -237,6 +262,8 @@ function normalizeGameSession(
     teamCount: Number(session.teamCount ?? session.teams?.length ?? 0),
     maxMembersPerTeam: Number(session.maxMembersPerTeam ?? 5),
     currentQuestionIndex: Number(session.currentQuestionIndex ?? 0),
+    currentQuestionStartedAt: session.currentQuestionStartedAt ?? null,
+    currentQuestionEndsAt: session.currentQuestionEndsAt ?? null,
     teams: (session.teams ?? []).map(normalizeTeam),
     participants: (session.participants ?? []).map(normalizeParticipant),
     answers: (session.answers ?? []).map(normalizeAnswer),
@@ -315,6 +342,75 @@ function getTeamMemberCount(session: StoredGameSession, teamId: string) {
     (participant) =>
       participant.teamId === teamId && participant.connectionStatus !== "left",
   ).length;
+}
+
+function getTeamMembers(session: StoredGameSession, teamId: string) {
+  return session.participants
+    .filter(
+      (participant) =>
+        participant.teamId === teamId &&
+        participant.connectionStatus !== "left",
+    )
+    .toSorted(
+      (a, b) =>
+        new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime(),
+    );
+}
+
+function getTeamCaptain(session: StoredGameSession, teamId: string) {
+  return getTeamMembers(session, teamId)[0] ?? null;
+}
+
+function isTeamCaptain(
+  session: StoredGameSession,
+  participant: StoredParticipant,
+) {
+  if (!participant.teamId) {
+    return false;
+  }
+
+  return getTeamCaptain(session, participant.teamId)?.id === participant.id;
+}
+
+function isQuestionTimerExpired(session: StoredGameSession, now = new Date()) {
+  return Boolean(
+    session.currentQuestionEndsAt &&
+      now.getTime() > new Date(session.currentQuestionEndsAt).getTime(),
+  );
+}
+
+function getQuestionTimerWindow(question: StoredQuestion, nowIso: string) {
+  const startedAt = new Date(nowIso);
+  const endsAt = new Date(
+    startedAt.getTime() + question.timeLimitSeconds * 1000,
+  ).toISOString();
+
+  return {
+    currentQuestionStartedAt: nowIso,
+    currentQuestionEndsAt: endsAt,
+  };
+}
+
+async function assignCurrentQuestionTimer({
+  session,
+  nowIso,
+}: {
+  session: StoredGameSession;
+  nowIso: string;
+}) {
+  const question = await getCurrentQuestion(session);
+
+  if (!question) {
+    session.currentQuestionStartedAt = null;
+    session.currentQuestionEndsAt = null;
+    return null;
+  }
+
+  const timer = getQuestionTimerWindow(question, nowIso);
+  session.currentQuestionStartedAt = timer.currentQuestionStartedAt;
+  session.currentQuestionEndsAt = timer.currentQuestionEndsAt;
+
+  return question;
 }
 
 function getEligibleParticipantCount(session: StoredGameSession) {
@@ -436,15 +532,53 @@ export function getTeamSummaries(session: StoredGameSession): TeamSummary[] {
   });
 }
 
-export function getRankedTeams(session: StoredGameSession): RankedTeam[] {
-  const scoreableTeams = session.teams
+function getVisibleTeamScores({
+  session,
+  excludeQuestionIndex,
+}: {
+  session: StoredGameSession;
+  excludeQuestionIndex?: number;
+}) {
+  if (excludeQuestionIndex === undefined) {
+    return session.teams;
+  }
+
+  return session.teams.map((team) => {
+    const rawScore = session.answers
+      .filter(
+        (answer) =>
+          answer.teamId === team.id &&
+          answer.questionIndex !== excludeQuestionIndex,
+      )
+      .reduce((sum, answer) => sum + answer.scoreAwarded, 0);
+    const divisor = team.lockedMemberCount ?? 0;
+    const averageScore = divisor > 0 ? rawScore / divisor : 0;
+
+    return {
+      ...team,
+      rawScore,
+      averageScore: Number(averageScore.toFixed(2)),
+      score: Number(averageScore.toFixed(2)),
+    };
+  });
+}
+
+export function getRankedTeams(
+  session: StoredGameSession,
+  options: { excludeQuestionIndex?: number } = {},
+): RankedTeam[] {
+  const teams = getVisibleTeamScores({
+    session,
+    excludeQuestionIndex: options.excludeQuestionIndex,
+  });
+  const scoreableTeams = teams
     .filter((team) => (team.lockedMemberCount ?? 0) > 0)
     .toSorted(
       (a, b) =>
         b.averageScore - a.averageScore ||
         a.teamNumber - b.teamNumber,
     );
-  const unrankedTeams = session.teams
+  const unrankedTeams = teams
     .filter((team) => (team.lockedMemberCount ?? 0) === 0)
     .toSorted((a, b) => a.teamNumber - b.teamNumber);
   const tiedScores = new Set(
@@ -546,6 +680,8 @@ export async function createLocalGameSession({
     teamCount,
     maxMembersPerTeam,
     currentQuestionIndex: 0,
+    currentQuestionStartedAt: null,
+    currentQuestionEndsAt: null,
     teams,
     participants: [],
     answers: [],
@@ -816,6 +952,7 @@ export async function startLocalGameSession({
   session.currentQuestionIndex = 0;
   session.startedAt = now;
   session.endedAt = null;
+  Object.assign(session, getQuestionTimerWindow(currentQuestion, now));
   session.updatedAt = now;
   await writeGameSessions(gameSessions);
 
@@ -899,11 +1036,12 @@ export async function advanceLocalGameQuestion({
 
   if (
     session.status !== "showing_answer" &&
-    session.status !== "answer_locked"
+    session.status !== "answer_locked" &&
+    session.status !== "question_active"
   ) {
     return {
       ok: false as const,
-      reason: "ต้องล็อกคำตอบหรือเฉลยก่อนข้อต่อไป",
+      reason: "ยังไม่สามารถไปข้อถัดไปได้",
     };
   }
 
@@ -912,9 +1050,12 @@ export async function advanceLocalGameQuestion({
   if (session.currentQuestionIndex >= session.questionCount - 1) {
     session.status = "ended";
     session.endedAt = now;
+    session.currentQuestionStartedAt = null;
+    session.currentQuestionEndsAt = null;
   } else {
     session.currentQuestionIndex += 1;
     session.status = "question_active";
+    await assignCurrentQuestionTimer({ session, nowIso: now });
   }
 
   session.updatedAt = now;
@@ -940,9 +1081,147 @@ export async function endLocalGameSession({
     update(session) {
       session.status = "ended";
       session.endedAt = new Date().toISOString();
+      session.currentQuestionStartedAt = null;
+      session.currentQuestionEndsAt = null;
       return null;
     },
   });
+}
+
+export async function leaveLocalTeam({
+  roomCode,
+  studentCode,
+}: {
+  roomCode: string;
+  studentCode: string;
+}) {
+  if (isSupabaseDataBackend()) {
+    return leaveSupabaseTeam({ roomCode, studentCode });
+  }
+
+  const normalizedRoomCode = normalizeRoomCode(roomCode);
+  const gameSessions = await readGameSessions();
+  const session = gameSessions.find(
+    (item) => item.roomCode === normalizedRoomCode,
+  );
+
+  if (!session || session.status === "ended") {
+    return { ok: false as const, reason: "ไม่พบห้อง หรือเกมจบแล้ว" };
+  }
+
+  if (session.status !== "lobby") {
+    return { ok: false as const, reason: "เริ่มเกมแล้ว ไม่สามารถเปลี่ยนทีมได้" };
+  }
+
+  const participant = session.participants.find(
+    (item) => item.studentCode === studentCode,
+  );
+
+  if (!participant) {
+    return { ok: false as const, reason: "ยังไม่ได้เข้าห้องนี้" };
+  }
+
+  const now = new Date().toISOString();
+  participant.teamId = null;
+  participant.connectionStatus = "online";
+  participant.lastSeenAt = now;
+  session.updatedAt = now;
+  await writeGameSessions(gameSessions);
+
+  return { ok: true as const, session };
+}
+
+export async function renameLocalTeam({
+  roomCode,
+  studentCode,
+  teamName,
+}: {
+  roomCode: string;
+  studentCode: string;
+  teamName: string;
+}) {
+  if (isSupabaseDataBackend()) {
+    return renameSupabaseTeam({ roomCode, studentCode, teamName });
+  }
+
+  const normalizedRoomCode = normalizeRoomCode(roomCode);
+  const nextTeamName = teamName.trim().replace(/\s+/g, " ");
+
+  if (nextTeamName.length < 2 || nextTeamName.length > 30) {
+    return { ok: false as const, reason: "ชื่อทีมต้องมี 2-30 ตัวอักษร" };
+  }
+
+  const gameSessions = await readGameSessions();
+  const session = gameSessions.find(
+    (item) => item.roomCode === normalizedRoomCode,
+  );
+
+  if (!session || session.status === "ended") {
+    return { ok: false as const, reason: "ไม่พบห้อง หรือเกมจบแล้ว" };
+  }
+
+  if (session.status !== "lobby") {
+    return { ok: false as const, reason: "เริ่มเกมแล้ว ไม่สามารถเปลี่ยนชื่อทีมได้" };
+  }
+
+  const participant = session.participants.find(
+    (item) => item.studentCode === studentCode,
+  );
+
+  if (!participant?.teamId) {
+    return { ok: false as const, reason: "กรุณาเลือกทีมก่อนเปลี่ยนชื่อทีม" };
+  }
+
+  if (!isTeamCaptain(session, participant)) {
+    return { ok: false as const, reason: "เฉพาะคนแรกของทีมเท่านั้นที่เปลี่ยนชื่อทีมได้" };
+  }
+
+  const team = session.teams.find((item) => item.id === participant.teamId);
+
+  if (!team) {
+    return { ok: false as const, reason: "ไม่พบทีมของคุณ" };
+  }
+
+  const now = new Date().toISOString();
+  team.teamName = nextTeamName;
+  participant.connectionStatus = "online";
+  participant.lastSeenAt = now;
+  session.updatedAt = now;
+  await writeGameSessions(gameSessions);
+
+  return { ok: true as const, session };
+}
+
+export async function deleteLocalGameSession({
+  teacherCode,
+  roomCode,
+}: {
+  teacherCode: string;
+  roomCode: string;
+}) {
+  if (isSupabaseDataBackend()) {
+    return deleteSupabaseGameSession({ teacherCode, roomCode });
+  }
+
+  const normalizedRoomCode = normalizeRoomCode(roomCode);
+  const gameSessions = await readGameSessions();
+  const sessionIndex = gameSessions.findIndex(
+    (item) =>
+      item.roomCode === normalizedRoomCode && item.teacherCode === teacherCode,
+  );
+
+  if (sessionIndex === -1) {
+    return { ok: false as const, reason: "ไม่พบห้องนี้" };
+  }
+
+  if (gameSessions[sessionIndex].status !== "ended") {
+    return { ok: false as const, reason: "ลบห้องได้หลังจบเกมเท่านั้น" };
+  }
+
+  gameSessions.splice(sessionIndex, 1);
+  await writeGameSessions(gameSessions);
+
+  return { ok: true as const };
 }
 
 async function updateTeacherSession({
@@ -1028,6 +1307,12 @@ export async function submitLocalAnswer({
     return { ok: false as const, reason: "ไม่พบคำถามปัจจุบัน" };
   }
 
+  const now = new Date().toISOString();
+
+  if (isQuestionTimerExpired(session, new Date(now))) {
+    return { ok: false as const, reason: "หมดเวลาตอบคำถามข้อนี้แล้ว" };
+  }
+
   const trimmedAnswer = answerText.trim();
 
   if (!trimmedAnswer) {
@@ -1038,7 +1323,6 @@ export async function submitLocalAnswer({
     return { ok: false as const, reason: "คำตอบยาวเกินไป" };
   }
 
-  const now = new Date().toISOString();
   const rawAwardedPoints = calculateAwardedPoints({
     answerText: trimmedAnswer,
     correctAnswer: currentQuestion.correctAnswer,
@@ -1065,6 +1349,46 @@ export async function submitLocalAnswer({
   return { ok: true as const, answer, session };
 }
 
+export function getParticipantScoreSummaries(
+  session: StoredGameSession,
+): ParticipantScoreSummary[] {
+  const teamNameById = new Map(
+    session.teams.map((team) => [team.id, team.teamName] as const),
+  );
+
+  return session.participants
+    .filter((participant) => participant.connectionStatus !== "left")
+    .map((participant) => {
+      const answers = session.answers.filter(
+        (answer) => answer.studentCode === participant.studentCode,
+      );
+      const rawScore = answers.reduce(
+        (sum, answer) => sum + answer.scoreAwarded,
+        0,
+      );
+
+      return {
+        participantId: participant.id,
+        studentCode: participant.studentCode,
+        displayName: participant.displayName,
+        teamId: participant.teamId,
+        teamName: participant.teamId
+          ? (teamNameById.get(participant.teamId) ?? "ไม่พบทีม")
+          : "ยังไม่เลือกทีม",
+        isScoreEligible: participant.isScoreEligible,
+        answeredCount: answers.length,
+        correctCount: answers.filter((answer) => answer.isCorrect).length,
+        rawScore,
+      };
+    })
+    .toSorted(
+      (a, b) =>
+        (a.teamName || "").localeCompare(b.teamName || "", "th") ||
+        b.rawScore - a.rawScore ||
+        a.displayName.localeCompare(b.displayName, "th"),
+    );
+}
+
 export async function getTeacherDashboardSnapshot(
   session: StoredGameSession,
 ): Promise<TeacherDashboardSnapshot> {
@@ -1085,6 +1409,8 @@ export async function getTeacherDashboardSnapshot(
     teamCount: session.teamCount,
     maxMembersPerTeam: session.maxMembersPerTeam,
     currentQuestionIndex: session.currentQuestionIndex,
+    currentQuestionStartedAt: session.currentQuestionStartedAt,
+    currentQuestionEndsAt: session.currentQuestionEndsAt,
     currentQuestion: currentQuestion
       ? toQuestionSnapshot({
           question: currentQuestion,
@@ -1209,7 +1535,10 @@ async function buildStudentPlaySnapshot({
   participant: StoredParticipant;
   team: StoredTeam;
 }): Promise<StudentPlaySnapshot> {
-  const currentQuestion = await getCurrentQuestion(session);
+  const shouldShowQuestion = session.status !== "lobby";
+  const currentQuestion = shouldShowQuestion
+    ? await getCurrentQuestion(session)
+    : null;
   const includeCorrectAnswer =
     session.status === "showing_answer" || session.status === "ended";
   const currentAnswer =
@@ -1218,6 +1547,28 @@ async function buildStudentPlaySnapshot({
         answer.studentCode === participant.studentCode &&
         answer.questionIndex === session.currentQuestionIndex,
     ) ?? null;
+  const visibleAnswer =
+    currentAnswer && includeCorrectAnswer
+      ? currentAnswer
+      : currentAnswer
+        ? {
+            ...currentAnswer,
+            isCorrect: false,
+            scoreAwarded: 0,
+          }
+        : null;
+  const expired = isQuestionTimerExpired(session);
+  const captain = isTeamCaptain(session, participant);
+  const hideCurrentQuestionScore =
+    !includeCorrectAnswer &&
+    (session.status === "question_active" || session.status === "answer_locked");
+  const visibleTeams = getVisibleTeamScores({
+    session,
+    excludeQuestionIndex: hideCurrentQuestionScore
+      ? session.currentQuestionIndex
+      : undefined,
+  });
+  const visibleTeam = visibleTeams.find((item) => item.id === team.id) ?? team;
 
   return {
     sessionId: session.id,
@@ -1228,6 +1579,8 @@ async function buildStudentPlaySnapshot({
     participant,
     team,
     currentQuestionIndex: session.currentQuestionIndex,
+    currentQuestionStartedAt: session.currentQuestionStartedAt,
+    currentQuestionEndsAt: session.currentQuestionEndsAt,
     currentQuestion: currentQuestion
       ? toQuestionSnapshot({
           question: currentQuestion,
@@ -1235,18 +1588,27 @@ async function buildStudentPlaySnapshot({
           includeCorrectAnswer,
         })
       : null,
-    currentAnswer,
+    currentAnswer: visibleAnswer,
+    isAnswerRevealed: includeCorrectAnswer,
     canSubmitAnswer:
       session.status === "question_active" &&
       Boolean(currentQuestion) &&
-      !currentAnswer,
+      !currentAnswer &&
+      !expired,
+    canRenameTeam: session.status === "lobby" && captain,
+    canChangeTeam: session.status === "lobby",
+    isTeamCaptain: captain,
     answerProgress: getAnswerProgress(session),
     teamScore: {
-      rawScore: team.rawScore,
-      averageScore: team.averageScore,
-      lockedMemberCount: team.lockedMemberCount,
+      rawScore: visibleTeam.rawScore,
+      averageScore: visibleTeam.averageScore,
+      lockedMemberCount: visibleTeam.lockedMemberCount,
     },
-    rankedTeams: getRankedTeams(session),
+    rankedTeams: getRankedTeams(session, {
+      excludeQuestionIndex: hideCurrentQuestionScore
+        ? session.currentQuestionIndex
+        : undefined,
+    }),
     startedAt: session.startedAt,
     endedAt: session.endedAt,
     updatedAt: session.updatedAt,

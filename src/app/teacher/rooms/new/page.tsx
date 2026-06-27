@@ -9,6 +9,7 @@ import { getLocalQuestionSetSummaries } from "@/lib/data/question-bank";
 type NewRoomPageProps = {
   searchParams: Promise<{
     error?: string;
+    notice?: string;
     active_room?: string;
   }>;
 };
@@ -37,6 +38,11 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
         {params.error ? (
           <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
             {params.error}
+          </div>
+        ) : null}
+        {params.notice ? (
+          <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+            {params.notice}
           </div>
         ) : null}
 
