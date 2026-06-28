@@ -114,6 +114,7 @@ export function PlayRoom({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTeamUpdating, setIsTeamUpdating] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  const [isRevealEffectOpen, setIsRevealEffectOpen] = useState(false);
   const [closedResultSessionId, setClosedResultSessionId] = useState<
     string | null
   >(null);
@@ -126,6 +127,7 @@ export function PlayRoom({
   const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
   const answerAudioRef = useRef<HTMLAudioElement | null>(null);
   const revealedAnswerKeyRef = useRef<string | null>(null);
+  const revealEffectTimerRef = useRef<number | null>(null);
   const teamNameSnapshotRef = useRef(initialSnapshot.team.teamName);
   const pollIntervalMs = getStudentPollInterval(snapshot.status);
   const remainingSeconds = getRemainingSeconds({
@@ -168,8 +170,8 @@ export function PlayRoom({
     setNowMs(Date.now());
   }, []);
   const playAnswerAudio = useCallback(
-    (durationMs = 2400) => {
-      if (!isSoundEnabled) {
+    (durationMs = 2400, options: { force?: boolean } = {}) => {
+      if (!isSoundEnabled && !options.force) {
         return;
       }
 
@@ -192,6 +194,27 @@ export function PlayRoom({
     [isSoundEnabled],
   );
 
+  const enableSound = useCallback(
+    ({ playFeedback = false }: { playFeedback?: boolean } = {}) => {
+      const backgroundAudio = backgroundAudioRef.current;
+
+      setIsSoundEnabled(true);
+
+      if (backgroundAudio) {
+        backgroundAudio.volume = 0.18;
+        backgroundAudio.loop = true;
+        void backgroundAudio.play().catch(() => {
+          setIsSoundEnabled(false);
+        });
+      }
+
+      if (playFeedback) {
+        playAnswerAudio(1800, { force: true });
+      }
+    },
+    [playAnswerAudio],
+  );
+
   function toggleSound() {
     const backgroundAudio = backgroundAudioRef.current;
     const answerAudio = answerAudioRef.current;
@@ -203,15 +226,7 @@ export function PlayRoom({
       return;
     }
 
-    setIsSoundEnabled(true);
-
-    if (backgroundAudio) {
-      backgroundAudio.volume = 0.16;
-      backgroundAudio.loop = true;
-      void backgroundAudio.play().catch(() => {
-        setIsSoundEnabled(false);
-      });
-    }
+    enableSound();
   }
 
   useEffect(() => {
@@ -229,6 +244,10 @@ export function PlayRoom({
     return () => {
       backgroundAudio?.pause();
       answerAudio?.pause();
+
+      if (revealEffectTimerRef.current) {
+        window.clearTimeout(revealEffectTimerRef.current);
+      }
     };
   }, []);
 
@@ -268,7 +287,17 @@ export function PlayRoom({
     }
 
     revealedAnswerKeyRef.current = revealedAnswerKey;
+    setIsRevealEffectOpen(true);
     playAnswerAudio(2800);
+
+    if (revealEffectTimerRef.current) {
+      window.clearTimeout(revealEffectTimerRef.current);
+    }
+
+    revealEffectTimerRef.current = window.setTimeout(() => {
+      setIsRevealEffectOpen(false);
+      revealEffectTimerRef.current = null;
+    }, 3600);
   }, [
     playAnswerAudio,
     snapshot.currentAnswer,
@@ -361,6 +390,12 @@ export function PlayRoom({
       return;
     }
 
+    if (!isSoundEnabled) {
+      enableSound({ playFeedback: true });
+    } else {
+      playAnswerAudio(1800);
+    }
+
     setIsSubmitting(true);
     setMessage(null);
 
@@ -383,7 +418,6 @@ export function PlayRoom({
       }
 
       applySnapshot(data as StudentPlaySnapshot);
-      playAnswerAudio(1800);
       setAnswerDraft({
         questionIndex: (data as StudentPlaySnapshot).currentQuestionIndex,
         text: "",
@@ -480,12 +514,13 @@ export function PlayRoom({
               <h1 className="text-3xl font-semibold">{snapshot.roomCode}</h1>
               <button
                 aria-label={isSoundEnabled ? "ปิดเสียง" : "เปิดเสียง"}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface text-cyan transition hover:border-cyan/50 hover:bg-cyan/10"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-surface px-3 text-sm font-semibold text-cyan transition hover:border-cyan/50 hover:bg-cyan/10"
                 onClick={toggleSound}
                 title={isSoundEnabled ? "ปิดเสียง" : "เปิดเสียง"}
                 type="button"
               >
                 {isSoundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+                <span>{isSoundEnabled ? "ปิดเสียง" : "เปิดเสียง"}</span>
               </button>
             </div>
             <p className="mt-2 text-sm text-muted">
@@ -611,19 +646,6 @@ export function PlayRoom({
               {showCorrectAnswer && snapshot.currentQuestion.correctAnswer ? (
                 <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
                   เฉลย: {snapshot.currentQuestion.correctAnswer}
-                </div>
-              ) : null}
-
-              {revealGifSrc ? (
-                <div className="rounded-md border border-border bg-surface p-4">
-                  <Image
-                    alt={revealGifAlt}
-                    className="mx-auto max-h-56 w-full max-w-xs rounded-md object-contain"
-                    height={240}
-                    src={revealGifSrc}
-                    unoptimized
-                    width={320}
-                  />
                 </div>
               ) : null}
 
@@ -807,6 +829,31 @@ export function PlayRoom({
             >
               กลับหน้าเข้าห้อง
             </a>
+          </div>
+        </div>
+      ) : null}
+
+      {revealGifSrc && isRevealEffectOpen ? (
+        <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center bg-black/45 px-4">
+          <div className="w-full max-w-sm rounded-lg border border-border bg-panel p-4 text-center shadow-sm">
+            <Image
+              alt={revealGifAlt}
+              className="mx-auto max-h-72 w-full rounded-md object-contain"
+              height={320}
+              priority
+              src={revealGifSrc}
+              unoptimized
+              width={360}
+            />
+            <p
+              className={
+                snapshot.currentAnswer?.isCorrect
+                  ? "mt-3 text-lg font-semibold text-success"
+                  : "mt-3 text-lg font-semibold text-warning"
+              }
+            >
+              {snapshot.currentAnswer?.isCorrect ? "ตอบถูก!" : "ยังไม่ถูก"}
+            </p>
           </div>
         </div>
       ) : null}
