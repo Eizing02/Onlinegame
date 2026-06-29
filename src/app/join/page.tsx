@@ -60,7 +60,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
             กรอกรหัสห้องตัวเลข 4 หลัก จากนั้นเลือกทีมที่ต้องการอยู่
             หรือให้ระบบสุ่มทีมที่ยังว่างให้
           </p>
-          <div className="rounded-md border border-border bg-white p-4 text-sm leading-6 text-muted">
+          <div className="rounded-lg border border-cyan/25 bg-panel p-4 text-sm leading-6 text-muted">
             <p className="font-semibold text-foreground">ผู้เล่น</p>
             <p>{student.displayName}</p>
             <p>{student.grade}</p>
@@ -68,7 +68,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
         </div>
 
         <div className="space-y-5">
-          <Panel className="space-y-5">
+          <Panel className="space-y-5 border-cyan/25">
             {query.error ? (
               <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                 {query.error}
@@ -93,7 +93,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                 <input
                   id="room_code"
                   name="room_code"
-                  className="mt-2 h-12 w-full rounded-md border border-border px-3 text-xl font-semibold tracking-normal outline-none focus:border-primary"
+                  className="mt-2 h-12 w-full rounded-md border border-cyan/25 bg-background/70 px-3 text-xl font-semibold tracking-normal outline-none transition focus:border-cyan focus:ring-4 focus:ring-cyan/20"
                   defaultValue={roomCode}
                   inputMode="numeric"
                   maxLength={4}
@@ -102,7 +102,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                 />
               </div>
               <button
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-dark"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-primary/50 bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:border-cyan/60 hover:bg-primary-dark"
                 type="submit"
               >
                 <Search size={18} />
@@ -112,7 +112,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
           </Panel>
 
           {gameSession ? (
-            <Panel className="space-y-5">
+            <Panel className="space-y-5 border-primary/25">
               <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
                 <div>
                   <p className="text-sm font-medium text-muted">
@@ -135,7 +135,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                       <form action={leaveTeamAction}>
                         <input name="room_code" type="hidden" value={roomCode} />
                         <button
-                          className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-white px-3 text-sm font-semibold transition hover:bg-surface"
+                          className="inline-flex h-11 items-center justify-center rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
                           type="submit"
                         >
                           ออกจากทีม
@@ -145,7 +145,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                     <form action={randomTeamAction}>
                       <input name="room_code" type="hidden" value={roomCode} />
                       <button
-                        className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-white px-3 text-sm font-semibold transition hover:bg-surface"
+                        className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-warning/45 bg-warning/15 px-3 text-sm font-semibold text-warning transition hover:bg-warning/25"
                         type="submit"
                       >
                         <Shuffle size={17} />
@@ -199,7 +199,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                     <input name="room_code" type="hidden" value={roomCode} />
                     <input name="team_id" type="hidden" value={team.id} />
                     <button
-                      className="flex min-h-28 w-full flex-col items-start justify-between rounded-md border border-border bg-white p-4 text-left transition hover:border-primary hover:bg-blue-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-muted data-[current=true]:border-primary data-[current=true]:bg-blue-50"
+                      className="flex min-h-28 w-full flex-col items-start justify-between rounded-lg border-2 border-cyan/25 bg-panel-strong p-4 text-left transition hover:border-cyan hover:bg-cyan/10 disabled:cursor-not-allowed disabled:border-border disabled:bg-slate-100 disabled:text-muted data-[current=true]:border-warning data-[current=true]:bg-warning/15"
                       data-current={existingParticipant?.teamId === team.id}
                       disabled={
                         (team.isFull &&
@@ -224,7 +224,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                             : "ทีมเต็มแล้ว"}
                         </span>
                       ) : (
-                        <span className="text-sm font-semibold text-primary">
+                        <span className="text-sm font-semibold text-cyan">
                           {existingParticipant?.teamId === team.id
                             ? "ทีมปัจจุบัน"
                             : isLateJoin

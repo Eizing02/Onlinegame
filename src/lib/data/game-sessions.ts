@@ -56,6 +56,10 @@ export type StoredParticipant = {
   lastSeenAt: string;
 };
 
+export type TeamParticipantSummary = StoredParticipant & {
+  hasAnsweredCurrentQuestion: boolean;
+};
+
 export type StoredAnswer = {
   id: string;
   questionIndex: number;
@@ -104,7 +108,7 @@ export type TeamSummary = StoredTeam & {
   memberCount: number;
   maxMembers: number;
   isFull: boolean;
-  participants: StoredParticipant[];
+  participants: TeamParticipantSummary[];
 };
 
 export type RankedTeam = {
@@ -515,19 +519,35 @@ function getAnswerProgress(session: StoredGameSession): AnswerProgress {
 }
 
 export function getTeamSummaries(session: StoredGameSession): TeamSummary[] {
+  const answeredStudentCodes = new Set(
+    getCurrentQuestionAnswers(session).map((answer) => answer.studentCode),
+  );
+
   return session.teams.map((team) => {
     const memberCount = getTeamMemberCount(session, team.id);
+    const participants = session.participants
+      .filter(
+        (participant) =>
+          participant.teamId === team.id &&
+          participant.connectionStatus !== "left",
+      )
+      .toSorted(
+        (a, b) =>
+          new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime(),
+      )
+      .map((participant) => ({
+        ...participant,
+        hasAnsweredCurrentQuestion: answeredStudentCodes.has(
+          participant.studentCode,
+        ),
+      }));
 
     return {
       ...team,
       memberCount,
       maxMembers: session.maxMembersPerTeam,
       isFull: memberCount >= session.maxMembersPerTeam,
-      participants: session.participants.filter(
-        (participant) =>
-          participant.teamId === team.id &&
-          participant.connectionStatus !== "left",
-      ),
+      participants,
     };
   });
 }

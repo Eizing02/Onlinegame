@@ -21,8 +21,8 @@ export function ButtonLink({
       className={cn(
         "inline-flex h-11 items-center justify-center rounded-lg px-4 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan",
         variant === "primary"
-          ? "bg-primary text-white hover:bg-primary-dark"
-          : "border border-border bg-panel/70 text-foreground hover:border-primary/70 hover:bg-primary/15",
+          ? "border border-primary/50 bg-primary text-white shadow-sm hover:border-cyan/50 hover:bg-primary-dark"
+          : "border border-cyan/35 bg-cyan/10 text-cyan hover:border-cyan hover:bg-cyan/20",
         className,
       )}
     >

@@ -1,4 +1,5 @@
 import { LogIn, Sparkles, Trophy, UsersRound } from "lucide-react";
+import Image from "next/image";
 
 import { signInWithSheetAction } from "@/app/auth/actions";
 import { AppShell } from "@/components/layout/app-shell";
@@ -21,7 +22,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <div className="relative overflow-hidden rounded-2xl border border-border bg-panel p-6 shadow-sm">
             <div className="relative space-y-8">
               <div>
-                <p className="text-sm font-medium text-cyan">KruEIonline</p>
+                <Image
+                  alt="KruEIonline"
+                  className="h-28 w-auto object-contain drop-shadow-[0_18px_36px_rgba(67,221,255,0.24)]"
+                  height={150}
+                  priority
+                  src="/assets/brand/logo.png"
+                  width={280}
+                />
                 <h1 className="mt-3 max-w-md text-5xl font-semibold leading-tight text-white">
                   ร่วมกันตอบ ทำคะแนนสูงสุดเพื่อทีม
                 </h1>
@@ -64,7 +72,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         <Panel className="mx-auto w-full max-w-md space-y-6 p-6 sm:p-8">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-cyan">KruEIonline</p>
+            <Image
+              alt="KruEIonline"
+              className="h-20 w-auto object-contain drop-shadow-[0_14px_30px_rgba(67,221,255,0.24)]"
+              height={120}
+              priority
+              src="/assets/brand/logo.png"
+              width={220}
+            />
             <h2 className="text-3xl font-semibold text-white">
               เข้าสู่ระบบ
             </h2>

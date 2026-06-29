@@ -3,6 +3,7 @@
 import {
   BarChart3,
   ClipboardList,
+  Clock,
   Eye,
   FastForward,
   Lock,
@@ -10,6 +11,8 @@ import {
   Square,
   Trophy,
   UsersRound,
+  Volume2,
+  VolumeX,
   type LucideIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -52,8 +55,48 @@ const statusBadgeClassName: Record<
   ended: "border-red-200 bg-red-50 text-red-700",
 };
 
+const AUDIO_ASSETS = {
+  background: "/assets/audio/bg-sci-fi.wav",
+} as const;
+
 function formatScore(score: number) {
   return Number.isInteger(score) ? score.toString() : score.toFixed(2);
+}
+
+function formatRemainingTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+function getRemainingSeconds({
+  endsAt,
+  nowMs,
+  startedAt,
+  timeLimitSeconds,
+}: {
+  endsAt: string | null;
+  nowMs: number;
+  startedAt: string | null;
+  timeLimitSeconds?: number;
+}) {
+  const endsAtMs = endsAt ? new Date(endsAt).getTime() : NaN;
+
+  if (Number.isFinite(endsAtMs)) {
+    return Math.max(0, Math.ceil((endsAtMs - nowMs) / 1000));
+  }
+
+  const startedAtMs = startedAt ? new Date(startedAt).getTime() : NaN;
+
+  if (Number.isFinite(startedAtMs) && typeof timeLimitSeconds === "number") {
+    return Math.max(
+      0,
+      Math.ceil((startedAtMs + timeLimitSeconds * 1000 - nowMs) / 1000),
+    );
+  }
+
+  return null;
 }
 
 function getTeacherPollInterval(status: TeacherDashboardSnapshot["status"]) {
@@ -75,10 +118,10 @@ function ControlButton({
     <button
       className={
         variant === "primary"
-          ? "inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-slate-300"
+          ? "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-primary/50 bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:border-cyan/60 hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-slate-300"
           : variant === "danger"
-            ? "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-4 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-            : "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-white px-4 text-sm font-semibold transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+            ? "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+            : "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-cyan/35 bg-cyan/10 px-4 text-sm font-semibold text-cyan transition hover:border-cyan hover:bg-cyan/20 disabled:cursor-not-allowed disabled:opacity-50"
       }
       disabled={disabled || pendingCommand !== null}
       onClick={() => runCommand(command)}
@@ -112,8 +155,23 @@ export function LiveRoomPanels({
   const [pendingCommand, setPendingCommand] = useState<TeacherCommand | null>(
     null,
   );
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  const [nowMs, setNowMs] = useState(() => Date.now());
   const refreshTimerRef = useRef<number | null>(null);
+  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
   const pollIntervalMs = getTeacherPollInterval(snapshot.status);
+  const remainingSeconds = getRemainingSeconds({
+    endsAt: snapshot.currentQuestionEndsAt,
+    nowMs,
+    startedAt: snapshot.currentQuestionStartedAt,
+    timeLimitSeconds: snapshot.currentQuestion?.timeLimitSeconds,
+  });
+  const showQuestionTimer =
+    remainingSeconds !== null && snapshot.status === "question_active";
+  const showAnswerStatus =
+    Boolean(snapshot.currentQuestion) &&
+    snapshot.status !== "lobby" &&
+    snapshot.status !== "ended";
   const visibleParticipants = useMemo(
     () =>
       snapshot.participants.filter(
@@ -157,6 +215,7 @@ export function LiveRoomPanels({
 
         if (isActive) {
           setSnapshot(nextSnapshot);
+          setNowMs(Date.now());
           setSyncLabel(
             `อัปเดตล่าสุด ${new Date(
               nextSnapshot.updatedAt,
@@ -203,6 +262,7 @@ export function LiveRoomPanels({
           (await response.json()) as TeacherDashboardSnapshot;
 
         setSnapshot(nextSnapshot);
+        setNowMs(Date.now());
         setSyncLabel(
           `Realtime • ${new Date(nextSnapshot.updatedAt).toLocaleTimeString(
             "th-TH",
@@ -246,6 +306,60 @@ export function LiveRoomPanels({
     };
   }, [requestRealtimeRefresh, roomCode, snapshot.sessionId]);
 
+  function toggleSound() {
+    const backgroundAudio = backgroundAudioRef.current;
+
+    if (isSoundEnabled) {
+      backgroundAudio?.pause();
+      setIsSoundEnabled(false);
+      return;
+    }
+
+    setIsSoundEnabled(true);
+
+    if (backgroundAudio) {
+      backgroundAudio.volume = 0.14;
+      backgroundAudio.loop = true;
+      void backgroundAudio.play().catch(() => {
+        setIsSoundEnabled(false);
+      });
+    }
+  }
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setNowMs(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (!isSoundEnabled) {
+      return;
+    }
+
+    const backgroundAudio = backgroundAudioRef.current;
+
+    if (!backgroundAudio) {
+      return;
+    }
+
+    backgroundAudio.volume = 0.14;
+    backgroundAudio.loop = true;
+    void backgroundAudio.play().catch(() => {
+      setIsSoundEnabled(false);
+    });
+  }, [isSoundEnabled]);
+
+  useEffect(() => {
+    const backgroundAudio = backgroundAudioRef.current;
+
+    return () => {
+      backgroundAudio?.pause();
+    };
+  }, []);
+
   async function runCommand(command: TeacherCommand) {
     setPendingCommand(command);
     setControlMessage(null);
@@ -271,6 +385,7 @@ export function LiveRoomPanels({
       }
 
       setSnapshot(data as TeacherDashboardSnapshot);
+      setNowMs(Date.now());
       setControlMessage("อัปเดตสถานะเกมแล้ว");
     } catch {
       setControlMessage("เชื่อมต่อคำสั่งไม่ได้ ลองอีกครั้ง");
@@ -280,7 +395,9 @@ export function LiveRoomPanels({
   }
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[280px_1fr_320px]">
+    <>
+      <audio ref={backgroundAudioRef} preload="auto" src={AUDIO_ASSETS.background} />
+      <div className="grid gap-5 xl:grid-cols-[280px_1fr_320px]">
       <Panel className="space-y-5">
         <div>
           <p className="text-sm font-medium text-muted">รหัสห้อง</p>
@@ -346,11 +463,25 @@ export function LiveRoomPanels({
               {statusLabel[snapshot.status]}
             </h2>
           </div>
-          <span
-            className={`rounded-md border px-3 py-2 text-sm font-semibold ${statusBadgeClassName[snapshot.status]}`}
-          >
-            {snapshot.status.toUpperCase()}
-          </span>
+          <div className="flex flex-wrap justify-end gap-2">
+            <button
+              aria-label={isSoundEnabled ? "ปิดเสียงเพลง" : "เปิดเสียงเพลง"}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan transition hover:border-cyan hover:bg-cyan/20"
+              onClick={toggleSound}
+              title={isSoundEnabled ? "ปิดเสียงเพลง" : "เปิดเสียงเพลง"}
+              type="button"
+            >
+              {isSoundEnabled ? <Volume2 size={17} /> : <VolumeX size={17} />}
+              <span className="hidden sm:inline">
+                {isSoundEnabled ? "ปิดเสียง" : "เปิดเสียง"}
+              </span>
+            </button>
+            <span
+              className={`inline-flex h-11 items-center rounded-md border px-3 text-sm font-semibold ${statusBadgeClassName[snapshot.status]}`}
+            >
+              {snapshot.status.toUpperCase()}
+            </span>
+          </div>
         </div>
 
         {snapshot.status === "lobby" ? (
@@ -406,8 +537,22 @@ export function LiveRoomPanels({
             </div>
           </div>
 
-          <div className="mt-5 rounded-md border border-border bg-white p-4">
-            <p className="text-sm font-medium text-muted">คำถามปัจจุบัน</p>
+          <div className="mt-5 rounded-md border border-cyan/25 bg-white p-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <p className="text-sm font-medium text-muted">คำถามปัจจุบัน</p>
+              {showQuestionTimer ? (
+                <span
+                  className={
+                    remainingSeconds <= 10
+                      ? "inline-flex h-11 items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700"
+                      : "inline-flex h-11 items-center gap-2 rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan"
+                  }
+                >
+                  <Clock size={17} />
+                  {formatRemainingTime(remainingSeconds)}
+                </span>
+              ) : null}
+            </div>
             {snapshot.currentQuestion ? (
               <>
                 <h3 className="mt-2 text-lg font-semibold leading-7">
@@ -491,8 +636,23 @@ export function LiveRoomPanels({
             <h2 className="font-semibold">รายชื่อกลุ่ม</h2>
           </div>
           <div className="space-y-3">
+            {showAnswerStatus ? (
+              <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                  <span className="h-2 w-2 rounded-full bg-success" />
+                  ตอบแล้ว
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-red-700">
+                  <span className="h-2 w-2 rounded-full bg-danger" />
+                  ยังไม่ตอบ
+                </span>
+              </div>
+            ) : null}
             {snapshot.teamSummaries.map((team) => (
-              <div className="rounded-md border border-border bg-surface p-3" key={team.id}>
+              <div
+                className="rounded-md border border-cyan/20 bg-surface p-3"
+                key={team.id}
+              >
                 <div className="flex justify-between gap-3 text-sm">
                   <span className="font-semibold">{team.teamName}</span>
                   <span className="text-muted">
@@ -506,12 +666,41 @@ export function LiveRoomPanels({
                 ) : null}
                 {team.participants.length > 0 ? (
                   <div className="mt-3 space-y-2">
-                    {team.participants.map((participant) => (
-                      <p className="text-sm text-muted" key={participant.id}>
-                        {participant.displayName}
-                        {!participant.isScoreEligible ? " • ไม่นับคะแนน" : ""}
-                      </p>
-                    ))}
+                    {team.participants.map((participant) => {
+                      const answered = participant.hasAnsweredCurrentQuestion;
+
+                      return (
+                        <div className="text-sm" key={participant.id}>
+                          {showAnswerStatus ? (
+                            <span
+                              className={
+                                answered
+                                  ? "inline-flex w-full items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 font-semibold text-emerald-700"
+                                  : "inline-flex w-full items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 font-semibold text-red-700"
+                              }
+                            >
+                              <span
+                                className={
+                                  answered
+                                    ? "h-2.5 w-2.5 rounded-full bg-success"
+                                    : "h-2.5 w-2.5 rounded-full bg-danger"
+                                }
+                              />
+                              {participant.displayName}
+                            </span>
+                          ) : (
+                            <span className="text-muted">
+                              {participant.displayName}
+                            </span>
+                          )}
+                          {!participant.isScoreEligible ? (
+                            <span className="mt-1 block text-xs text-warning">
+                              ไม่นับคะแนน
+                            </span>
+                          ) : null}
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
                   <p className="mt-3 text-sm text-muted">ยังไม่มีสมาชิก</p>
@@ -582,6 +771,7 @@ export function LiveRoomPanels({
           </div>
         </Panel>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

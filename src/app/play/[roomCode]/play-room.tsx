@@ -115,6 +115,7 @@ export function PlayRoom({
   const [isTeamUpdating, setIsTeamUpdating] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
   const [isRevealEffectOpen, setIsRevealEffectOpen] = useState(false);
+  const [isCaptainNoticeOpen, setIsCaptainNoticeOpen] = useState(false);
   const [closedResultSessionId, setClosedResultSessionId] = useState<
     string | null
   >(null);
@@ -313,6 +314,41 @@ export function PlayRoom({
       setTeamName(snapshot.team.teamName);
     }
   }, [snapshot.team.teamName]);
+
+  useEffect(() => {
+    if (!snapshot.isTeamCaptain || !snapshot.canRenameTeam) {
+      return;
+    }
+
+    const storageKey = `captain-notice:${snapshot.sessionId}:${snapshot.team.id}`;
+    let shouldOpenNotice = false;
+
+    try {
+      if (window.localStorage.getItem(storageKey)) {
+        return;
+      }
+
+      window.localStorage.setItem(storageKey, "seen");
+      shouldOpenNotice = true;
+    } catch {
+      shouldOpenNotice = true;
+    }
+
+    if (!shouldOpenNotice) {
+      return;
+    }
+
+    const timerId = window.setTimeout(() => {
+      setIsCaptainNoticeOpen(true);
+    }, 0);
+
+    return () => window.clearTimeout(timerId);
+  }, [
+    snapshot.canRenameTeam,
+    snapshot.isTeamCaptain,
+    snapshot.sessionId,
+    snapshot.team.id,
+  ]);
 
   useEffect(() => {
     let isActive = true;
@@ -775,6 +811,29 @@ export function PlayRoom({
             กลับหน้าเข้าห้อง
           </a>
         </Panel>
+      ) : null}
+
+      {isCaptainNoticeOpen ? (
+        <div className="fixed left-1/2 top-24 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-xl border border-cyan/35 bg-panel p-4 text-center shadow-sm">
+          <div className="flex items-start gap-3 text-left">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-warning/40 bg-warning/15 text-warning">
+              <Trophy size={26} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base font-semibold">หัวหน้ากลุ่ม</h2>
+              <p className="mt-1 text-sm leading-6 text-muted">
+                คุณเข้ากลุ่มนี้เป็นคนแรก จึงเปลี่ยนชื่อทีมได้จนกว่าครูจะเริ่มเกม
+              </p>
+              <button
+                className="mt-3 inline-flex h-9 items-center justify-center rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan transition hover:border-cyan hover:bg-cyan/20"
+                onClick={() => setIsCaptainNoticeOpen(false)}
+                type="button"
+              >
+                เข้าใจแล้ว
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
 
       {snapshot.status === "ended" && isResultOpen ? (
