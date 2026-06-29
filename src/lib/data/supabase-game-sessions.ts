@@ -63,6 +63,22 @@ type AnswerRow = {
   submitted_at: string;
 };
 
+type CloseGameSessionRpcRow = {
+  ok: boolean;
+  reason: "not_found" | null;
+};
+
+function isMissingCloseSessionRpcError(error: {
+  code?: string;
+  message?: string;
+}) {
+  return (
+    error.code === "42883" ||
+    error.code === "PGRST202" ||
+    error.message?.includes("close_game_session") === true
+  );
+}
+
 function mapTeam(row: TeamRow): StoredTeam {
   return {
     id: row.id,
@@ -925,18 +941,39 @@ export async function deleteSupabaseGameSession({
     return { ok: false as const, reason: "ไม่พบห้องนี้" };
   }
 
-  if (session.status !== "ended") {
-    return { ok: false as const, reason: "ลบห้องได้หลังจบเกมเท่านั้น" };
+  const supabase = createSupabaseAdminClient();
+  const { data: rpcData, error: rpcError } = await supabase
+    .rpc("close_game_session", {
+      p_room_code: roomCode,
+      p_teacher_code: teacherCode,
+    })
+    .returns<CloseGameSessionRpcRow[]>();
+
+  if (!rpcError) {
+    const result = Array.isArray(rpcData) ? rpcData[0] : null;
+
+    return result?.ok
+      ? { ok: true as const }
+      : { ok: false as const, reason: "ไม่พบห้องนี้" };
   }
 
-  const { error } = await createSupabaseAdminClient()
+  if (!isMissingCloseSessionRpcError(rpcError)) {
+    throw rpcError;
+  }
+
+  const { data, error } = await supabase
     .from("game_sessions")
     .delete()
-    .eq("id", session.id);
+    .eq("teacher_code", teacherCode)
+    .eq("room_code", roomCode)
+    .select("id")
+    .maybeSingle();
 
   if (error) throw error;
 
-  return { ok: true as const };
+  return data
+    ? { ok: true as const }
+    : { ok: false as const, reason: "ไม่พบห้องนี้" };
 }
 
 export async function submitSupabaseAnswer({

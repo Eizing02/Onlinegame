@@ -9,6 +9,7 @@ import {
 } from "@/app/teacher/actions";
 import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
+import { ConfirmSubmitButton } from "@/components/ui/confirm-submit-button";
 import { Panel } from "@/components/ui/panel";
 import { requireRole } from "@/lib/auth/session";
 import { getLocalQuestionSet } from "@/lib/data/question-bank";
@@ -78,13 +79,13 @@ export default async function QuestionSetDetailPage({
             </div>
             <form action={deleteQuestionSetAction}>
               <input name="question_set_id" type="hidden" value={questionSet.id} />
-              <button
+              <ConfirmSubmitButton
                 className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
-                type="submit"
+                message="ลบชุดคำถามนี้? ถ้ามีห้องที่จบแล้วค้างอยู่ ระบบจะล้างข้อมูลรอบเล่นเก่าของชุดนี้ด้วย"
               >
                 <Trash2 size={17} />
                 ลบชุดคำถามนี้
-              </button>
+              </ConfirmSubmitButton>
             </form>
           </div>
         </div>

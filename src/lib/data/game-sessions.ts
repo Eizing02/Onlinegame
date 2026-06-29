@@ -1234,10 +1234,6 @@ export async function deleteLocalGameSession({
     return { ok: false as const, reason: "ไม่พบห้องนี้" };
   }
 
-  if (gameSessions[sessionIndex].status !== "ended") {
-    return { ok: false as const, reason: "ลบห้องได้หลังจบเกมเท่านั้น" };
-  }
-
   gameSessions.splice(sessionIndex, 1);
   await writeGameSessions(gameSessions);
 

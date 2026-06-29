@@ -1,6 +1,7 @@
-import { createRoomAction } from "@/app/teacher/actions";
+import { createRoomAction, deleteRoomAction } from "@/app/teacher/actions";
 import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
+import { ConfirmSubmitButton } from "@/components/ui/confirm-submit-button";
 import { Panel } from "@/components/ui/panel";
 import { requireRole } from "@/lib/auth/session";
 import { getActiveTeacherGameSession } from "@/lib/data/game-sessions";
@@ -55,7 +56,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
         ) : null}
 
         {activeRoom ? (
-          <Panel className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <Panel className="flex flex-col justify-between gap-4 border-amber-200 bg-amber-50 sm:flex-row sm:items-center">
             <div>
               <p className="text-sm font-medium text-muted">ห้องที่ยัง active</p>
               <h2 className="mt-1 text-2xl font-semibold">
@@ -66,9 +67,21 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
                 {activeRoom.activityName ? ` • ${activeRoom.activityName}` : ""}
               </p>
             </div>
-            <ButtonLink href={`/teacher/rooms/${activeRoom.roomCode}/dashboard`}>
-              กลับไปห้องเดิม
-            </ButtonLink>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <ButtonLink href={`/teacher/rooms/${activeRoom.roomCode}/dashboard`}>
+                กลับไปห้องเดิม
+              </ButtonLink>
+              <form action={deleteRoomAction}>
+                <input name="room_code" type="hidden" value={activeRoom.roomCode} />
+                <input name="return_to" type="hidden" value="/teacher/rooms/new" />
+                <ConfirmSubmitButton
+                  className="inline-flex h-11 w-full items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 text-sm font-semibold text-red-700 transition hover:bg-red-100 sm:w-auto"
+                  message={`ปิดห้อง ${activeRoom.roomCode} และลบข้อมูลรอบเล่นทั้งหมด? หลังปิดห้องจะดูสรุปย้อนหลังไม่ได้`}
+                >
+                  ปิดห้องนี้
+                </ConfirmSubmitButton>
+              </form>
+            </div>
           </Panel>
         ) : null}
 

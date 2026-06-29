@@ -1,7 +1,11 @@
 import { randomUUID } from "node:crypto";
 
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
-import type { StoredQuestion, StoredQuestionSet } from "@/lib/data/question-bank";
+import type {
+  DeleteQuestionSetResult,
+  StoredQuestion,
+  StoredQuestionSet,
+} from "@/lib/data/question-bank";
 
 type QuestionSetRow = {
   id: string;
@@ -21,6 +25,20 @@ type QuestionRow = {
   order_index: number;
   created_at: string;
 };
+
+type DeleteQuestionSetSafelyRpcRow = {
+  ok: boolean;
+  reason: "active_room" | "not_found" | null;
+  active_room_code: string | null;
+};
+
+function isMissingRpcFunctionError(error: { code?: string; message?: string }) {
+  return (
+    error.code === "42883" ||
+    error.code === "PGRST202" ||
+    error.message?.includes("delete_question_set_safely") === true
+  );
+}
 
 function mapQuestion(row: QuestionRow): StoredQuestion {
   return {
@@ -301,29 +319,105 @@ export async function deleteSupabaseQuestions(
   return true;
 }
 
-export async function deleteSupabaseQuestionSet(
+async function deleteSupabaseQuestionSetDirectly(
   teacherCode: string,
   questionSetId: string,
-) {
-  const questionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
+): Promise<DeleteQuestionSetResult> {
+  const supabase = createSupabaseAdminClient();
+  const { data: activeRooms, error: activeError } = await supabase
+    .from("game_sessions")
+    .select("room_code")
+    .eq("teacher_code", teacherCode)
+    .eq("question_set_id", questionSetId)
+    .neq("status", "ended")
+    .order("created_at", { ascending: false })
+    .limit(1);
 
-  if (!questionSet) {
-    return false;
+  if (activeError) {
+    throw activeError;
   }
 
-  const { error } = await createSupabaseAdminClient()
+  const activeRoomCode = activeRooms?.[0]?.room_code;
+
+  if (activeRoomCode) {
+    return {
+      ok: false,
+      reason: "active_room",
+      activeRoomCode,
+    };
+  }
+
+  const { error: cleanupError } = await supabase
+    .from("game_sessions")
+    .delete()
+    .eq("teacher_code", teacherCode)
+    .eq("question_set_id", questionSetId)
+    .eq("status", "ended");
+
+  if (cleanupError) {
+    throw cleanupError;
+  }
+
+  const { data, error } = await supabase
     .from("question_sets")
     .delete()
     .eq("teacher_code", teacherCode)
-    .eq("id", questionSetId);
+    .eq("id", questionSetId)
+    .select("id")
+    .maybeSingle();
 
   if (error) {
     if (error.code === "23503") {
-      return false;
+      return {
+        ok: false,
+        reason: "active_room",
+      };
     }
 
     throw error;
   }
 
-  return true;
+  return data ? { ok: true } : { ok: false, reason: "not_found" };
+}
+
+export async function deleteSupabaseQuestionSet(
+  teacherCode: string,
+  questionSetId: string,
+): Promise<DeleteQuestionSetResult> {
+  const questionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
+
+  if (!questionSet) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  const { data, error } = await createSupabaseAdminClient()
+    .rpc("delete_question_set_safely", {
+      p_question_set_id: questionSetId,
+      p_teacher_code: teacherCode,
+    })
+    .returns<DeleteQuestionSetSafelyRpcRow[]>();
+
+  if (error) {
+    if (isMissingRpcFunctionError(error)) {
+      return deleteSupabaseQuestionSetDirectly(teacherCode, questionSetId);
+    }
+
+    throw error;
+  }
+
+  const result = Array.isArray(data) ? data[0] : null;
+
+  if (!result) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (result.ok) {
+    return { ok: true };
+  }
+
+  return {
+    ok: false,
+    reason: result.reason ?? "not_found",
+    activeRoomCode: result.active_room_code ?? undefined,
+  };
 }

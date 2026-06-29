@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { deleteRoomAction } from "@/app/teacher/actions";
 import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
+import { ConfirmSubmitButton } from "@/components/ui/confirm-submit-button";
 import { Panel } from "@/components/ui/panel";
 import { requireRole } from "@/lib/auth/session";
 import {
@@ -156,19 +157,24 @@ export default async function ResultsPage({
         {session.status === "ended" ? (
           <Panel className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h2 className="text-lg font-semibold">ลบห้องนี้</h2>
+              <h2 className="text-lg font-semibold">ปิดห้องนี้</h2>
               <p className="mt-1 text-sm text-muted">
                 ลบข้อมูลรอบเล่นนี้ เช่น ผู้เข้าห้อง ทีม คำตอบ และ event โดยเก็บชุดคำถามไว้
               </p>
             </div>
             <form action={deleteRoomAction}>
               <input name="room_code" type="hidden" value={session.roomCode} />
-              <button
+              <input
+                name="return_to"
+                type="hidden"
+                value={`/teacher/rooms/${session.roomCode}/results`}
+              />
+              <ConfirmSubmitButton
                 className="inline-flex h-11 items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 text-sm font-semibold text-red-700 transition hover:bg-red-100"
-                type="submit"
+                message={`ปิดห้อง ${session.roomCode} และลบข้อมูลรอบเล่นทั้งหมด? หลังปิดห้องจะดูสรุปย้อนหลังไม่ได้`}
               >
-                ลบห้อง
-              </button>
+                ปิดห้อง
+              </ConfirmSubmitButton>
             </form>
           </Panel>
         ) : null}

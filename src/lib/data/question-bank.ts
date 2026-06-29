@@ -18,6 +18,11 @@ const QUESTION_BANK_FILE = path.join(
   "data",
   "question-sets.json",
 );
+const QUESTION_BANK_GAME_SESSIONS_FILE = path.join(
+  process.cwd(),
+  "data",
+  "game-sessions.json",
+);
 
 export type StoredQuestion = {
   id: string;
@@ -39,10 +44,40 @@ export type StoredQuestionSet = {
   questions: StoredQuestion[];
 };
 
+export type DeleteQuestionSetResult =
+  | { ok: true }
+  | {
+      ok: false;
+      reason: "active_room" | "not_found";
+      activeRoomCode?: string;
+    };
+
+type QuestionSetGameSessionRef = {
+  roomCode: string;
+  teacherCode: string;
+  questionSetId: string;
+  status: string;
+};
+
 async function readQuestionBank() {
   try {
     const raw = await readFile(QUESTION_BANK_FILE, "utf8");
     return JSON.parse(raw) as StoredQuestionSet[];
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException).code;
+
+    if (code === "ENOENT") {
+      return [];
+    }
+
+    throw error;
+  }
+}
+
+async function readQuestionBankGameSessions() {
+  try {
+    const raw = await readFile(QUESTION_BANK_GAME_SESSIONS_FILE, "utf8");
+    return JSON.parse(raw) as QuestionSetGameSessionRef[];
   } catch (error) {
     const code = (error as NodeJS.ErrnoException).code;
 
@@ -59,6 +94,19 @@ async function writeQuestionBank(questionSets: StoredQuestionSet[]) {
   await writeFile(
     QUESTION_BANK_FILE,
     `${JSON.stringify(questionSets, null, 2)}\n`,
+    "utf8",
+  );
+}
+
+async function writeQuestionBankGameSessions(
+  gameSessions: QuestionSetGameSessionRef[],
+) {
+  await mkdir(path.dirname(QUESTION_BANK_GAME_SESSIONS_FILE), {
+    recursive: true,
+  });
+  await writeFile(
+    QUESTION_BANK_GAME_SESSIONS_FILE,
+    `${JSON.stringify(gameSessions, null, 2)}\n`,
     "utf8",
   );
 }
@@ -247,21 +295,53 @@ export async function deleteLocalQuestions(
 export async function deleteLocalQuestionSet(
   teacherCode: string,
   questionSetId: string,
-) {
+): Promise<DeleteQuestionSetResult> {
   if (isSupabaseDataBackend()) {
     return deleteSupabaseQuestionSet(teacherCode, questionSetId);
   }
 
   const questionSets = await readQuestionBank();
+  const targetQuestionSet = questionSets.find(
+    (set) => set.teacherCode === teacherCode && set.id === questionSetId,
+  );
+
+  if (!targetQuestionSet) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  const gameSessions = await readQuestionBankGameSessions();
+  const activeSession = gameSessions.find(
+    (session) =>
+      session.teacherCode === teacherCode &&
+      session.questionSetId === questionSetId &&
+      session.status !== "ended",
+  );
+
+  if (activeSession) {
+    return {
+      ok: false,
+      reason: "active_room",
+      activeRoomCode: activeSession.roomCode,
+    };
+  }
+
+  const nextGameSessions = gameSessions.filter(
+    (session) =>
+      !(
+        session.teacherCode === teacherCode &&
+        session.questionSetId === questionSetId &&
+        session.status === "ended"
+      ),
+  );
   const nextQuestionSets = questionSets.filter(
     (set) => !(set.teacherCode === teacherCode && set.id === questionSetId),
   );
 
-  if (nextQuestionSets.length === questionSets.length) {
-    return false;
+  if (nextGameSessions.length !== gameSessions.length) {
+    await writeQuestionBankGameSessions(nextGameSessions);
   }
 
   await writeQuestionBank(nextQuestionSets);
-  return true;
+  return { ok: true };
 }
 

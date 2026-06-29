@@ -32,6 +32,20 @@ function encodedRedirect(
   redirect(`${path}?${key}=${encodeURIComponent(message)}`);
 }
 
+function getSafeTeacherReturnPath(formData: FormData, fallbackPath: string) {
+  const returnTo = getFormString(formData, "return_to");
+
+  if (
+    returnTo.startsWith("/teacher/") &&
+    !returnTo.startsWith("//") &&
+    !returnTo.includes("://")
+  ) {
+    return returnTo;
+  }
+
+  return fallbackPath;
+}
+
 export async function createQuestionSetAction(formData: FormData) {
   const session = await requireRole("teacher");
   const title = getFormString(formData, "title");
@@ -156,11 +170,16 @@ export async function deleteQuestionSetAction(formData: FormData) {
 
   const deleted = await deleteLocalQuestionSet(session.userCode, questionSetId);
 
-  if (!deleted) {
+  if (!deleted.ok) {
+    const message =
+      deleted.reason === "active_room"
+        ? `ชุดคำถามนี้กำลังถูกใช้กับห้อง ${deleted.activeRoomCode ?? ""} กรุณาปิดห้องก่อนลบชุดคำถาม`
+        : "ไม่พบชุดคำถามที่ต้องการลบ";
+
     encodedRedirect(
       `/teacher/question-sets/${questionSetId}`,
       "error",
-      "ลบชุดคำถามไม่ได้ อาจยังถูกใช้กับห้องที่ยังไม่ลบ",
+      message,
     );
   }
 
@@ -171,6 +190,10 @@ export async function deleteQuestionSetAction(formData: FormData) {
 export async function deleteRoomAction(formData: FormData) {
   const session = await requireRole("teacher");
   const roomCode = getFormString(formData, "room_code");
+  const fallbackPath = roomCode
+    ? `/teacher/rooms/${roomCode}/results`
+    : "/teacher/rooms/new";
+  const returnPath = getSafeTeacherReturnPath(formData, fallbackPath);
 
   if (!roomCode) {
     encodedRedirect("/teacher/rooms/new", "error", "ข้อมูลห้องไม่ครบ");
@@ -183,7 +206,7 @@ export async function deleteRoomAction(formData: FormData) {
 
   if (!deleted.ok) {
     encodedRedirect(
-      `/teacher/rooms/${roomCode}/results`,
+      returnPath,
       "error",
       deleted.reason,
     );
@@ -194,7 +217,7 @@ export async function deleteRoomAction(formData: FormData) {
   encodedRedirect(
     "/teacher/rooms/new",
     "notice",
-    "ลบห้องและข้อมูลรอบเล่นนี้แล้ว",
+    "ปิดห้องและลบข้อมูลรอบเล่นนี้แล้ว",
   );
 }
 
