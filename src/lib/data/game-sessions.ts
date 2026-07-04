@@ -23,8 +23,8 @@ import {
   leaveSupabaseTeam,
   renameSupabaseTeam,
 } from "@/lib/data/supabase-game-sessions";
+import { isAnswerCorrect } from "@/lib/game/answer-checking";
 import { generateRoomCode, normalizeRoomCode } from "@/lib/game/room-code";
-import { calculateAwardedPoints } from "@/lib/game/scoring";
 import { findTeamForNewParticipant } from "@/lib/game/team-assignment";
 import type { GameStatus } from "@/types/game";
 
@@ -66,6 +66,7 @@ export type StoredAnswer = {
   studentCode: string;
   teamId: string;
   answerText: string;
+  selectedOptionId: string | null;
   isCorrect: boolean;
   scoreAwarded: number;
   submittedAt: string;
@@ -99,9 +100,19 @@ export type QuestionSnapshot = {
   questionNumber: number;
   totalQuestions: number;
   questionText: string;
+  questionType: StoredQuestion["questionType"];
+  imageUrl: string | null;
+  options: QuestionOptionSnapshot[];
   points: number;
   timeLimitSeconds: number;
   correctAnswer?: string;
+};
+
+export type QuestionOptionSnapshot = {
+  id: string;
+  optionText: string;
+  orderIndex: number;
+  isCorrect?: boolean;
 };
 
 export type TeamSummary = StoredTeam & {
@@ -243,6 +254,7 @@ function normalizeAnswer(answer: Partial<StoredAnswer>): StoredAnswer {
     studentCode: String(answer.studentCode),
     teamId: String(answer.teamId),
     answerText: String(answer.answerText ?? ""),
+    selectedOptionId: answer.selectedOptionId ?? null,
     isCorrect: Boolean(answer.isCorrect),
     scoreAwarded: Number(answer.scoreAwarded ?? 0),
     submittedAt: String(answer.submittedAt),
@@ -476,6 +488,14 @@ function toQuestionSnapshot({
     questionNumber: getCurrentQuestionNumber(session),
     totalQuestions: session.questionCount,
     questionText: question.questionText,
+    questionType: question.questionType,
+    imageUrl: question.imageUrl,
+    options: question.options.map((option) => ({
+      id: option.id,
+      optionText: option.optionText,
+      orderIndex: option.orderIndex,
+      isCorrect: includeCorrectAnswer ? option.isCorrect : undefined,
+    })),
     points: question.points,
     timeLimitSeconds: question.timeLimitSeconds,
     correctAnswer: includeCorrectAnswer ? question.correctAnswer : undefined,
@@ -1276,13 +1296,20 @@ export async function submitLocalAnswer({
   roomCode,
   studentCode,
   answerText,
+  selectedOptionId,
 }: {
   roomCode: string;
   studentCode: string;
-  answerText: string;
+  answerText?: string;
+  selectedOptionId?: string;
 }) {
   if (isSupabaseDataBackend()) {
-    return submitSupabaseAnswer({ roomCode, studentCode, answerText });
+    return submitSupabaseAnswer({
+      roomCode,
+      studentCode,
+      answerText,
+      selectedOptionId,
+    });
   }
 
   const normalizedRoomCode = normalizeRoomCode(roomCode);
@@ -1329,28 +1356,44 @@ export async function submitLocalAnswer({
     return { ok: false as const, reason: "หมดเวลาตอบคำถามข้อนี้แล้ว" };
   }
 
-  const trimmedAnswer = answerText.trim();
+  let trimmedAnswer = (answerText ?? "").trim();
+  let selectedOption = null as StoredQuestion["options"][number] | null;
+  let rawAwardedPoints = 0;
+  let isCorrect = false;
 
-  if (!trimmedAnswer) {
-    return { ok: false as const, reason: "กรุณากรอกคำตอบ" };
+  if (currentQuestion.questionType === "short_text") {
+    if (!trimmedAnswer) {
+      return { ok: false as const, reason: "กรุณากรอกคำตอบ" };
+    }
+
+    if (trimmedAnswer.length > 2000) {
+      return { ok: false as const, reason: "คำตอบยาวเกินไป" };
+    }
+
+    isCorrect = isAnswerCorrect(trimmedAnswer, currentQuestion.correctAnswer);
+    rawAwardedPoints = isCorrect ? currentQuestion.points : 0;
+  } else {
+    selectedOption =
+      currentQuestion.options.find((option) => option.id === selectedOptionId) ??
+      null;
+
+    if (!selectedOption) {
+      return { ok: false as const, reason: "กรุณาเลือกคำตอบ" };
+    }
+
+    trimmedAnswer = selectedOption.optionText;
+    isCorrect = selectedOption.isCorrect;
+    rawAwardedPoints = isCorrect ? currentQuestion.points : 0;
   }
 
-  if (trimmedAnswer.length > 2000) {
-    return { ok: false as const, reason: "คำตอบยาวเกินไป" };
-  }
-
-  const rawAwardedPoints = calculateAwardedPoints({
-    answerText: trimmedAnswer,
-    correctAnswer: currentQuestion.correctAnswer,
-    points: currentQuestion.points,
-  });
   const answer: StoredAnswer = {
     id: randomUUID(),
     questionIndex: session.currentQuestionIndex,
     studentCode,
     teamId: participant.teamId,
     answerText: trimmedAnswer,
-    isCorrect: rawAwardedPoints > 0,
+    selectedOptionId: selectedOption?.id ?? null,
+    isCorrect,
     scoreAwarded: participant.isScoreEligible ? rawAwardedPoints : 0,
     submittedAt: now,
   };

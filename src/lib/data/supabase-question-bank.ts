@@ -2,10 +2,21 @@ import { randomUUID } from "node:crypto";
 
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 import type {
+  CreateQuestionInput,
   DeleteQuestionSetResult,
+  QuestionType,
   StoredQuestion,
+  StoredQuestionOption,
   StoredQuestionSet,
 } from "@/lib/data/question-bank";
+
+const QUESTION_IMAGE_BUCKET = "question-images";
+const QUESTION_IMAGE_MIME_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/gif",
+];
 
 type QuestionSetRow = {
   id: string;
@@ -20,10 +31,21 @@ type QuestionRow = {
   id: string;
   question_text: string;
   correct_answer: string;
+  question_type?: QuestionType | null;
+  image_url?: string | null;
+  image_path?: string | null;
   points: number;
   time_limit_seconds: number;
   order_index: number;
   created_at: string;
+};
+
+type QuestionOptionRow = {
+  id: string;
+  question_id: string;
+  option_text: string;
+  is_correct: boolean;
+  order_index: number;
 };
 
 type DeleteQuestionSetSafelyRpcRow = {
@@ -40,11 +62,53 @@ function isMissingRpcFunctionError(error: { code?: string; message?: string }) {
   );
 }
 
-function mapQuestion(row: QuestionRow): StoredQuestion {
+function isMissingQuestionMetadataError(error: { code?: string; message?: string }) {
+  return (
+    error.code === "42703" ||
+    error.code === "PGRST204" ||
+    error.message?.includes("question_type") === true ||
+    error.message?.includes("image_path") === true
+  );
+}
+
+function isMissingQuestionOptionsTableError(error: {
+  code?: string;
+  message?: string;
+}) {
+  return (
+    error.code === "42P01" ||
+    error.code === "PGRST205" ||
+    error.message?.includes("question_options") === true
+  );
+}
+
+function normalizeQuestionType(value: unknown): QuestionType {
+  return value === "true_false" || value === "multiple_choice"
+    ? value
+    : "short_text";
+}
+
+function mapQuestionOption(row: QuestionOptionRow): StoredQuestionOption {
+  return {
+    id: row.id,
+    optionText: row.option_text,
+    isCorrect: row.is_correct,
+    orderIndex: row.order_index,
+  };
+}
+
+function mapQuestion(
+  row: QuestionRow,
+  optionsByQuestionId = new Map<string, StoredQuestionOption[]>(),
+): StoredQuestion {
   return {
     id: row.id,
     questionText: row.question_text,
     correctAnswer: row.correct_answer,
+    questionType: normalizeQuestionType(row.question_type),
+    options: optionsByQuestionId.get(row.id) ?? [],
+    imageUrl: row.image_url ?? null,
+    imagePath: row.image_path ?? null,
     points: row.points,
     timeLimitSeconds: row.time_limit_seconds,
     orderIndex: row.order_index,
@@ -52,22 +116,185 @@ function mapQuestion(row: QuestionRow): StoredQuestion {
   };
 }
 
+function isImageFile(value: unknown): value is File {
+  return typeof File !== "undefined" && value instanceof File && value.size > 0;
+}
+
+function getSafeFileName(fileName: string) {
+  const safeName =
+    fileName
+      .normalize("NFKD")
+      .replace(/[^\w.-]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "question-image";
+
+  return safeName.toLowerCase();
+}
+
+async function ensureQuestionImageBucket() {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase.storage.createBucket(QUESTION_IMAGE_BUCKET, {
+    public: true,
+    allowedMimeTypes: QUESTION_IMAGE_MIME_TYPES,
+  });
+
+  if (
+    error &&
+    !error.message.toLowerCase().includes("already exists") &&
+    !error.message.toLowerCase().includes("duplicate")
+  ) {
+    throw error;
+  }
+}
+
+async function uploadQuestionImage({
+  imageFile,
+  questionId,
+  questionSetId,
+  teacherCode,
+}: {
+  imageFile?: File | null;
+  questionId: string;
+  questionSetId: string;
+  teacherCode: string;
+}) {
+  if (!isImageFile(imageFile)) {
+    return { imageUrl: null, imagePath: null };
+  }
+
+  if (!imageFile.type.startsWith("image/")) {
+    throw new Error("รองรับเฉพาะไฟล์รูปภาพเท่านั้น");
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const imagePath = [
+    teacherCode,
+    questionSetId,
+    `${questionId}-${getSafeFileName(imageFile.name)}`,
+  ].join("/");
+  const upload = await supabase.storage
+    .from(QUESTION_IMAGE_BUCKET)
+    .upload(imagePath, imageFile, {
+      cacheControl: "31536000",
+      contentType: imageFile.type,
+      upsert: true,
+    });
+
+  if (upload.error) {
+    if (upload.error.message.toLowerCase().includes("bucket")) {
+      await ensureQuestionImageBucket();
+      const retry = await supabase.storage
+        .from(QUESTION_IMAGE_BUCKET)
+        .upload(imagePath, imageFile, {
+          cacheControl: "31536000",
+          contentType: imageFile.type,
+          upsert: true,
+        });
+
+      if (retry.error) {
+        throw retry.error;
+      }
+    } else {
+      throw upload.error;
+    }
+  }
+
+  const { data } = supabase.storage
+    .from(QUESTION_IMAGE_BUCKET)
+    .getPublicUrl(imagePath);
+
+  return {
+    imageUrl: data.publicUrl,
+    imagePath,
+  };
+}
+
+async function removeQuestionImages(imagePaths: string[]) {
+  const paths = [...new Set(imagePaths.filter(Boolean))];
+
+  if (paths.length === 0) {
+    return;
+  }
+
+  const { error } = await createSupabaseAdminClient()
+    .storage.from(QUESTION_IMAGE_BUCKET)
+    .remove(paths);
+
+  if (error && !error.message.toLowerCase().includes("not found")) {
+    throw error;
+  }
+}
+
+async function getQuestionOptions(questionIds: string[]) {
+  if (questionIds.length === 0) {
+    return new Map<string, StoredQuestionOption[]>();
+  }
+
+  const { data, error } = await createSupabaseAdminClient()
+    .from("question_options")
+    .select("id, question_id, option_text, is_correct, order_index")
+    .in("question_id", questionIds)
+    .order("order_index", { ascending: true })
+    .returns<QuestionOptionRow[]>();
+
+  if (error) {
+    if (isMissingQuestionOptionsTableError(error)) {
+      return new Map<string, StoredQuestionOption[]>();
+    }
+
+    throw error;
+  }
+
+  const optionsByQuestionId = new Map<string, StoredQuestionOption[]>();
+
+  for (const option of data ?? []) {
+    const options = optionsByQuestionId.get(option.question_id) ?? [];
+    options.push(mapQuestionOption(option));
+    optionsByQuestionId.set(option.question_id, options);
+  }
+
+  return optionsByQuestionId;
+}
+
 async function getQuestions(questionSetId: string) {
   const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
+  const questionResult = await supabase
     .from("questions")
     .select(
-      "id, question_text, correct_answer, points, time_limit_seconds, order_index, created_at",
+      "id, question_text, correct_answer, question_type, image_url, image_path, points, time_limit_seconds, order_index, created_at",
     )
     .eq("question_set_id", questionSetId)
     .order("order_index", { ascending: true })
     .returns<QuestionRow[]>();
+  let data = questionResult.data;
+  const error = questionResult.error;
 
   if (error) {
-    throw error;
+    if (!isMissingQuestionMetadataError(error)) {
+      throw error;
+    }
+
+    const fallback = await supabase
+      .from("questions")
+      .select(
+        "id, question_text, correct_answer, image_url, points, time_limit_seconds, order_index, created_at",
+      )
+      .eq("question_set_id", questionSetId)
+      .order("order_index", { ascending: true })
+      .returns<QuestionRow[]>();
+
+    if (fallback.error) {
+      throw fallback.error;
+    }
+
+    data = fallback.data;
   }
 
-  return (data ?? []).map(mapQuestion);
+  const optionsByQuestionId = await getQuestionOptions(
+    (data ?? []).map((question) => question.id),
+  );
+
+  return (data ?? []).map((question) => mapQuestion(question, optionsByQuestionId));
 }
 
 export async function getSupabaseQuestionSetSummaries(teacherCode: string) {
@@ -167,7 +394,7 @@ export async function createSupabaseQuestionSet(
 export async function addSupabaseQuestion(
   teacherCode: string,
   questionSetId: string,
-  question: Omit<StoredQuestion, "id" | "orderIndex" | "createdAt">,
+  question: CreateQuestionInput,
 ) {
   const questionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
 
@@ -176,23 +403,101 @@ export async function addSupabaseQuestion(
   }
 
   const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
+  const questionId = randomUUID();
+  const questionType = question.questionType ?? "short_text";
+  const questionOptions = question.options ?? [];
+  const image = await uploadQuestionImage({
+    imageFile: question.imageFile,
+    questionId,
+    questionSetId,
+    teacherCode,
+  });
+  const questionResult = await supabase
     .from("questions")
     .insert({
+      id: questionId,
       question_set_id: questionSetId,
       question_text: question.questionText,
       correct_answer: question.correctAnswer,
+      question_type: questionType,
+      image_url: image.imageUrl ?? question.imageUrl ?? null,
+      image_path: image.imagePath ?? question.imagePath ?? null,
       points: question.points,
       time_limit_seconds: question.timeLimitSeconds,
       order_index: questionSet.questions.length,
     })
     .select(
-      "id, question_text, correct_answer, points, time_limit_seconds, order_index, created_at",
+      "id, question_text, correct_answer, question_type, image_url, image_path, points, time_limit_seconds, order_index, created_at",
     )
     .single<QuestionRow>();
+  let data = questionResult.data;
+  let error = questionResult.error;
+
+  if (error && isMissingQuestionMetadataError(error)) {
+    if (image.imagePath) {
+      await removeQuestionImages([image.imagePath]);
+    }
+
+    if (
+      image.imagePath ||
+      questionType !== "short_text" ||
+      questionOptions.length > 0
+    ) {
+      throw error;
+    }
+
+    const fallbackResult = await supabase
+      .from("questions")
+      .insert({
+        id: questionId,
+        question_set_id: questionSetId,
+        question_text: question.questionText,
+        correct_answer: question.correctAnswer,
+        image_url: image.imageUrl ?? question.imageUrl ?? null,
+        points: question.points,
+        time_limit_seconds: question.timeLimitSeconds,
+        order_index: questionSet.questions.length,
+      })
+      .select(
+        "id, question_text, correct_answer, image_url, points, time_limit_seconds, order_index, created_at",
+      )
+      .single<QuestionRow>();
+
+    data = fallbackResult.data;
+    error = fallbackResult.error;
+  }
 
   if (error) {
+    if (image.imagePath) {
+      await removeQuestionImages([image.imagePath]);
+    }
+
     throw error;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  if (questionOptions.length > 0) {
+    const { error: optionsError } = await supabase.from("question_options").insert(
+      questionOptions.map((option) => ({
+        question_id: data.id,
+        option_text: option.optionText,
+        is_correct: option.isCorrect,
+        order_index: option.orderIndex,
+      })),
+    );
+
+    if (optionsError) {
+      await supabase.from("questions").delete().eq("id", data.id);
+
+      if (image.imagePath) {
+        await removeQuestionImages([image.imagePath]);
+      }
+
+      throw optionsError;
+    }
   }
 
   await supabase
@@ -200,7 +505,12 @@ export async function addSupabaseQuestion(
     .update({ updated_at: new Date().toISOString() })
     .eq("id", questionSetId);
 
-  return mapQuestion(data);
+  const nextQuestionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
+
+  return (
+    nextQuestionSet?.questions.find((storedQuestion) => storedQuestion.id === data.id) ??
+    mapQuestion(data)
+  );
 }
 
 export async function deleteSupabaseQuestion(
@@ -231,6 +541,10 @@ export async function deleteSupabaseQuestion(
 
   if (error) {
     throw error;
+  }
+
+  if (target.imagePath) {
+    await removeQuestionImages([target.imagePath]);
   }
 
   const remaining = questionSet.questions
@@ -292,6 +606,13 @@ export async function deleteSupabaseQuestions(
   if (error) {
     throw error;
   }
+
+  await removeQuestionImages(
+    questionSet.questions
+      .filter((question) => targetQuestionIds.includes(question.id))
+      .map((question) => question.imagePath ?? "")
+      .filter(Boolean),
+  );
 
   const remaining = questionSet.questions
     .filter((question) => !targetQuestionIds.includes(question.id))
@@ -390,6 +711,10 @@ export async function deleteSupabaseQuestionSet(
     return { ok: false, reason: "not_found" };
   }
 
+  const imagePaths = questionSet.questions
+    .map((question) => question.imagePath ?? "")
+    .filter(Boolean);
+
   const { data, error } = await createSupabaseAdminClient()
     .rpc("delete_question_set_safely", {
       p_question_set_id: questionSetId,
@@ -399,7 +724,16 @@ export async function deleteSupabaseQuestionSet(
 
   if (error) {
     if (isMissingRpcFunctionError(error)) {
-      return deleteSupabaseQuestionSetDirectly(teacherCode, questionSetId);
+      const result = await deleteSupabaseQuestionSetDirectly(
+        teacherCode,
+        questionSetId,
+      );
+
+      if (result.ok) {
+        await removeQuestionImages(imagePaths);
+      }
+
+      return result;
     }
 
     throw error;
@@ -412,6 +746,7 @@ export async function deleteSupabaseQuestionSet(
   }
 
   if (result.ok) {
+    await removeQuestionImages(imagePaths);
     return { ok: true };
   }
 

@@ -59,11 +59,16 @@ export async function POST(request: Request, { params }: PlayApiProps) {
   const body = (await request.json().catch(() => null)) as {
     action?: unknown;
     answerText?: unknown;
+    selectedOptionId?: unknown;
     teamName?: unknown;
   } | null;
   const action = typeof body?.action === "string" ? body.action : "answer";
   const answerText =
     typeof body?.answerText === "string" ? body.answerText.trim() : "";
+  const selectedOptionId =
+    typeof body?.selectedOptionId === "string"
+      ? body.selectedOptionId.trim()
+      : "";
 
   const { roomCode } = await params;
   const normalizedRoomCode = normalizeRoomCode(roomCode);
@@ -84,6 +89,7 @@ export async function POST(request: Request, { params }: PlayApiProps) {
               roomCode: normalizedRoomCode,
               studentCode: auth.student.userCode,
               answerText,
+              selectedOptionId,
             })
           : { ok: false as const, reason: "คำสั่งไม่ถูกต้อง" };
 

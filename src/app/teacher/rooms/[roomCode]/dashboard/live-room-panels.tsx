@@ -20,6 +20,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { MathText } from "@/components/ui/math-text";
 import { Panel } from "@/components/ui/panel";
+import { QuestionImage } from "@/components/ui/question-image";
 import type { TeacherDashboardSnapshot } from "@/lib/data/game-sessions";
 import { subscribeToGameSessionChanges } from "@/lib/supabase/realtime-game";
 
@@ -567,10 +568,36 @@ export function LiveRoomPanels({
                     text={snapshot.currentQuestion.questionText}
                   />
                 </div>
+                {snapshot.currentQuestion.imageUrl ? (
+                  <QuestionImage
+                    alt={`รูปประกอบคำถามข้อ ${snapshot.currentQuestion.questionNumber}`}
+                    className="mt-4 bg-white"
+                    src={snapshot.currentQuestion.imageUrl}
+                  />
+                ) : null}
                 <p className="mt-2 text-sm text-muted">
                   {snapshot.currentQuestion.points} คะแนน •{" "}
                   {snapshot.currentQuestion.timeLimitSeconds} วินาที
                 </p>
+                {snapshot.currentQuestion.options.length > 0 ? (
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {snapshot.currentQuestion.options.map((option, optionIndex) => (
+                      <div
+                        className={
+                          option.isCorrect
+                            ? "rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700"
+                            : "rounded-md border border-border bg-slate-50 px-3 py-2 text-sm font-semibold"
+                        }
+                        key={option.id}
+                      >
+                        <span className="mr-2 rounded bg-white/80 px-2 py-0.5 text-xs text-muted">
+                          {String.fromCharCode(65 + optionIndex)}
+                        </span>
+                        <MathText className="inline" inline text={option.optionText} />
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
                 {snapshot.currentQuestion.correctAnswer ? (
                   <div className="mt-2 text-sm font-semibold text-emerald-700">
                     เฉลย:{" "}

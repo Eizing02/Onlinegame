@@ -1,6 +1,6 @@
 import { getSupabaseQuestionSet } from "@/lib/data/supabase-question-bank";
+import { isAnswerCorrect } from "@/lib/game/answer-checking";
 import { generateRoomCode, normalizeRoomCode } from "@/lib/game/room-code";
-import { calculateAwardedPoints } from "@/lib/game/scoring";
 import { findTeamForNewParticipant } from "@/lib/game/team-assignment";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 import type {
@@ -58,6 +58,7 @@ type AnswerRow = {
   student_code: string;
   team_id: string;
   answer_text: string;
+  selected_option_id?: string | null;
   is_correct: boolean;
   score_awarded: number;
   submitted_at: string;
@@ -112,10 +113,49 @@ function mapAnswer(row: AnswerRow): StoredAnswer {
     studentCode: row.student_code,
     teamId: row.team_id,
     answerText: row.answer_text,
+    selectedOptionId: row.selected_option_id ?? null,
     isCorrect: row.is_correct,
     scoreAwarded: row.score_awarded,
     submittedAt: row.submitted_at,
   };
+}
+
+function isMissingSelectedOptionIdError(error: {
+  code?: string;
+  message?: string;
+}) {
+  return (
+    error.code === "42703" ||
+    error.code === "PGRST204" ||
+    error.message?.includes("selected_option_id") === true
+  );
+}
+
+async function fetchSessionAnswers(
+  supabase: ReturnType<typeof createSupabaseAdminClient>,
+  sessionId: string,
+) {
+  const result = await supabase
+    .from("answers")
+    .select(
+      "id, question_index, student_code, team_id, answer_text, selected_option_id, is_correct, score_awarded, submitted_at",
+    )
+    .eq("session_id", sessionId)
+    .order("submitted_at", { ascending: true })
+    .returns<AnswerRow[]>();
+
+  if (!result.error || !isMissingSelectedOptionIdError(result.error)) {
+    return result;
+  }
+
+  return supabase
+    .from("answers")
+    .select(
+      "id, question_index, student_code, team_id, answer_text, is_correct, score_awarded, submitted_at",
+    )
+    .eq("session_id", sessionId)
+    .order("submitted_at", { ascending: true })
+    .returns<AnswerRow[]>();
 }
 
 async function mapSession(row: SessionRow): Promise<StoredGameSession> {
@@ -137,14 +177,7 @@ async function mapSession(row: SessionRow): Promise<StoredGameSession> {
       .eq("session_id", row.id)
       .order("joined_at", { ascending: true })
       .returns<ParticipantRow[]>(),
-    supabase
-      .from("answers")
-      .select(
-        "id, question_index, student_code, team_id, answer_text, is_correct, score_awarded, submitted_at",
-      )
-      .eq("session_id", row.id)
-      .order("submitted_at", { ascending: true })
-      .returns<AnswerRow[]>(),
+    fetchSessionAnswers(supabase, row.id),
   ]);
 
   if (teamsResult.error) throw teamsResult.error;
@@ -980,10 +1013,12 @@ export async function submitSupabaseAnswer({
   roomCode,
   studentCode,
   answerText,
+  selectedOptionId,
 }: {
   roomCode: string;
   studentCode: string;
-  answerText: string;
+  answerText?: string;
+  selectedOptionId?: string;
 }) {
   const session = await fetchSessionByRoomCode(roomCode);
 
@@ -1027,24 +1062,38 @@ export async function submitSupabaseAnswer({
     return { ok: false as const, reason: "หมดเวลาตอบคำถามข้อนี้แล้ว" };
   }
 
-  const trimmedAnswer = answerText.trim();
+  let trimmedAnswer = (answerText ?? "").trim();
+  let selectedOption = null as (typeof currentQuestion)["options"][number] | null;
+  let rawAwardedPoints = 0;
+  let isCorrect = false;
 
-  if (!trimmedAnswer) {
-    return { ok: false as const, reason: "กรุณากรอกคำตอบ" };
+  if (currentQuestion.questionType === "short_text") {
+    if (!trimmedAnswer) {
+      return { ok: false as const, reason: "กรุณากรอกคำตอบ" };
+    }
+
+    if (trimmedAnswer.length > 2000) {
+      return { ok: false as const, reason: "คำตอบยาวเกินไป" };
+    }
+
+    isCorrect = isAnswerCorrect(trimmedAnswer, currentQuestion.correctAnswer);
+    rawAwardedPoints = isCorrect ? currentQuestion.points : 0;
+  } else {
+    selectedOption =
+      currentQuestion.options.find((option) => option.id === selectedOptionId) ??
+      null;
+
+    if (!selectedOption) {
+      return { ok: false as const, reason: "กรุณาเลือกคำตอบ" };
+    }
+
+    trimmedAnswer = selectedOption.optionText;
+    isCorrect = selectedOption.isCorrect;
+    rawAwardedPoints = isCorrect ? currentQuestion.points : 0;
   }
-
-  if (trimmedAnswer.length > 2000) {
-    return { ok: false as const, reason: "คำตอบยาวเกินไป" };
-  }
-
-  const rawAwardedPoints = calculateAwardedPoints({
-    answerText: trimmedAnswer,
-    correctAnswer: currentQuestion.correctAnswer,
-    points: currentQuestion.points,
-  });
   const scoreAwarded = participant.isScoreEligible ? rawAwardedPoints : 0;
   const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
+  const answerResult = await supabase
     .from("answers")
     .insert({
       session_id: session.id,
@@ -1054,13 +1103,43 @@ export async function submitSupabaseAnswer({
       participant_id: participant.id,
       student_code: studentCode,
       answer_text: trimmedAnswer,
-      is_correct: rawAwardedPoints > 0,
+      selected_option_id: selectedOption?.id ?? null,
+      is_correct: isCorrect,
       score_awarded: scoreAwarded,
     })
     .select(
-      "id, question_index, student_code, team_id, answer_text, is_correct, score_awarded, submitted_at",
+      "id, question_index, student_code, team_id, answer_text, selected_option_id, is_correct, score_awarded, submitted_at",
     )
     .single<AnswerRow>();
+  let data = answerResult.data;
+  let error = answerResult.error;
+
+  if (error && isMissingSelectedOptionIdError(error)) {
+    if (selectedOption) {
+      throw error;
+    }
+
+    const fallbackAnswerResult = await supabase
+      .from("answers")
+      .insert({
+        session_id: session.id,
+        question_id: currentQuestion.id,
+        question_index: session.currentQuestionIndex,
+        team_id: participant.teamId,
+        participant_id: participant.id,
+        student_code: studentCode,
+        answer_text: trimmedAnswer,
+        is_correct: isCorrect,
+        score_awarded: scoreAwarded,
+      })
+      .select(
+        "id, question_index, student_code, team_id, answer_text, is_correct, score_awarded, submitted_at",
+      )
+      .single<AnswerRow>();
+
+    data = fallbackAnswerResult.data;
+    error = fallbackAnswerResult.error;
+  }
 
   if (error) {
     if (error.code === "23505") {
@@ -1068,6 +1147,10 @@ export async function submitSupabaseAnswer({
     }
 
     throw error;
+  }
+
+  if (!data) {
+    throw new Error("บันทึกคำตอบแล้วแต่โหลดข้อมูลคำตอบไม่สำเร็จ");
   }
 
   const { error: participantError } = await supabase

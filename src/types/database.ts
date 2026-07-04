@@ -30,10 +30,21 @@ export type QuestionRow = {
   question_set_id: string;
   question_text: string;
   correct_answer: string;
+  question_type: "short_text" | "true_false" | "multiple_choice";
   points: number;
   time_limit_seconds: number;
   order_index: number;
   image_url: string | null;
+  image_path: string | null;
+  created_at: string;
+};
+
+export type QuestionOptionRow = {
+  id: string;
+  question_id: string;
+  option_text: string;
+  is_correct: boolean;
+  order_index: number;
   created_at: string;
 };
 
@@ -98,6 +109,7 @@ export type AnswerRow = {
   participant_id: string | null;
   student_code: string;
   answer_text: string;
+  selected_option_id: string | null;
   is_correct: boolean;
   score_awarded: number;
   submitted_at: string;

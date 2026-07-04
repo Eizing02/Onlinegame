@@ -12,8 +12,16 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { ConfirmSubmitButton } from "@/components/ui/confirm-submit-button";
 import { MathText } from "@/components/ui/math-text";
 import { Panel } from "@/components/ui/panel";
+import { QuestionImage } from "@/components/ui/question-image";
 import { requireRole } from "@/lib/auth/session";
 import { getLocalQuestionSet } from "@/lib/data/question-bank";
+import { QuestionTypeFields } from "./question-type-fields";
+
+const questionTypeLabel = {
+  short_text: "พิมพ์ตอบ",
+  true_false: "ถูก / ผิด",
+  multiple_choice: "ปรนัย",
+};
 
 type QuestionSetDetailPageProps = {
   params: Promise<{
@@ -121,25 +129,8 @@ export default async function QuestionSetDetailPage({
                 <code>\[\frac{"{1}"}{"{2}"}\]</code>
               </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-[1fr_140px_180px]">
-              <div>
-                <label
-                  className="text-sm font-medium"
-                  htmlFor="correct_answer"
-                >
-                  คำตอบที่ถูก
-                </label>
-                <input
-                  id="correct_answer"
-                  name="correct_answer"
-                  className="mt-2 h-11 w-full rounded-md border border-border px-3 outline-none focus:border-primary"
-                  placeholder="เช่น 42"
-                  required
-                />
-                <p className="mt-2 text-xs leading-5 text-muted">
-                  คำตอบก็ใส่สูตรแบบเดียวกันได้
-                </p>
-              </div>
+            <QuestionTypeFields />
+            <div className="grid gap-4 md:grid-cols-[140px_180px]">
               <div>
                 <label className="text-sm font-medium" htmlFor="points">
                   คะแนน
@@ -210,7 +201,7 @@ export default async function QuestionSetDetailPage({
               <div className="flex items-start justify-between gap-4">
                 <div className="flex min-w-0 gap-3">
                   <input
-                    aria-label={`เลือกคำถามข้อ ${index + 1}`}
+                    aria-label={`เลือกข้อ ${index + 1}`}
                     className="mt-1 h-5 w-5 rounded border-border bg-background"
                     form="bulk-delete-questions"
                     name="question_ids"
@@ -220,10 +211,20 @@ export default async function QuestionSetDetailPage({
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-primary">
                       ข้อ {index + 1}
+                      <span className="ml-2 rounded-full border border-cyan/30 bg-cyan/10 px-2 py-0.5 text-xs text-cyan">
+                        {questionTypeLabel[question.questionType]}
+                      </span>
                     </p>
-                    <div className="mt-1 text-lg font-semibold leading-7">
+                    <h2 className="mt-1 text-lg font-semibold leading-7">
                       <MathText text={question.questionText} />
-                    </div>
+                    </h2>
+                    {question.imageUrl ? (
+                      <QuestionImage
+                        alt={`รูปประกอบคำถามข้อ ${index + 1}`}
+                        className="mt-4 max-w-xl bg-white"
+                        src={question.imageUrl}
+                      />
+                    ) : null}
                   </div>
                 </div>
                 <form action={deleteQuestionAction}>
@@ -234,7 +235,7 @@ export default async function QuestionSetDetailPage({
                   />
                   <input name="question_id" type="hidden" value={question.id} />
                   <button
-                    aria-label={`ลบคำถามข้อ ${index + 1}`}
+                    aria-label={`ลบข้อ ${index + 1}`}
                     className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 transition hover:bg-red-100"
                     title="ลบคำถาม"
                     type="submit"
@@ -264,6 +265,28 @@ export default async function QuestionSetDetailPage({
                     </p>
                   </div>
                 </div>
+                {question.options.length > 0 ? (
+                  <div className="md:col-span-3">
+                    <p className="text-muted">ตัวเลือก</p>
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      {question.options.map((option, optionIndex) => (
+                        <div
+                          className={
+                            option.isCorrect
+                              ? "rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 font-semibold text-emerald-700"
+                              : "rounded-md border border-border bg-white px-3 py-2"
+                          }
+                          key={option.id}
+                        >
+                          <span className="mr-2 text-xs font-semibold text-muted">
+                            {String.fromCharCode(65 + optionIndex)}
+                          </span>
+                          <MathText className="inline" inline text={option.optionText} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </Panel>
           ))}

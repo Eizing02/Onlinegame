@@ -19,6 +19,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { MathText } from "@/components/ui/math-text";
 import { Panel } from "@/components/ui/panel";
+import { QuestionImage } from "@/components/ui/question-image";
 import type { StudentPlaySnapshot } from "@/lib/data/game-sessions";
 import { subscribeToGameSessionChanges } from "@/lib/supabase/realtime-game";
 
@@ -108,6 +109,7 @@ export function PlayRoom({
   const [snapshot, setSnapshot] = useState(initialSnapshot);
   const [answerDraft, setAnswerDraft] = useState({
     questionIndex: initialSnapshot.currentQuestionIndex,
+    selectedOptionId: "",
     text: "",
   });
   const [teamName, setTeamName] = useState(initialSnapshot.team.teamName);
@@ -124,6 +126,10 @@ export function PlayRoom({
   const answerText =
     answerDraft.questionIndex === snapshot.currentQuestionIndex
       ? answerDraft.text
+      : "";
+  const selectedOptionId =
+    answerDraft.questionIndex === snapshot.currentQuestionIndex
+      ? answerDraft.selectedOptionId
       : "";
   const refreshTimerRef = useRef<number | null>(null);
   const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -142,10 +148,15 @@ export function PlayRoom({
     snapshot.status === "question_active" &&
     remainingSeconds !== null &&
     remainingSeconds <= 0;
+  const isChoiceQuestion =
+    snapshot.currentQuestion !== null &&
+    snapshot.currentQuestion.questionType !== "short_text";
   const canSubmit =
     snapshot.canSubmitAnswer &&
     !isTimerExpired &&
-    answerText.trim().length > 0 &&
+    (isChoiceQuestion
+      ? selectedOptionId.length > 0
+      : answerText.trim().length > 0) &&
     !isSubmitting;
   const showCorrectAnswer =
     snapshot.status === "showing_answer" || snapshot.status === "ended";
@@ -442,7 +453,9 @@ export function PlayRoom({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ answerText }),
+          body: JSON.stringify(
+            isChoiceQuestion ? { selectedOptionId } : { answerText },
+          ),
         },
       );
       const data = (await response.json()) as StudentPlaySnapshot | {
@@ -457,6 +470,7 @@ export function PlayRoom({
       applySnapshot(data as StudentPlaySnapshot);
       setAnswerDraft({
         questionIndex: (data as StudentPlaySnapshot).currentQuestionIndex,
+        selectedOptionId: "",
         text: "",
       });
       setMessage("ส่งคำตอบแล้ว");
@@ -567,6 +581,9 @@ export function PlayRoom({
           <div className="w-full rounded-md border border-border bg-blue-50 p-3 sm:max-w-sm">
             {snapshot.canRenameTeam ? (
               <div className="space-y-2">
+                <p className="text-sm font-semibold text-primary">
+                  {snapshot.team.teamName}
+                </p>
                 <label className="text-xs font-medium text-muted" htmlFor="team_name">
                   ชื่อทีม
                 </label>
@@ -673,6 +690,13 @@ export function PlayRoom({
                 <div className="mt-2 text-2xl font-semibold leading-9">
                   <MathText text={snapshot.currentQuestion.questionText} />
                 </div>
+                {snapshot.currentQuestion.imageUrl ? (
+                  <QuestionImage
+                    alt={`รูปประกอบคำถามข้อ ${snapshot.currentQuestion.questionNumber}`}
+                    className="mt-4 bg-white"
+                    src={snapshot.currentQuestion.imageUrl}
+                  />
+                ) : null}
                 {isTimerExpired ? (
                   <p className="mt-3 text-sm font-semibold text-warning">
                     หมดเวลาตอบคำถามข้อนี้แล้ว
@@ -688,6 +712,52 @@ export function PlayRoom({
                     inline
                     text={snapshot.currentQuestion.correctAnswer}
                   />
+                </div>
+              ) : null}
+
+              {snapshot.currentQuestion.options.length > 0 ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {snapshot.currentQuestion.options.map((option, optionIndex) => {
+                    const isSelected =
+                      snapshot.currentAnswer?.selectedOptionId === option.id ||
+                      selectedOptionId === option.id;
+                    const isCorrectOption = showCorrectAnswer && option.isCorrect;
+                    const isWrongSelection =
+                      showCorrectAnswer && isSelected && option.isCorrect === false;
+
+                    return (
+                      <button
+                        className={
+                          isCorrectOption
+                            ? "min-h-14 rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3 text-left font-semibold text-emerald-700 shadow-sm"
+                            : isWrongSelection
+                              ? "min-h-14 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-left font-semibold text-red-700 shadow-sm"
+                              : isSelected
+                                ? "min-h-14 rounded-md border border-primary bg-primary/10 px-4 py-3 text-left font-semibold text-primary shadow-sm"
+                                : "min-h-14 rounded-md border border-border bg-white px-4 py-3 text-left font-semibold transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-muted"
+                        }
+                        disabled={
+                          !snapshot.canSubmitAnswer ||
+                          isTimerExpired ||
+                          Boolean(snapshot.currentAnswer)
+                        }
+                        key={option.id}
+                        onClick={() =>
+                          setAnswerDraft({
+                            questionIndex: snapshot.currentQuestionIndex,
+                            selectedOptionId: option.id,
+                            text: "",
+                          })
+                        }
+                        type="button"
+                      >
+                        <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded bg-white/80 text-sm text-muted">
+                          {String.fromCharCode(65 + optionIndex)}
+                        </span>
+                        <MathText className="inline" inline text={option.optionText} />
+                      </button>
+                    );
+                  })}
                 </div>
               ) : null}
 
@@ -723,24 +793,27 @@ export function PlayRoom({
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <textarea
-                    className="min-h-32 w-full rounded-md border border-border bg-white p-3 outline-none focus:border-primary disabled:bg-slate-50"
-                    disabled={!snapshot.canSubmitAnswer || isTimerExpired}
-                    onChange={(event) =>
-                      setAnswerDraft({
-                        questionIndex: snapshot.currentQuestionIndex,
-                        text: event.target.value,
-                      })
-                    }
-                    placeholder={
-                      isTimerExpired
-                        ? "หมดเวลาตอบแล้ว"
-                        : snapshot.status === "question_active"
-                        ? "พิมพ์คำตอบ..."
-                        : "รอคำถามจากครู..."
-                    }
-                    value={answerText}
-                  />
+                  {!isChoiceQuestion ? (
+                    <textarea
+                      className="min-h-32 w-full rounded-md border border-border bg-white p-3 outline-none focus:border-primary disabled:bg-slate-50"
+                      disabled={!snapshot.canSubmitAnswer || isTimerExpired}
+                      onChange={(event) =>
+                        setAnswerDraft({
+                          questionIndex: snapshot.currentQuestionIndex,
+                          selectedOptionId: "",
+                          text: event.target.value,
+                        })
+                      }
+                      placeholder={
+                        isTimerExpired
+                          ? "หมดเวลาตอบแล้ว"
+                          : snapshot.status === "question_active"
+                            ? "พิมพ์คำตอบ..."
+                            : "รอคำถามจากครู..."
+                      }
+                      value={answerText}
+                    />
+                  ) : null}
                   <button
                     className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-slate-300"
                     disabled={!canSubmit}
