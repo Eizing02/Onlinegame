@@ -10,6 +10,7 @@ import {
 import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ConfirmSubmitButton } from "@/components/ui/confirm-submit-button";
+import { MathText } from "@/components/ui/math-text";
 import { Panel } from "@/components/ui/panel";
 import { requireRole } from "@/lib/auth/session";
 import { getLocalQuestionSet } from "@/lib/data/question-bank";
@@ -115,6 +116,10 @@ export default async function QuestionSetDetailPage({
                 placeholder="พิมพ์คำถามที่ต้องการให้นักเรียนตอบ"
                 required
               />
+              <p className="mt-2 text-xs leading-5 text-muted">
+                ใส่สูตรได้ เช่น <code>\(x^2 + 2x\)</code> หรือ{" "}
+                <code>\[\frac{"{1}"}{"{2}"}\]</code>
+              </p>
             </div>
             <div className="grid gap-4 md:grid-cols-[1fr_140px_180px]">
               <div>
@@ -131,6 +136,9 @@ export default async function QuestionSetDetailPage({
                   placeholder="เช่น 42"
                   required
                 />
+                <p className="mt-2 text-xs leading-5 text-muted">
+                  คำตอบก็ใส่สูตรแบบเดียวกันได้
+                </p>
               </div>
               <div>
                 <label className="text-sm font-medium" htmlFor="points">
@@ -213,9 +221,9 @@ export default async function QuestionSetDetailPage({
                     <p className="text-sm font-semibold text-primary">
                       ข้อ {index + 1}
                     </p>
-                    <h2 className="mt-1 text-lg font-semibold leading-7">
-                      {question.questionText}
-                    </h2>
+                    <div className="mt-1 text-lg font-semibold leading-7">
+                      <MathText text={question.questionText} />
+                    </div>
                   </div>
                 </div>
                 <form action={deleteQuestionAction}>
@@ -238,7 +246,10 @@ export default async function QuestionSetDetailPage({
               <div className="grid gap-3 border-t border-border pt-4 text-sm md:grid-cols-3">
                 <div>
                   <p className="text-muted">คำตอบที่ถูก</p>
-                  <p className="mt-1 font-semibold">{question.correctAnswer}</p>
+                  <MathText
+                    className="mt-1 font-semibold"
+                    text={question.correctAnswer}
+                  />
                 </div>
                 <div>
                   <p className="text-muted">คะแนน</p>

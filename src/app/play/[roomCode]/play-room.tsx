@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { MathText } from "@/components/ui/math-text";
 import { Panel } from "@/components/ui/panel";
 import type { StudentPlaySnapshot } from "@/lib/data/game-sessions";
 import { subscribeToGameSessionChanges } from "@/lib/supabase/realtime-game";
@@ -669,9 +670,9 @@ export function PlayRoom({
                     </span>
                   ) : null}
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold leading-9">
-                  {snapshot.currentQuestion.questionText}
-                </h3>
+                <div className="mt-2 text-2xl font-semibold leading-9">
+                  <MathText text={snapshot.currentQuestion.questionText} />
+                </div>
                 {isTimerExpired ? (
                   <p className="mt-3 text-sm font-semibold text-warning">
                     หมดเวลาตอบคำถามข้อนี้แล้ว
@@ -681,7 +682,12 @@ export function PlayRoom({
 
               {showCorrectAnswer && snapshot.currentQuestion.correctAnswer ? (
                 <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
-                  เฉลย: {snapshot.currentQuestion.correctAnswer}
+                  เฉลย:{" "}
+                  <MathText
+                    className="inline"
+                    inline
+                    text={snapshot.currentQuestion.correctAnswer}
+                  />
                 </div>
               ) : null}
 
@@ -702,7 +708,12 @@ export function PlayRoom({
                       : "ส่งคำตอบแล้ว รอครูเฉลย"}
                   </div>
                   <p className="mt-2 text-sm text-muted">
-                    คำตอบของคุณ: {snapshot.currentAnswer.answerText}
+                    คำตอบของคุณ:{" "}
+                    <MathText
+                      className="inline"
+                      inline
+                      text={snapshot.currentAnswer.answerText}
+                    />
                   </p>
                   {showCorrectAnswer ? (
                     <p className="mt-1 text-sm text-muted">

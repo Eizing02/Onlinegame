@@ -18,6 +18,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { MathText } from "@/components/ui/math-text";
 import { Panel } from "@/components/ui/panel";
 import type { TeacherDashboardSnapshot } from "@/lib/data/game-sessions";
 import { subscribeToGameSessionChanges } from "@/lib/supabase/realtime-game";
@@ -555,19 +556,30 @@ export function LiveRoomPanels({
             </div>
             {snapshot.currentQuestion ? (
               <>
-                <h3 className="mt-2 text-lg font-semibold leading-7">
-                  ข้อ {snapshot.currentQuestion.questionNumber}/
-                  {snapshot.currentQuestion.totalQuestions}:{" "}
-                  {snapshot.currentQuestion.questionText}
-                </h3>
+                <div className="mt-2 text-lg font-semibold leading-7">
+                  <span>
+                    ข้อ {snapshot.currentQuestion.questionNumber}/
+                    {snapshot.currentQuestion.totalQuestions}:{" "}
+                  </span>
+                  <MathText
+                    className="inline"
+                    inline
+                    text={snapshot.currentQuestion.questionText}
+                  />
+                </div>
                 <p className="mt-2 text-sm text-muted">
                   {snapshot.currentQuestion.points} คะแนน •{" "}
                   {snapshot.currentQuestion.timeLimitSeconds} วินาที
                 </p>
                 {snapshot.currentQuestion.correctAnswer ? (
-                  <p className="mt-2 text-sm font-semibold text-emerald-700">
-                    เฉลย: {snapshot.currentQuestion.correctAnswer}
-                  </p>
+                  <div className="mt-2 text-sm font-semibold text-emerald-700">
+                    เฉลย:{" "}
+                    <MathText
+                      className="inline"
+                      inline
+                      text={snapshot.currentQuestion.correctAnswer}
+                    />
+                  </div>
                 ) : null}
               </>
             ) : (
