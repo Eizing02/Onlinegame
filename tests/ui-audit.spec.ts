@@ -1,0 +1,60 @@
+import { browserRequest } from "./browser-request";
+import {test,expect,type Page} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import {mkdir,writeFile} from 'node:fs/promises';
+import path from 'node:path';
+const data=path.resolve('tmp/e2e-data');
+const output=path.resolve('tmp/ui-audit');
+test('audit classroom routes, responsive states, ownership and stale answers',async({page,browser})=>{
+  test.setTimeout(240000);
+  await mkdir(output,{recursive:true});
+  await writeFile(path.join(data,'game-sessions.json'),'[]');
+  const now=new Date().toISOString();
+  await writeFile(path.join(data,'question-sets.json'),JSON.stringify([{id:'11111111-1111-4111-8111-111111111111',teacherCode:'ADMIN',title:'ภารกิจคณิตศาสตร์ในห้องเรียน',description:'ทบทวนด้วยกันทีละคำถาม',createdAt:now,updatedAt:now,questions:[{id:'22222222-2222-4222-8222-222222222222',questionText:'ดาวเคราะห์จำลองมีดวงจันทร์ 2 ดวง อีก 3 ดวงเดินทางมาร่วมวงโคจร รวมเป็นกี่ดวง?',correctAnswer:'5',questionType:'short_text',options:[],imageUrl:null,imagePath:null,points:10,timeLimitSeconds:120,orderIndex:0,createdAt:now}]}]));
+  const report: unknown[]=[];
+  const errors:string[]=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  async function inspect(target:Page,name:string,width:number,height=900){
+    await target.setViewportSize({width,height});
+    await target.locator('main:visible').waitFor();
+    await target.evaluate(()=>document.fonts.ready);
+    const audit=await new AxeBuilder({page:target}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
+    const dimensions=await target.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
+    report.push({name,width,height,overflow:dimensions.scroll-dimensions.width,violations:audit.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))}))});
+    await target.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
+    await target.screenshot({path:path.join(output,`${name}-${width}.png`),fullPage:true});
+  }
+  async function pair(target:Page,name:string){await inspect(target,name,1440);await inspect(target,name,390,844);}
+  async function login(target:Page,code:string,password:string){await target.goto('/login');await target.getByLabel('รหัสผู้ใช้').fill(code);await target.getByLabel('รหัสผ่าน').fill(password);await target.getByRole('button',{name:'เข้าสู่ระบบ',exact:true}).click();}
+  await page.goto('/login');await pair(page,'login');await inspect(page,'login-small',320,740);await inspect(page,'login-tablet',768,1024);await inspect(page,'login-landscape',844,390);
+  await login(page,'admin','teacher-test-only');await expect(page).toHaveURL(/question-sets$/);await pair(page,'question-sets');
+  await page.goto('/teacher/question-sets/11111111-1111-4111-8111-111111111111');await pair(page,'question-editor');
+  await page.goto('/teacher/rooms/new');await pair(page,'new-room');
+  await page.getByLabel('ชื่อกิจกรรม').fill('ภารกิจวงโคจร');await page.getByLabel('จำนวนกลุ่ม').fill('2');await page.getByLabel('จำนวนคนต่อกลุ่ม').fill('4');await page.getByRole('button',{name:'สร้างห้องเกม'}).click();await expect(page).toHaveURL(/dashboard$/);
+  const room=page.url().match(/rooms\/(\d{4})/)![1];
+  const studentContext=await browser.newContext({baseURL:'http://127.0.0.1:3100'});const student=await studentContext.newPage();student.on('pageerror',e=>errors.push(e.message));
+  await login(student,'02074','student-test-only');await expect(student).toHaveURL(/join$/);await pair(student,'join');
+  await student.getByLabel('รหัสห้อง').fill(room);await student.getByRole('button',{name:'ค้นหาห้อง'}).click();await pair(student,'team-selection');
+  await student.getByRole('button',{name:/กลุ่ม 1/}).click();await expect(student).toHaveURL(/play\//);await student.getByRole('button',{name:'เข้าใจแล้ว'}).click();await pair(student,'student-lobby');
+  await page.reload();await pair(page,'teacher-lobby');await inspect(page,'teacher-small',320,740);
+  const api=`/api/teacher/rooms/${room}`;
+  expect((await browserRequest(student, `${api}/control`,{method:'POST',data:{command:'start'}})).status()).toBe(401);
+  const outsider=await browser.newContext({baseURL:'http://127.0.0.1:3100'});const outsiderPage=await outsider.newPage();await login(outsiderPage,'T002','teacher-test-only');await expect(outsiderPage).toHaveURL(/question-sets$/);
+  expect((await browserRequest(outsiderPage, `${api}/dashboard`)).status()).toBe(404);expect((await browserRequest(outsiderPage, `${api}/control`,{method:'POST',data:{command:'end'}})).status()).toBe(400);await outsider.close();
+  expect((await browserRequest(page, `${api}/control`,{method:'POST',data:{command:'start'}})).status()).toBe(200);
+  await student.reload();await page.reload();await pair(student,'question-active');await pair(page,'teacher-active');
+  const snapshot=await (await browserRequest(student, `/api/play/${room}`)).json();
+  const stale=await browserRequest(student, `/api/play/${room}`,{method:'POST',data:{answerText:'5',expectedQuestionId:'old-question',expectedSessionId:snapshot.sessionId}});expect(stale.status()).toBe(400);
+  await student.getByPlaceholder('พิมพ์คำตอบ...').fill('5');await student.getByRole('button',{name:'ส่งคำตอบ',exact:true}).click();await expect(student.getByText('ส่งคำตอบแล้ว').first()).toBeVisible();
+  expect(await student.locator('audio').evaluateAll(nodes=>nodes.every(n=>(n as HTMLAudioElement).paused))).toBe(true);
+  const answered=await (await browserRequest(student, `/api/play/${room}`)).json();expect(answered.team.rawScore).toBe(0);expect(answered.teamScore.rawScore).toBe(0);
+  expect((await browserRequest(page, `${api}/control`,{method:'POST',data:{command:'reveal'}})).status()).toBe(200);
+  await student.reload();await pair(student,'answer-revealed');
+  expect((await browserRequest(page, `${api}/control`,{method:'POST',data:{command:'end'}})).status()).toBe(200);
+  await student.reload();await expect(student.getByRole('dialog')).toBeVisible();await pair(student,'result-dialog');
+  await student.keyboard.press('Escape');await expect(student.getByRole('dialog')).toHaveCount(0);await pair(student,'student-results');
+  await page.goto(`/teacher/rooms/${room}/results`);await pair(page,'teacher-results');
+  await studentContext.close();await writeFile(path.join(output,'report.json'),JSON.stringify({report,errors},null,2));
+  expect(errors).toEqual([]);
+  expect(report.filter(entry => { const item = entry as {overflow:number;violations:unknown[]}; return item.overflow > 0 || item.violations.length > 0; })).toEqual([]);
+});

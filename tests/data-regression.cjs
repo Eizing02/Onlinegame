@@ -1,0 +1,122 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+// Exercise the real adapters with an isolated directory, without a Next request.
+const fs=require('node:fs');
+const path=require('node:path');
+const Module=require('node:module');
+const assert=require('node:assert/strict');
+const ts=require('typescript');
+const root=path.resolve(__dirname,'..');
+fs.mkdirSync(path.join(root,'tmp'),{recursive:true});
+const directory=fs.mkdtempSync(path.join(root,'tmp','regression-'));
+process.env.DATA_BACKEND='local';process.env.DATA_DIRECTORY=directory;
+process.env.AUTH_SESSION_SECRET='local-regression-secret-never-use-for-deployment';
+const resolve=Module._resolveFilename;
+Module._resolveFilename=function(name,...rest){return resolve.call(this,name.startsWith('@/')?path.join(root,'src',name.slice(2)):name,...rest);};
+require.extensions['.ts']=function(module,filename){module._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,filename);};
+const game=require('../src/lib/data/game-sessions.ts');
+const bank=require('../src/lib/data/question-bank.ts');
+const format=require('../src/lib/auth/account-format.ts');
+const accounts=require('../src/lib/auth/accounts.ts');
+const tokens=require('../src/lib/auth/session-token.ts');
+const {newestSnapshot}=require('../src/lib/game/client-response.ts');
+(async()=>{
+  const {parseImportedAccounts}=await import('../scripts/lib/account-import.mjs');
+  for(const [role,grade] of [['ครู','ม.6'],['TEACHER','TEACHER'],['','ครู'],['นักเรียน','ม.6'],['STUDENT','TEACHER']]) {
+    const imported=parseImportedAccounts(`id,name,password,grade,role\nT001,"ชื่อ, ทดสอบ", pass ,${grade},${role}\n`)[0];
+    assert.equal(imported.role,format.parseAccountRole(role,grade));
+    assert.equal(imported.password,' pass ');assert.equal(imported.display_name,'ชื่อ, ทดสอบ');
+  }
+  assert.throws(()=>parseImportedAccounts('id,name,password,grade,role\nT001,ครู,p,ครู,TYPO'),/ACCOUNT_ROLE_INVALID/);
+  assert.throws(()=>parseImportedAccounts('id,name,password,grade,role\nt001,ครู,p,ครู,teacher\nT001,ครู,p,ครู,teacher'),/ACCOUNT_CODE_DUPLICATE/);
+  assert.equal(format.normalizeUserCode(' ๐๒๐๗๔ '),'02074');
+  assert.deepEqual(format.parseCsv('\uFEFFid,name\r\n1,"ครู, \"\"ทดสอบ\"\""\r\n'),[['id','name'],['1','ครู, "ทดสอบ"']]);
+  assert.throws(()=>format.parseAccountRole('unknown'));
+  fs.writeFileSync(path.join(directory,'student.csv'),'id,name,password,grade,role\nadmin,ครู, pass ,ครู,TEACHER\n');
+  const account=await accounts.findAccountByCredentials('ADMIN',' pass ');
+  assert.equal(account.userCode,'admin');assert.equal(account.role,'teacher');
+  assert.equal(await accounts.findAccountByCredentials('ADMIN','pass'),null);
+  const issued=await tokens.createSessionToken(account),verified=await tokens.verifySessionToken(issued.token);
+  assert.equal(verified.userCode,'admin');assert.equal(await tokens.matchesAccountVersion({...account,role:'student'},verified.version),false);
+  assert.equal(await tokens.verifySessionToken(issued.token.slice(0,-4)+'fake'),null);
+  fs.appendFileSync(path.join(directory,'student.csv'),'ADMIN,ซ้ำ,pass,ครู,teacher\n');
+  await assert.rejects(accounts.getSheetAccounts(),/ACCOUNT_CODE_DUPLICATE/);
+  const set=await bank.createLocalQuestionSet('admin','Concurrent classroom',null);
+  await bank.addLocalQuestion('admin',set.id,{questionText:'2+3',correctAnswer:'5',points:10,timeLimitSeconds:120});
+  const room=await game.createLocalGameSession({teacherCode:'admin',questionSetId:set.id,questionSetTitle:set.title,questionCount:1,activityName:null,teamCount:2,maxMembersPerTeam:4});
+  const joined=await Promise.all(Array.from({length:8},(_,i)=>game.joinLocalGameSession({roomCode:room.roomCode,studentCode:`S${i}`,displayName:`Student ${i}`,teamId:room.teams[Math.floor(i/4)].id})));
+  assert.equal(joined.filter(r=>r.ok).length,8);
+  const persisted=JSON.parse(fs.readFileSync(path.join(directory,'game-sessions.json')))[0];assert.equal(persisted.participants.length,8);
+  const teacher={teacherCode:'admin',roomCode:room.roomCode};assert.equal((await game.startLocalGameSession(teacher)).ok,true);
+  const initial=(await game.getStudentPlaySnapshot({roomCode:room.roomCode,studentCode:'S0'})).snapshot;
+  assert.equal((await game.submitLocalAnswer({roomCode:room.roomCode,studentCode:'S0',answerText:'5',expectedSessionId:room.id,expectedQuestionId:'old'})).ok,false);
+  const answers=await Promise.all(Array.from({length:8},(_,i)=>game.submitLocalAnswer({roomCode:room.roomCode,studentCode:`S${i}`,answerText:'5',expectedSessionId:room.id,expectedQuestionId:initial.currentQuestion.id})));
+  assert.equal(answers.filter(r=>r.ok).length,8);
+  let snap=(await game.getStudentPlaySnapshot({roomCode:room.roomCode,studentCode:'S0'})).snapshot;assert.equal(snap.team.rawScore,0);assert.equal(snap.teamScore.rawScore,0);
+  await game.showLocalGameAnswer(teacher);snap=(await game.getStudentPlaySnapshot({roomCode:room.roomCode,studentCode:'S0'})).snapshot;
+  assert.equal(snap.teamScore.averageScore,15);assert.equal(snap.teamScore.rawScore,60);
+
+  // A frozen two-question room exercises strategy, eligibility, and exact fractions.
+  await bank.addLocalQuestion('admin',set.id,{questionText:'3+3',correctAnswer:'6',points:10,timeLimitSeconds:120});
+  await game.endLocalGameSession(teacher);
+  const powerRoom=await game.createLocalGameSession({teacherCode:'admin',questionSetId:set.id,questionSetTitle:set.title,questionCount:2,activityName:null,teamCount:2,maxMembersPerTeam:4});
+  for(const [i,team] of [0,0,1,1].entries()) await game.joinLocalGameSession({roomCode:powerRoom.roomCode,studentCode:'P'+i,displayName:'P'+i,teamId:powerRoom.teams[team].id});
+  const pc={teacherCode:'admin',roomCode:powerRoom.roomCode};await game.startLocalGameSession(pc);
+  const ps=async(code)=>(await game.getStudentPlaySnapshot({roomCode:powerRoom.roomCode,studentCode:code})).snapshot;
+  const sa=await ps('P0');
+  const captain=sa.isTeamCaptain?'P0':'P1', member=sa.isTeamCaptain?'P1':'P0';
+  const arg=code=>({roomCode:powerRoom.roomCode,studentCode:code,expectedSessionId:powerRoom.id,expectedQuestionId:sa.currentQuestion.id});
+  assert.equal((await game.activateLocalTeamPower(arg(member))).ok,false);
+  assert.equal((await game.activateLocalTeamPower({...arg(captain),expectedSessionId:'stale'})).ok,false);
+  const boosts=await Promise.all([game.activateLocalTeamPower(arg(captain)),game.activateLocalTeamPower(arg(captain))]);
+  assert.equal(boosts.filter(r=>r.ok).length,1);
+  // Editing the source bank cannot alter the current room's answer or points.
+  const bankFile=path.join(directory,'question-sets.json'), originalBank=fs.readFileSync(bankFile,'utf8');
+  const changed=JSON.parse(originalBank);changed[0].questions[0].points=999;changed[0].questions[0].correctAnswer='wrong';fs.writeFileSync(bankFile,JSON.stringify(changed));
+  assert.equal((await game.submitLocalAnswer({...arg(captain),answerText:'5'})).ok,true);
+  assert.equal((await game.submitLocalAnswer({...arg(member),answerText:'wrong'})).ok,true);
+  const second=await ps('P2'); const otherCaptain=second.isTeamCaptain?'P2':'P3';
+  assert.equal((await game.submitLocalAnswer({...arg('P2'),answerText:'5'})).ok,true);
+  assert.equal((await game.activateLocalTeamPower(arg(otherCaptain))).ok,false);
+  const hidden=await game.getTeacherDashboardSnapshot(await game.getLocalGameSessionByRoomCode(powerRoom.roomCode));
+  assert.equal(hidden.teams.find(t=>t.id===sa.team.id).rawScore,0);
+  assert.equal((await ps(captain)).contribution,null);
+  await game.showLocalGameAnswer(pc);
+  assert.deepEqual((await ps(captain)).contribution,{base:5,bonus:2.5,total:7.5});
+  assert.equal((await ps(captain)).teamScore.averageScore,7.5);
+  await game.advanceLocalGameQuestion(pc);
+  const final=await ps(otherCaptain);assert.equal(final.currentQuestion.roundMultiplier,1.5);
+  const finalArg=code=>({...arg(code),expectedQuestionId:final.currentQuestion.id});
+  assert.equal((await game.activateLocalTeamPower(finalArg(captain))).ok,false);
+  assert.equal((await game.activateLocalTeamPower(finalArg(otherCaptain))).ok,true);
+  assert.equal((await game.submitLocalAnswer({...finalArg(otherCaptain),answerText:'6'})).ok,true);
+  await game.joinLocalGameSession({roomCode:powerRoom.roomCode,studentCode:'LATE',displayName:'Late',teamId:powerRoom.teams[1].id});
+  assert.equal((await game.submitLocalAnswer({...finalArg('LATE'),answerText:'6'})).ok,true);
+  await game.showLocalGameAnswer(pc);
+  assert.deepEqual((await ps(otherCaptain)).contribution,{base:7.5,bonus:3.75,total:11.25});
+  assert.equal((await ps('LATE')).contribution.total,0);
+  assert.equal((await ps(otherCaptain)).teamScore.averageScore,16.25);
+  fs.writeFileSync(bankFile,originalBank);
+  // Rules omitted on historical rooms retain the original formula.
+  const file=path.join(directory,'game-sessions.json'), all=JSON.parse(fs.readFileSync(file,'utf8'));
+  const legacy=all.find(r=>r.id===powerRoom.id);delete legacy.rulesVersion;legacy.status='question_active';legacy.answers=[];legacy.currentQuestionEndsAt=new Date(Date.now()+60000).toISOString();
+  fs.writeFileSync(file,JSON.stringify(all));
+  assert.equal((await game.submitLocalAnswer({...finalArg(otherCaptain),answerText:'6'})).ok,true);
+  await game.showLocalGameAnswer(pc);assert.equal((await ps(otherCaptain)).teamScore.averageScore,5);
+
+  await game.endLocalGameSession(pc);
+  const race=await game.createLocalGameSession({teacherCode:'admin',questionSetId:set.id,questionSetTitle:set.title,questionCount:2,activityName:null,teamCount:2,maxMembersPerTeam:4});
+  for(const [i,team] of [0,1,1].entries()) await game.joinLocalGameSession({roomCode:race.roomCode,studentCode:'R'+i,displayName:'R'+i,teamId:race.teams[team].id});
+  const rc={teacherCode:'admin',roomCode:race.roomCode};await game.startLocalGameSession(rc);
+  const rs=async(code)=>(await game.getStudentPlaySnapshot({roomCode:race.roomCode,studentCode:code})).snapshot;
+  const rq=(await rs('R0')).currentQuestion.id;
+  const ra=code=>({roomCode:race.roomCode,studentCode:code,expectedSessionId:race.id,expectedQuestionId:rq,answerText:'5'});
+  const boostFirst=await Promise.all([game.activateLocalTeamPower(ra('R0')),game.submitLocalAnswer(ra('R0'))]);assert.equal(boostFirst.every(r=>r.ok),true);
+  const cap=(await rs('R1')).isTeamCaptain?'R1':'R2';
+  const answerFirst=await Promise.all([game.submitLocalAnswer(ra('R1')),game.activateLocalTeamPower(ra(cap))]);assert.equal(answerFirst[0].ok,true);assert.equal(answerFirst[1].ok,false);
+  await game.submitLocalAnswer(ra('R2'));await game.showLocalGameAnswer(rc);
+  assert.equal((await rs('R0')).teamScore.averageScore,15);assert.equal((await rs('R1')).teamScore.averageScore,10);
+  const latest={sessionId:'a',updatedAt:'2026-01-02'},old={sessionId:'a',updatedAt:'2026-01-01'};assert.equal(newestSnapshot(latest,old),latest);assert.equal(newestSnapshot(latest,{sessionId:'b',updatedAt:'2026-01-03'}),latest);
+  const result={passed:true,checks:['CSV quoting, Thai digits, strict role, canonical identifiers, exact password','JWT signature, changed-role invalidation, duplicate account rejection','8 simultaneous joins persist 8; 8 simultaneous answers persist 8','stale answer rejected, pre-reveal score masked, correct average after reveal','out-of-order and different-room snapshot ignored','captain-only power once, after-answer rejection, frozen questions, final stacking, late member zero, legacy unchanged']};
+  fs.writeFileSync(path.join(root,'tmp/data-regression-result.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
+})().catch(error=>{console.error(error);process.exitCode=1;});
+

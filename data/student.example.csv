@@ -1,0 +1,3 @@
+id,name,password,grade,role
+T001,ครูตัวอย่าง,123456,TEACHER,TEACHER
+S001,นักเรียนตัวอย่าง,111111,ม.6,STUDENT

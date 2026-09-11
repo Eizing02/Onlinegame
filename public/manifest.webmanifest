@@ -1,0 +1,25 @@
+{
+  "name": "KruEIonline",
+  "short_name": "KruEI",
+  "description": "ร่วมกันตอบ ทำคะแนนสูงสุดเพื่อทีม",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050716",
+  "theme_color": "#050716",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["education", "games"]
+}
