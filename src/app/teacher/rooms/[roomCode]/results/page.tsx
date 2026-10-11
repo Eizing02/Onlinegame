@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { deleteRoomAction } from "@/app/teacher/actions";
 import { AppShell } from "@/components/layout/app-shell";
@@ -40,6 +40,8 @@ export default async function ResultsPage({
   if (!session) {
     notFound();
   }
+
+  if (session.gameMode === "boss_raid") redirect(`/teacher/rooms/${session.roomCode}/raid/results`);
 
   const results = getRankedTeams(session);
   const participantScores = getParticipantScoreSummaries(session);

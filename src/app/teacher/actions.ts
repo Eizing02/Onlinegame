@@ -19,6 +19,7 @@ import {
   deleteLocalGameSession,
   getActiveTeacherGameSession,
 } from "@/lib/data/game-sessions";
+import { createRaid } from "@/features/boss-raid/server/raid-service";
 import { createRoomSchema } from "@/lib/validations/room";
 
 function getFormString(formData: FormData, key: string) {
@@ -384,6 +385,20 @@ export async function createRoomAction(formData: FormData) {
       "error",
       "ชุดคำถามนี้ยังไม่มีคำถาม เพิ่มคำถามก่อนสร้างห้อง",
     );
+  }
+
+  const mode = getFormString(formData, "game_mode") || "classic";
+  if (!["classic", "boss_raid"].includes(mode)) encodedRedirect("/teacher/rooms/new", "error", "รูปแบบเกมไม่ถูกต้อง");
+  if (mode === "boss_raid") {
+    const minutes = Number(getFormString(formData, "raid_minutes"));
+    if (!Number.isInteger(minutes) || minutes < 1 || minutes > 60 || parsed.data.maxMembersPerTeam > 5) encodedRedirect("/teacher/rooms/new", "error", "Boss Raid ใช้เวลา 1–60 นาที และสมาชิก 1–5 คนต่อทีม");
+    let roomCode: string;
+    try {
+      const result = await createRaid(session, { ...parsed.data, activityName: parsed.data.activityName || "", durationSeconds: minutes * 60, visibilityEnabled: formData.get("raid_visibility") === "on" });
+      roomCode = result.roomCode;
+    } catch (e) { encodedRedirect("/teacher/rooms/new", "error", e instanceof Error ? e.message : "สร้างห้องไม่สำเร็จ"); }
+    revalidatePath("/teacher/rooms/new");
+    redirect(`/teacher/rooms/${roomCode}/raid/dashboard`);
   }
 
   const gameSession = await createLocalGameSession({

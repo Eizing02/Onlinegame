@@ -14,6 +14,13 @@ const messages: Record<string, string> = {
 };
 export function raidError(code?: string) { return messages[code ?? ""] ?? "ทำรายการไม่สำเร็จ กรุณาลองอีกครั้ง"; }
 
+// Reuse migration 008's atomic, shared limiter without modifying Auth or its key space.
+// Limits allow fast independent answers and retries; rooms do not multiply a user's budget.
+export async function raidMutationAllowed(session: AppSession, kind: "hero" | "answer" | "visibility" | "control") {
+ const limits = { answer: 60, hero: 30, visibility: 20, control: 10 };
+ return rpc<boolean>("consume_auth_limit", { p_key: `raid:${session.userCode}:${kind}`, p_limit: limits[kind], p_seconds: 10 });
+}
+
 export async function raidAvailable() {
  if (!raidEnabled()) return false;
  const { error } = await createSupabaseAdminClient().from("boss_raid_sessions").select("session_id").limit(0);

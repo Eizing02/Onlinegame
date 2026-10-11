@@ -3,8 +3,9 @@ const durations: Record<ScreenEffect, number> = { shake: 200, white: 120, red: 2
 export class ScreenEffectManager {
   private timers = new Map<ScreenEffect, ReturnType<typeof setTimeout>>();
   private last = new Map<ScreenEffect, number>();
-  constructor(private host: HTMLElement, private reduced: boolean) {}
+  constructor(private host: HTMLElement, private reduced: boolean, private enabled = true) {}
   play(effect: ScreenEffect) {
+    if (!this.enabled) return;
     if (this.reduced && ["shake", "white", "slow"].includes(effect)) return;
     const now = performance.now();
     if (now - (this.last.get(effect) ?? -1000) < 250) return;

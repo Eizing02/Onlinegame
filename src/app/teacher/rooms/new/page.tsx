@@ -1,5 +1,7 @@
-import { GameRules } from "@/components/game/game-rules";
-import { createRoomAction, deleteRoomAction } from "@/app/teacher/actions";
+import { RaidRoomForm } from "@/features/boss-raid/components/RaidRoomForm";
+import { raidAvailable } from "@/features/boss-raid/server/raid-service";
+import "@/features/boss-raid/raid.css";
+import { deleteRoomAction } from "@/app/teacher/actions";
 import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ConfirmSubmitButton } from "@/components/ui/confirm-submit-button";
@@ -37,7 +39,6 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
           </p>
         </div>
 
-        <GameRules />
         {params.error ? (
           <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
             {params.error}
@@ -88,89 +89,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
         ) : null}
 
         <Panel>
-          <form className="grid gap-5 md:grid-cols-2" action={createRoomAction}>
-            <div>
-              <label className="text-sm font-medium" htmlFor="question_set_id">
-                ชุดคำถาม
-              </label>
-              <select
-                id="question_set_id"
-                name="question_set_id"
-                className="mt-2 h-11 w-full rounded-md border border-border bg-white px-3 outline-none focus:border-primary"
-                disabled={!canCreateRoom}
-                required
-              >
-                {questionSets.map((set) => (
-                  <option
-                    disabled={set.questionCount === 0}
-                    key={set.id}
-                    value={set.id}
-                  >
-                    {set.title} ({set.questionCount} ข้อ)
-                  </option>
-                ))}
-              </select>
-              {!canCreateRoom ? (
-                <p className="mt-2 text-sm text-muted">
-                  กลับไปเพิ่มคำถามในชุดคำถามก่อน
-                </p>
-              ) : null}
-            </div>
-            <div>
-              <label className="text-sm font-medium" htmlFor="activity_name">
-                ชื่อกิจกรรม
-              </label>
-              <input
-                id="activity_name"
-                name="activity_name"
-                className="mt-2 h-11 w-full rounded-md border border-border px-3 outline-none focus:border-primary"
-                placeholder="กิจกรรมท้ายคาบ"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium" htmlFor="team_count">
-                จำนวนกลุ่ม
-              </label>
-              <input
-                id="team_count"
-                name="team_count"
-                className="mt-2 h-11 w-full rounded-md border border-border px-3 outline-none focus:border-primary"
-                defaultValue={4}
-                max={12}
-                min={1}
-                type="number"
-              />
-            </div>
-            <div>
-              <label
-                className="text-sm font-medium"
-                htmlFor="max_members_per_team"
-              >
-                จำนวนคนต่อกลุ่ม
-              </label>
-              <input
-                id="max_members_per_team"
-                name="max_members_per_team"
-                className="mt-2 h-11 w-full rounded-md border border-border px-3 outline-none focus:border-primary"
-                defaultValue={5}
-                max={12}
-                min={1}
-                type="number"
-              />
-            </div>
-            <div className="flex flex-col gap-3 md:col-span-2 sm:flex-row">
-              <button
-                className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-slate-300"
-                disabled={!canCreateRoom}
-                type="submit"
-              >
-                สร้างห้องเกม
-              </button>
-              <ButtonLink href="/teacher/question-sets" variant="secondary">
-                กลับไปจัดการชุดคำถาม
-              </ButtonLink>
-            </div>
-          </form>
+          <RaidRoomForm sets={questionSets} canCreate={canCreateRoom} raidAvailable={await raidAvailable()}/>
         </Panel>
       </section>
     </AppShell>

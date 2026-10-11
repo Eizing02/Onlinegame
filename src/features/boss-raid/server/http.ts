@@ -2,7 +2,7 @@ import "server-only";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { authorizeApi } from "@/lib/auth/api-session";
-import { raidCommand, raidError, raidSnapshot, raidStudentMutation } from "./raid-service";
+import { raidCommand, raidError, raidMutationAllowed, raidSnapshot, raidStudentMutation } from "./raid-service";
 
 const current = { questionId: z.uuid(), displayIndex: z.number().int().min(0).max(999) };
 const schemas = {
@@ -32,6 +32,7 @@ export function mutationHandler(kind: keyof typeof schemas) {
   const { roomCode } = await context.params;
   if (!/^\d{4}$/.test(roomCode)) return NextResponse.json({ error: "รหัสห้องไม่ถูกต้อง" }, { status: 400, headers });
   try {
+   if (!await raidMutationAllowed(auth.session, kind)) return NextResponse.json({ error: "ส่งคำขอถี่เกินไป รอ 10 วินาทีแล้วลองอีกครั้ง", code: "RATE_LIMITED" }, { status: 429, headers: { ...headers, "Retry-After": "10" } });
    const body = schemas[kind].safeParse(await request.json());
    if (!body.success) return NextResponse.json({ error: "ข้อมูลคำขอไม่ถูกต้อง" }, { status: 400, headers });
    const input = body.data;

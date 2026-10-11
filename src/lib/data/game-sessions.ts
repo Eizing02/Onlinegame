@@ -77,6 +77,7 @@ export type StoredAnswer = {
 };
 
 export type StoredGameSession = {
+  gameMode?: "classic" | "boss_raid";
   rulesVersion?: 1 | 2;
   questionSnapshot?: StoredQuestion[];
   id: string;

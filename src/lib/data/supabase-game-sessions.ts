@@ -11,6 +11,7 @@ import type {
 } from "@/lib/data/game-sessions";
 
 type SessionRow = {
+  game_mode?: "classic" | "boss_raid";
   rules_version?: 1 | 2;
   question_snapshot?: StoredGameSession["questionSnapshot"];
   id: string;
@@ -191,6 +192,7 @@ async function mapSession(row: SessionRow): Promise<StoredGameSession> {
   return {
     id: row.id,
     roomCode: row.room_code,
+    gameMode: row.game_mode ?? "classic",
     rulesVersion: row.rules_version ?? 1,
     questionSnapshot: row.question_snapshot,
     teacherCode: row.teacher_code,
@@ -503,6 +505,16 @@ export async function joinSupabaseGameSession({
     };
   }
 
+  if (session.gameMode === "boss_raid") {
+    const { joinRaid } = await import("@/features/boss-raid/server/raid-service");
+    const result = await joinRaid({ roomCode, studentCode, authUserId, teamId });
+    if (!result.ok) return result;
+    const next = await fetchSessionById(session.id);
+    const actualTeam = next?.teams.find(t => t.id === next.participants.find(p => p.studentCode === studentCode)?.teamId);
+    if (!actualTeam) return { ok: false as const, reason: "โหลดทีมไม่สำเร็จ กรุณาเปิดหน้าห้องอีกครั้ง" };
+    return { ok: true as const, roomCode: result.roomCode, team: actualTeam };
+  }
+
   const supabase = createSupabaseAdminClient();
   if (authUserId) {
     const { data, error } = await supabase.rpc("join_google_classroom", {
@@ -612,6 +624,7 @@ export async function startSupabaseGameSession({
   roomCode: string;
 }) {
   const session = await getSupabaseTeacherGameSession(teacherCode, roomCode);
+  if (session?.gameMode === "boss_raid") return { ok: false as const, reason: "คำสั่ง Classic ใช้กับ Boss Raid ไม่ได้" };
 
   if (!session) {
     return { ok: false as const, reason: "ไม่พบห้องนี้" };
@@ -717,6 +730,7 @@ async function updateTeacherSession({
   eventType: string;
 }) {
   const session = await getSupabaseTeacherGameSession(teacherCode, roomCode);
+  if (session?.gameMode === "boss_raid") return { ok: false as const, reason: "คำสั่ง Classic ใช้กับ Boss Raid ไม่ได้" };
 
   if (!session) {
     return { ok: false as const, reason: "ไม่พบห้องนี้" };
@@ -892,6 +906,15 @@ export async function leaveSupabaseTeam({
 
   if (!session || session.status === "ended") {
     return { ok: false as const, reason: "ไม่พบห้อง หรือเกมจบแล้ว" };
+  }
+
+  if (session.gameMode === "boss_raid") {
+    const { leaveRaid } = await import("@/features/boss-raid/server/raid-service");
+    const result = await leaveRaid(roomCode, studentCode);
+    if (!result.ok) return result;
+    const next = await fetchSessionById(session.id);
+    if (!next) return { ok: false as const, reason: "ไม่พบห้องนี้" };
+    return { ok: true as const, session: next };
   }
 
   if (session.status !== "lobby") {

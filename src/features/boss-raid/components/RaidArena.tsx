@@ -5,7 +5,7 @@ import type { RaidEvent, RaidHero } from "../types";
 import { HERO_NAMES } from "../assets/manifest";
 import "../raid.css";
 
-export function RaidArena({ heroes, bossHp, bossMaxHp, events = [], reduced = false, quality = "full" }: { heroes: RaidHero[]; bossHp: number; bossMaxHp: number; events?: RaidEvent[]; reduced?: boolean; quality?: "full" | "low" }) {
+export function RaidArena({ heroes, bossHp, bossMaxHp, events = [], reduced = false, quality = "full", effectsEnabled = true }: { heroes: RaidHero[]; bossHp: number; bossMaxHp: number; events?: RaidEvent[]; reduced?: boolean; quality?: "full" | "low"; effectsEnabled?: boolean }) {
   const host = useRef<HTMLDivElement>(null); const scene = useRef<CombatScene | null>(null); const latest = useRef({ heroes, bossHp, events });
   const [error, setError] = useState(""); const [ready, setReady] = useState(false);
   const membership = heroes.filter(h => h.eligible && h.heroType).map(h => `${h.id}:${h.heroType}`).join("|");
@@ -14,17 +14,17 @@ export function RaidArena({ heroes, bossHp, bossMaxHp, events = [], reduced = fa
     let cancelled = false; let current: CombatScene | null = null;
     void import("../engine/combat-scene").then(async ({ CombatScene: Scene }) => {
       if (cancelled || !host.current) return;
-      current = new Scene(host.current, reduced || matchMedia("(prefers-reduced-motion: reduce)").matches, quality, setError);
+      current = new Scene(host.current, reduced || matchMedia("(prefers-reduced-motion: reduce)").matches, quality, setError, effectsEnabled);
       scene.current = current; await current.init(latest.current.heroes, latest.current.bossHp);
       if (!cancelled) { current.update(latest.current.heroes, latest.current.bossHp, []); setReady(true); }
     }).catch(() => { if (!cancelled) setError("เครื่องนี้เปิดฉากต่อสู้ไม่ได้ คุณยังตอบคำถามและดู HP ได้ตามปกติ"); });
     return () => { cancelled = true; current?.destroy(); scene.current = null; };
-  }, [membership, reduced, quality]);
+  }, [membership, reduced, quality, effectsEnabled]);
   const members = heroes.filter(h => h.eligible && h.heroType);
   return <section className="raid-arena" aria-label="ฉากต่อสู้บอส">
     <div className="raid-stage" ref={host} data-testid="raid-stage"><div className="raid-effects" aria-hidden="true" /></div>
     <div className="raid-boss-hud"><strong>{bossHp === 0 ? "ปราบบอสสำเร็จ" : "มังกรเงา"}</strong><progress value={bossHp} max={Math.max(1, bossMaxHp)} aria-label="HP บอส" /><span>{bossHp.toLocaleString()} / {bossMaxHp.toLocaleString()}</span></div>
-    <div className="raid-hero-hud" style={{ gridTemplateRows: `repeat(${Math.max(1, members.length)}, 1fr)` }}>{members.map(hero => <div key={hero.id}><strong title={hero.displayName}>{hero.displayName}</strong><progress value={hero.hp} max={100} aria-label={`HP ${hero.displayName}`} /><small>{hero.heroType ? HERO_NAMES[hero.heroType] : "ยังไม่เลือก"} · HP {hero.hp}/100{hero.hp === 0 ? " · ช่วยฟื้นเพื่อนได้" : ""}</small></div>)}</div>
+    <div className="raid-hero-hud" style={{ gridTemplateRows: `repeat(${Math.max(1, members.length)}, 1fr)` }}>{members.map(hero => <div key={hero.id} data-health={hero.hp===0?"knocked-out":hero.hp<=30?"critical":hero.hp<=60?"injured":"healthy"}><strong title={hero.displayName}>{hero.displayName}</strong><progress value={hero.hp} max={100} aria-label={`HP ${hero.displayName}`} /><small><span className="raid-hud-detail">{hero.heroType ? HERO_NAMES[hero.heroType] : "ยังไม่เลือก"} · </span>HP {hero.hp}<span className="raid-hud-detail">/100</span>{hero.hp===0&&<span className="raid-health-status">ช่วยฟื้นเพื่อนได้</span>}</small></div>)}</div>
     {error ? <p className="raid-scene-notice" role="status">{error}</p> : !ready ? <p className="raid-scene-notice" role="status">กำลังโหลดฉากต่อสู้…</p> : null}
   </section>;
 }

@@ -6,5 +6,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ room
   if (!auth.ok) return auth.response;
   const room = await getLocalTeacherGameSession(auth.session.userCode, (await params).roomCode);
   if (!room) return NextResponse.json({ error: "ห้องนี้ปิดแล้วหรือคุณไม่มีสิทธิ์เข้าถึง", redirectTo: "/teacher/rooms/new" }, { status: 404 });
+  if (room.gameMode === "boss_raid") return NextResponse.json({ error: "ห้องนี้ใช้ Boss Raid", code: "RAID_MODE", redirectTo: `/teacher/rooms/${room.roomCode}/raid/dashboard` }, { status: 409 });
   return NextResponse.json(await getTeacherDashboardSnapshot(room), { headers: { "Cache-Control": "no-store" } });
 }

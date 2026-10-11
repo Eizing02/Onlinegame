@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { LiveRoomPanels } from "@/app/teacher/rooms/[roomCode]/dashboard/live-room-panels";
 import { AppShell } from "@/components/layout/app-shell";
@@ -26,6 +26,8 @@ export default async function TeacherDashboardPage({
   if (!session) {
     notFound();
   }
+
+  if (session.gameMode === "boss_raid") redirect(`/teacher/rooms/${session.roomCode}/raid/dashboard`);
 
   const snapshot = await getTeacherDashboardSnapshot(session);
 
