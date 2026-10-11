@@ -21,6 +21,8 @@ UI ภาษาไทยใช้ระบบเดิม ตรวจด้ว�
 | ไฟล์ | การเปลี่ยน |
 |---|---|
 | `supabase/migrations/008_google_auth_identity_and_teacher_access.sql` | Schema/RLS/grants/role triggers, rate limits, verified Google identity, bootstrap, claim/switch, teacher administration, Google join |
+| `supabase/checks/008_google_auth_precheck.sql`, `008_google_auth_postcheck.sql`, `tests/sql-google-deployment.mjs` | ชุดตรวจ read only สำหรับ SQL Editor และทดสอบความพร้อม/สิทธิ์/ข้อมูลไม่เปลี่ยน 14 assertions |
+| `docs/google-auth-sql.md` | ลำดับคัดลอก SQL ลง Supabase ก่อน/หลัง migration และตั้งค่าที่ต้องทำต่อ |
 | `src/lib/auth/mode.ts` | Feature flag/backend validation, exact trusted origin |
 | `src/lib/auth/google-identity.ts` | Google verified identity/OAuth AMR/session UUID และ normalize รหัสนักเรียน |
 | `src/lib/auth/google-session.ts` | ตรวจ Supabase/DB ต่อ request, account states และ stable session ID |
@@ -87,6 +89,7 @@ Google Cloud ต้องสร้าง OAuth Web client/consent screen/test us
 | PASS | `npm run build` | Production build ผ่าน หน้าที่ขึ้นกับ Google mode เป็น dynamic |
 | PASS | `npm run test:data` | เกม local เดิม รวม concurrent join/answer/ownership/scoring ผ่าน |
 | PASS | `npm run test:sql` | Scoring RPC เดิมและ Google SQL ผ่าน; PGlite Auth **68 assertions** รวม upgrade, verified identity, constraints, permissions, forced rollback, canonical teacher-code collision และประวัติเดิม |
+| PASS | `node tests/sql-google-deployment.mjs` | **14 assertions** ตรวจ precheck → migration → postcheck, ข้อมูลคงเดิม/ไม่ bootstrap เอง และตรวจพบ missing columns, unsafe table/RPC grants และ RLS ที่ปิด |
 | PASS | `npm run test:auth` | Identity/config/origin, Supabase service ownership และ SQL 68 assertions; HTTP mock 10 concurrent claims สำเร็จหนึ่ง และคนเดียวผูกสองรหัสได้หนึ่ง |
 | PASS | `npm run test:e2e` | Legacy **15 tests** ผ่าน รวม login/ownership/gameplay/room tabs/swipe/draft/score feedback |
 | PASS | `npm run test:e2e:google` ก่อนเพิ่ม test เกมเต็มรอบ | Google mock **7 tests** ผ่าน: PKCE/preview/edit/claim/re-login/change-code/refresh/limits/roles/suspend/join/negative tests/UI |

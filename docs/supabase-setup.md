@@ -4,6 +4,8 @@
 
 สำหรับ Google Login ให้ทำตาม [คู่มือ Google Auth](google-auth-setup.md) เพิ่มเติม ใช้ `AUTH_MODE=legacy` จนกว่า Staging และ Provider settings จะพร้อม
 
+[SQL สำหรับ Google Login พร้อมตรวจผลก่อน/หลังรัน](google-auth-sql.md): ฐานข้อมูลที่มี 001–007 แล้วเพิ่มเฉพาะ 008 ไม่มี migration 009
+
 ## 1. สร้าง Project ใน Supabase
 
 สร้าง project ใหม่ใน Supabase แล้วเตรียมค่า:
@@ -104,7 +106,7 @@ AUTH_MODE=legacy
 
 ## 5. สิ่งที่ยังใช้ Server API
 
-ระบบยังคงให้ Next.js server actions/API เป็นตัวเขียนข้อมูล ไม่ให้ browser เขียน database โดยตรง เหตุผลคือระบบ login ตอนนี้เป็นรหัสจากชีท/ตาราง `accounts` ไม่ใช่ Supabase Auth เต็มรูปแบบ
+ระบบยังคงให้ Next.js server actions/API เป็นตัวเขียนข้อมูล ไม่ให้ browser เขียน database โดยตรง โหมด legacy ตรวจ session จากบัญชีเดิม ส่วน Google mode ตรวจ Supabase Auth และสิทธิ์ปัจจุบันใน DB ก่อนใช้ server-side service role
 
 ดังนั้น `SUPABASE_SERVICE_ROLE_KEY` ต้องอยู่เฉพาะฝั่ง server และห้ามเผยแพร่ใน client
 

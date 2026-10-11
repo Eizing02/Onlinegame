@@ -21,7 +21,7 @@ export const fixtureUsers = [
   [ids.third, 'third@example.com', 'google'],
   [ids.emailOnly, 'email@example.com', 'email'],
 ];
-export async function createGoogleDatabase() {
+export async function createGoogleDatabase({ applyAuthMigration = true } = {}) {
   const db = new PGlite();
   await db.exec(`create role anon; create role authenticated; create role service_role;
     create publication supabase_realtime;
@@ -46,7 +46,7 @@ export async function createGoogleDatabase() {
     insert into question_sets(id,teacher_code,title) values('${ids.set}','ADMIN','ชุดคำถามเดิม');
     insert into questions(id,question_set_id,question_text,correct_answer,points) values('${ids.question}','${ids.set}','2+3','5',10);`);
   // Apply the auth migration to existing classroom records, as on an upgrade.
-  await db.exec(await readFile('supabase/migrations/008_google_auth_identity_and_teacher_access.sql', 'utf8'));
+  if (applyAuthMigration) await db.exec(await readFile('supabase/migrations/008_google_auth_identity_and_teacher_access.sql', 'utf8'));
   return db;
 }
 export async function rpc(db, name, args) {

@@ -12,6 +12,8 @@ Google ยืนยันอีเมล ไม่ได้ยืนยันว
 
 ## เตรียมฐานข้อมูล Staging
 
+สำหรับชุด SQL และลำดับคัดลอกลง SQL Editor พร้อม precheck/postcheck แบบ read only ดู [SQL ที่ต้องรัน](google-auth-sql.md)
+
 1. ใช้ Supabase project สำหรับ Staging แยกจาก Production สำรอง schema และข้อมูลก่อนแก้ ตรวจ `accounts` ว่ามีบัญชีครูหลักเพียงหนึ่งแถวเมื่อเทียบ `lower(user_code)='admin'` และ `role='teacher'` ห้ามเปลี่ยนคีย์ของข้อมูลเดิม
 2. ตรวจ migration history ถ้าฐานข้อมูลใหม่ให้รัน `001` ถึง `008` ตามลำดับ ถ้ามี `001`–`007` แล้ว รันเฉพาะ [008](../supabase/migrations/008_google_auth_identity_and_teacher_access.sql) ใน SQL Editor หรือด้วยกระบวนการ migration ที่โครงการใช้อยู่ อย่ารัน `001` ซ้ำบนฐานข้อมูลเดิม
 3. `008` เป็นธุรกรรมเดียว เพิ่ม 4 ตาราง, UNIQUE/FK, RLS, RPC และอนุญาต `accounts.password=NULL` โดยไม่เปลี่ยน primary key ไม่ลบเกม/คำตอบ และไม่เปลี่ยนคะแนน
