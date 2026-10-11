@@ -7,8 +7,15 @@ import { createGoogleDatabase, fixtureUsers, ids, rpc, resolveAccount, teacherOp
 export const mockKey = 'fixture-service-key-only';
 const secret = new TextEncoder().encode('fixture-supabase-jwt-secret-not-for-production');
 const tables = new Set(['accounts','question_sets','questions','question_options','game_sessions','teams','participants','answers','game_events','game_session_updates']);
-export async function startMockSupabase(port = 3111) {
-  let db = await createGoogleDatabase();
+export async function startMockSupabase(port = 3111, raid = false) {
+  const chooser = raid ? [...fixtureUsers,['10000000-0000-4000-8000-000000000007','fourth@example.com','google'],['10000000-0000-4000-8000-000000000008','fifth@example.com','google']] : fixtureUsers;
+  async function createFixture() {
+    const fixture=await createGoogleDatabase({applyRaidMigration:raid});
+    if(raid){await fixture.exec("insert into accounts(user_code,display_name,password,role,grade) values('01238','นักเรียน ห้า','fixture','student','ม.6')");for(const [id,email,provider] of chooser.slice(fixtureUsers.length)){await fixture.query('insert into auth.users values($1,$2,now(),$3,$4)',[id,email,{provider,providers:[provider]},{}]);await fixture.query('insert into auth.identities(user_id,provider,identity_data) values($1,$2,$3)',[id,provider,{email,email_verified:true}]);}}
+    return fixture;
+  }
+  let db = await createFixture();
+  if (raid) tables.add('boss_raid_sessions');
   const codes = new Map(), refreshes = new Map(), revoked = new Set();
   function json(response, body, status = 200) { response.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); response.end(JSON.stringify(body)); }
   async function user(id) {
@@ -30,8 +37,28 @@ export async function startMockSupabase(port = 3111) {
       const url = new URL(request.url, `http://127.0.0.1:${port}`);
       const path = url.pathname;
       if (path === '/__test/reset') {
-        await db.close(); db = await createGoogleDatabase(); codes.clear(); refreshes.clear(); revoked.clear();
+        await db.close(); db = await createFixture(); codes.clear(); refreshes.clear(); revoked.clear();
         return json(response, { ok: true });
+      }
+      if (raid && path === '/__test/raid-bank') {
+        for (let i=1;i<10;i++) await db.query('insert into questions(question_set_id,question_text,correct_answer,points,order_index,question_type) values($1,$2,$3,10,$4,$5)', [ids.set, i===1?'จริงหรือเท็จ: 1+1=2':i===2?'เลือกผลลัพธ์ของ $2+2$':`คำถามยาวเพื่อทดสอบการอ่าน ${'ข้อความภาษาไทย '.repeat(20)} ${i}`, '5', i, i===1?'true_false':i===2?'multiple_choice':'short_text']);
+        const optionQuestions=(await db.query("select id,question_type from questions where question_type<>'short_text'")).rows;
+        for (const q of optionQuestions) for(let i=0;i<(q.question_type==='true_false'?2:4);i++) await db.query('insert into question_options(question_id,option_text,is_correct,order_index) values($1,$2,$3,$4)',[q.id,i===0?'คำตอบถูก':'คำตอบอื่น '+i,i===0,i]);
+        await db.query('update questions set image_url=$1 where question_set_id=$2 and order_index=3',['/assets/boss-raid/boss/idle.png',ids.set]);
+        return json(response,{ok:true});
+      }
+      if (raid && path === '/__test/raid-correct-option') {
+        const id=url.searchParams.get('question');
+        const row=(await db.query('select id from question_options where question_id=$1 and is_correct',[id])).rows[0];
+        return json(response,{selectedOptionId:row?.id??null,answerText:'5'});
+      }
+      if (raid && path === '/__test/raid-expire') {
+        await db.query("update boss_raid_sessions set started_at=now()-interval '10 seconds',overall_ends_at=now()-interval '1 second' where session_id=$1",[url.searchParams.get('session')]);
+        return json(response,{ok:true});
+      }
+      if (raid && path === '/__test/raid-boss-one-hp') {
+        await db.query('update boss_raid_team_states set boss_hp=1 where session_id=$1',[url.searchParams.get('session')]);
+        return json(response,{ok:true});
       }
       if (path === '/__test/allow-teacher') {
         await resolveAccount(db, ids.admin);
@@ -64,7 +91,7 @@ export async function startMockSupabase(port = 3111) {
       if (path === '/auth/v1/authorize') {
         if (url.searchParams.get('provider') !== 'google' || !url.searchParams.get('code_challenge')) return json(response, { error: 'PKCE required' }, 400);
         response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-        response.end('<html lang="th"><title>Mock Google chooser</title><h1>เลือกบัญชีทดสอบ</h1>' + fixtureUsers.map(([id,email]) => {
+        response.end('<html lang="th"><title>Mock Google chooser</title><h1>เลือกบัญชีทดสอบ</h1>' + chooser.map(([id,email]) => {
           const query = new URLSearchParams(url.searchParams); query.set('id', id);
           return `<p><a href="/mock/google?${query.toString()}">${email}</a></p>`;
         }).join('') + '</html>'); return;
@@ -100,6 +127,10 @@ export async function startMockSupabase(port = 3111) {
         if (request.headers.authorization !== `Bearer ${mockKey}`) return json(response, { message: 'Private data', code: '42501' }, 403);
         if (path.startsWith('/rest/v1/rpc/')) {
           const name = path.split('/').at(-1);
+          if (raid && ['consume_auth_limit','create_boss_raid_room','join_boss_raid','leave_boss_raid_lobby','reserve_raid_hero','start_boss_raid','finish_boss_raid','submit_boss_raid_answer','report_raid_visibility','get_private_raid_snapshot'].includes(name)) {
+            const keys=Object.keys(body);const result=await db.query(`select public.${identifier(name)}(${keys.map((key,i)=>`${identifier(key)}=>$${i+1}`).join(',')}) as r`,keys.map(key=>body[key]));
+            return json(response,result.rows[0].r);
+          }
           if (['resolve_google_account','student_account_operation','manage_teacher_access','join_google_classroom'].includes(name)) return json(response, await rpc(db, name, body));
           if (!['close_game_session','delete_question_set_safely','submit_classroom_answer','activate_classroom_power'].includes(name)) return json(response, { message: 'Unsupported fixture RPC' }, 404);
           const keys = Object.keys(body);

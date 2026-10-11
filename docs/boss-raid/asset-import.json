@@ -6,294 +6,336 @@
       "source": "Boss/idle.png",
       "destination": "boss/idle.png",
       "sha256": "5c36082b29da451fb69abc2ce03cca6ffb429e2d24e6393c414609ab6728c310",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "de9e3408b4d8fd7f5fadf220240e91d2df9e9f3cad0e0fb2825ee09c0cf87f27"
     },
     {
       "key": "boss/ready",
       "source": "Boss/ready.png",
       "destination": "boss/ready.png",
       "sha256": "f068187b0023d600b8e9c148c44451fbdbfad42ca983de171a354c506a218cc1",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "50263974f62e29455da0e22ed295ff040b4a4aba9c46907cac7065745aaea687"
     },
     {
       "key": "boss/attack_1",
       "source": "Boss/attack_1.png",
       "destination": "boss/attack_1.png",
       "sha256": "33134fe59590777e8d42232797d564fd7f48a94cf20d633c17d4aca876b2b780",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "81ece7d9ec99d97b45d1d5aa1d59680f743f0a524a9824ee053036b7ecdb50dd"
     },
     {
       "key": "boss/attack_2",
       "source": "Boss/attack_2.png",
       "destination": "boss/attack_2.png",
       "sha256": "b36ddb23a6aad6e44d41320de9fd67fce8d98bfc180e8ef8933493472201b20a",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "c1ab179a062217c2eeff8483f15ac61373c7e47d1b7c7928d61cd47bf7156117"
     },
     {
       "key": "boss/dodge",
       "source": "Boss/Backward Dodge.png",
       "destination": "boss/backward_dodge.png",
       "sha256": "5fecfa392c72fa95dd90d9bfe888d317412a51aa95a45f53e7d50c64f4895f5a",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "d108e2929fd3f52bff6d0933dc1317e7c7618d538987f7928be175118ccea9af"
     },
     {
       "key": "boss/hit",
       "source": "Boss/Damage Reaction.png",
       "destination": "boss/damage_reaction.png",
       "sha256": "355e2da2e555698764a507eddb8f755e55c272bb9ea4daeb1d58033d49587a0a",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "529d3a359988298e22c2618d3d2d33446a8fdbf6689b85b8c92fdb4f46ae6cd2"
     },
     {
       "key": "boss/death",
       "source": "Boss/Defeat Collapse & Death.png",
       "destination": "boss/death.png",
       "sha256": "382c1a3082cbe9829c01d4688ab1fb99f17e40c213d17c1f1e7d4bdb345e3cb2",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "7dc0d4f9da9cf60d304e5aae4348c68cc8013a3dd79b97db7a454e435ed78829"
     },
     {
       "key": "boss/run",
       "source": "Boss/run.png",
       "destination": "boss/run.png",
       "sha256": "a3227d841501e4357db51fccf85f1f54d3a2bd55bfcea6c941e5b82825c69404",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "165fd16828e4ec687b6c5fa5f69843e11c93b72d35ad53017a7aff62598a025a"
     },
     {
       "key": "boss/breath",
       "source": "Boss/Shadow Flame Breath.png",
       "destination": "boss/shadow_flame_breath.png",
       "sha256": "fd2bd48c1018489e36c8b625033f391a3d04331bd42ce8935a6437f42110b10a",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "f4bf63c28c7617f000b08f7efdbff7ed8e6776f16d171b6fd685f405ecd87e9b"
     },
     {
       "key": "boss/shield",
       "source": "Boss/Shield Defend.png",
       "destination": "boss/shield_defense.png",
       "sha256": "1acd757e2430611a50e4a93513229c0b69548e8045f398ffe234afae9d55c436",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "b9963a74a644b0bb571334a9044cfeb190a44df8ab9218245e13b8f700c41378"
     },
     {
       "key": "boss/ultimate",
       "source": "Boss/ultimate.png",
       "destination": "boss/ultimate.png",
       "sha256": "c4e40bcb435f30339e8d500c19d436d40e8c41ac8cfc44ab3d9b8de8a8e98ab3",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "e9ed52d5074fcd0c613ea040c75c1010826407828ebb8ccf1e61ac889dc86a95"
     },
     {
       "key": "boss/victory_roar",
       "source": "Boss/Victory Triumphant Roar.png",
       "destination": "boss/victory_roar.png",
       "sha256": "1b4ee7fd876cc7f58a43587a3da20730f48fa89c0170aeeb404f4c547bbcef0c",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "a6e83abb7a4ffd2394ed2bcaa3399f1ec44757dc8acd19d6af391b3ce548be94"
     },
     {
       "key": "warrior/idle",
       "source": "Warrior/idel.png",
       "destination": "heroes/warrior/idle.png",
       "sha256": "2d3ef31c237799ae3a1c761f5c160f5d62511f27ffb7b37691c48fbcae3f7411",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "6ac2d595f79d0751cd91bcf9c49ea179274768ed403b6e518af15b268632efcc"
     },
     {
       "key": "warrior/attack_1",
       "source": "Warrior/attack_1.png",
       "destination": "heroes/warrior/attack_1.png",
       "sha256": "2f81e9469dfbed5853715283bae33aa4a5893c3b5ba2dd342d0f868ae7734f36",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "d9b6ac8b30679f4594a07f0a0fe3ae4d55a10857b6901ad17c6f276910ce86fe"
     },
     {
       "key": "warrior/attack_2",
       "source": "Warrior/attack_2.png",
       "destination": "heroes/warrior/attack_2.png",
       "sha256": "b1d4cd3350cc9630f6a27008e621f226e16b8a3ccedb2f67a44664a0fed2c591",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "902b412e361b8e4c2744a7d953bc5521062980ac344c3eb8410036f1f120fc3f"
     },
     {
       "key": "warrior/hit",
       "source": "Warrior/hit.png",
       "destination": "heroes/warrior/hit.png",
       "sha256": "b8e1b9e09dd2878821a9c8afd0f364f3adfb0c3a5ccbd3ec73d8fc714b354613",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "70326bf7f6a9ec944c70aa44d574b45dd5f0dec96b23539ac446c2316460808b"
     },
     {
       "key": "warrior/victory",
       "source": "Warrior/victory.png",
       "destination": "heroes/warrior/victory.png",
       "sha256": "e7043777a883c7c44a939c691419b9fd38ae107d0645dceb49531c3ea5ca36a1",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "21f758488ba9fd31fbab3a5a44e8f68c227110905c49b6e7ab1c74cf5fe1a2a8"
     },
     {
       "key": "warrior/defeat",
       "source": "Warrior/defeat.png",
       "destination": "heroes/warrior/defeat.png",
       "sha256": "55e1a45febcac50f93df9faffed10c063d5698e4746a188cb8753d6730313769",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "106ac4cc12d16c53c22a0e2f2bde9c84b9851f2de6976c9e36e3b7f70b9c8b65"
     },
     {
       "key": "mage/idle",
       "source": "MAGE/idle.png",
       "destination": "heroes/mage/idle.png",
       "sha256": "f7152e18cca530c517f7dcaf33b17a26ff2ba4f8debc8218fbc7fc9ace2908f3",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "1a010ed6b22f586cbfe0a28c16cfc720cb8e1ef1f62a165c16db45f9d0abf044"
     },
     {
       "key": "mage/attack_1",
       "source": "MAGE/attack_1.png",
       "destination": "heroes/mage/attack_1.png",
       "sha256": "0b847ae0ea58a0d9deef3161c4926dcd4b9fb8db2a411e319c4aa27c8da5f83a",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "5a9a4ab923a3f346032ca6d4fc9e9c5ad9ee5585c7e909d045f4a04deccd6131"
     },
     {
       "key": "mage/attack_2",
       "source": "MAGE/attack_2.png",
       "destination": "heroes/mage/attack_2.png",
       "sha256": "865faf4a79779de9bc3eefbf83a03edf61de78172e9b5f03d77738501fd1e1c4",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "b7262da3d8650cda83752f89604b708d27759b54eb0d505436e63cbfb9557261"
     },
     {
       "key": "mage/hit",
       "source": "MAGE/hit.png",
       "destination": "heroes/mage/hit.png",
       "sha256": "c698a6e9c60ab15a54f9580557134a2b25b6d52b7112861d0906cb08dec79b62",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "9bd13407159d948a3367ebc92f18469b8bf715ae2b4b7d143723831e6f5286b9"
     },
     {
       "key": "mage/victory",
       "source": "MAGE/victory.png",
       "destination": "heroes/mage/victory.png",
       "sha256": "802553e24cf9ca6f79bfddb676b5744889ecd257084904cfc088d6b4a738908c",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "4a6055b80c0e256678dce7cba6948f1e8e22dd278955d641e8fe4cc1610582ba"
     },
     {
       "key": "mage/defeat",
       "source": "MAGE/defeat.png",
       "destination": "heroes/mage/defeat.png",
       "sha256": "a3dd4b54df10b6afcd67c4567d74e20d0a2495cf1594279462614f90028a379b",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "36920f49978cfa8f259dae140e2b46328a50a69ae1ea3b8ac60d6b2772d130a1"
     },
     {
       "key": "wizard/idle",
       "source": "wizard/idle.png",
       "destination": "heroes/wizard/idle.png",
       "sha256": "03ab2b69d12dfb1fe91c3e5d2b30fab1f41d477883a11615d9fce50e6a0a9d23",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "ed462ccbde231b4b45a31667b51257362135b932db732ade801ff4e6941f0fb2"
     },
     {
       "key": "wizard/attack_1",
       "source": "wizard/attack_1.png",
       "destination": "heroes/wizard/attack_1.png",
       "sha256": "de625489ac84640c774ee66f04b5ff7978e71fb8c736734167f936070638ae33",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "d935e23534991459e68506369e2e06f0b957a975fa407d4f6b94bbea28568e8f"
     },
     {
       "key": "wizard/attack_2",
       "source": "wizard/attack_2.png",
       "destination": "heroes/wizard/attack_2.png",
       "sha256": "8e46f27f895096fac94551722ed7971dc393a72ad70d52dc390bf12b4fb572cf",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "a561e02b05f12dfc90c6cf6e714f54e3376b93f976d4e8057ffeb7fcfb039f13"
     },
     {
       "key": "wizard/hit",
       "source": "wizard/hit.png",
       "destination": "heroes/wizard/hit.png",
       "sha256": "9d80782acec40a2061c3b77fcbc24db98beb414889fa5806966b544472a07afa",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "c101b01190c82d55cad68e0528528b7b3a70806b7d34efc6856fd5cbc8453b1e"
     },
     {
       "key": "wizard/victory",
       "source": "wizard/victory.png",
       "destination": "heroes/wizard/victory.png",
       "sha256": "d8fe9f6b8aef0f14f739a345a45bd8c8af3d4171dce650e80bcfd963f23be0be",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "80d969ba2f0f0cbcbd9eea1c7f0f0a59b0f3491ac97520b5f02b24779e3d85e2"
     },
     {
       "key": "wizard/defeat",
       "source": "wizard/defeat.png",
       "destination": "heroes/wizard/defeat.png",
       "sha256": "f44404542f5fdef5954fd5e2b3cedaee07d171ac2c51dd793709b546557e4508",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "ed438944596d4d0dbe8b38a560d276092e18123144a01e4743a4cf133614f81d"
     },
     {
       "key": "witch/idle",
       "source": "witch/idle.png",
       "destination": "heroes/witch/idle.png",
       "sha256": "31897c38429f1cecc1678d891dce1ba5e534179fa190390d01608781851a3a5f",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "e28bdf77ac6053eb6b2e6c0841730d41f6a5eb4590e1c7ca166421e76410301b"
     },
     {
       "key": "witch/attack_1",
       "source": "witch/attack_1.png",
       "destination": "heroes/witch/attack_1.png",
       "sha256": "c1d3deff2ae5ade5c33567e4df9eca20b729e57552968e6634de1fe687533589",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "d31787fd5d4ece47ad170eb045884de360143f2e26bfc576f9157bc18837a5e1"
     },
     {
       "key": "witch/attack_2",
       "source": "witch/attack_2.png",
       "destination": "heroes/witch/attack_2.png",
       "sha256": "ff7af1c24c4fc9b9f295722ed499ce5493ba654991496936a58fd81e654d82c2",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "41028ebb5459b1901c629735764365c97a05636c4f25c76eb97fee9f5cf3920b"
     },
     {
       "key": "witch/hit",
       "source": "witch/hit.png",
       "destination": "heroes/witch/hit.png",
       "sha256": "5a05d3ebd876017f9179be6598a9510f53d06e26f2f917c886fce306db4244bc",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "ea2e9cb4b794f11227c60da83281a328800ac8ac64b0b8cdc531073c2753b4b9"
     },
     {
       "key": "witch/victory",
       "source": "witch/victory.png",
       "destination": "heroes/witch/victory.png",
       "sha256": "4d4129e2c787045b2992e191d93307b5cc1629a42e3b2cc03362c782746df404",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "04933f371b6bf31a4954198c518ae0faefd5660d74fef9d590197577952296f0"
     },
     {
       "key": "witch/defeat",
       "source": "witch/defeat.png",
       "destination": "heroes/witch/defeat.png",
       "sha256": "336713bbfc97d2d043562cd4e511e1e5d0717db051714824b9c717899c7bcde7",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "d9af58fa5abd8b3a20035225b5230eb23076f255580578459e4b9186325d6e8d"
     },
     {
       "key": "fairy/idle",
       "source": "fairy/idle.png",
       "destination": "heroes/fairy/idle.png",
       "sha256": "8a4e920501cdd4e4d6e604875a37a17072e701eaf32532d49bf63d23f41054c4",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "9c03eb4a7114b468cefe935a418478195111f3d0dd566da69d71cc4e6e53f654"
     },
     {
       "key": "fairy/attack_1",
       "source": "fairy/attack_1.png",
       "destination": "heroes/fairy/attack_1.png",
       "sha256": "85d2bda268b124f6324a955a37f195817ddb43ca54eae406bd461daedf4597b3",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "7daf59d16911cd97f606ee46e585fc3c9044234a2bd4e6884931d989bfff0043"
     },
     {
       "key": "fairy/attack_2",
       "source": "fairy/attack_2.png",
       "destination": "heroes/fairy/attack_2.png",
       "sha256": "e1982c45a092ce463dcfde583efd7b1224bca82bb651d051e9412783812604a7",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "178775831b6f1a29a04d463b62a1ff90a2451986d180df505610970e63b391c3"
     },
     {
       "key": "fairy/hit",
       "source": "fairy/hit.png",
       "destination": "heroes/fairy/hit.png",
       "sha256": "7aa7544827149aa97a9a7c20c51661d753168df0d45ad87db870987a3b8e11aa",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "979d262151e2d9064e0319a2ce0394f6d821cabe5a536db3e3013fa74dc1d57d"
     },
     {
       "key": "fairy/victory",
       "source": "fairy/victory.png",
       "destination": "heroes/fairy/victory.png",
       "sha256": "14cb0eb222e3885f101bcda61f67253c1bcecc28a762a1015f3aba443e05901c",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "785f6f17a63f1bc738098a898052da085c57a5663ef667cf930fc395a6aadf8e"
     },
     {
       "key": "fairy/defeat",
       "source": "fairy/defeat.png",
       "destination": "heroes/fairy/defeat.png",
       "sha256": "926145280ecef2d6056c769de781b9437517261ef85a04cc175d11533ee8f417",
-      "origin": "User-provided original sprite sheet; copied unchanged."
+      "origin": "User-provided original sprite; pixels preserved. Distribution copy embeds source provenance metadata.",
+      "destinationSha256": "0fbf1c16ba25c8188f00451afac91186dda1282319de56277f47aa230be73bd1"
     }
   ]
 }

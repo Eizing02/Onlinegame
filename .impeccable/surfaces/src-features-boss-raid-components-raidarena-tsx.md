@@ -2,7 +2,7 @@
 version: 1
 slug: "src-features-boss-raid-components-raidarena-tsx"
 primary_target: "src/features/boss-raid/components/RaidArena.tsx"
-related_targets: ["src/app/play/[roomCode]/raid/raid-client.tsx","src/app/teacher/rooms/[roomCode]/raid/dashboard/page.tsx"]
+related_targets: ["src/features/boss-raid/components/RaidClient.tsx","src/app/teacher/rooms/[roomCode]/raid/dashboard/page.tsx"]
 ---
 
 ## Direction contract

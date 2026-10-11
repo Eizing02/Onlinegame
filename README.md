@@ -4,6 +4,8 @@
 
 ## สถานะปัจจุบัน
 
+- Boss Raid — Time Attack บน feature branch: ภาพ PixiJS จริง คำถามแยกรายคน HP/heal และผลสองอันดับ เพิ่มด้วย migration 009 และ `BOSS_RAID_ENABLED` (ปิดเริ่มต้น) [คู่มือ Boss Raid](docs/boss-raid/README.md) / [ติดตั้ง](docs/boss-raid/deploy.md)
+
 - Login แบบ legacy จากข้อมูลบัญชีเดิม หรือ Google ผ่าน Supabase Auth เมื่อเปิด `AUTH_MODE=google` และตั้งค่าตามคู่มือ
 - แยกครู/นักเรียนจาก `accounts.role`; Google mode เพิ่มสิทธิ์ Super Admin และสถานะครูใน `teacher_access`
 - ครูสร้างชุดคำถามได้
