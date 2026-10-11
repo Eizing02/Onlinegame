@@ -1,0 +1,258 @@
+{
+  "ready": true,
+  "sheets": 42,
+  "files": [
+    {
+      "key": "boss/idle",
+      "width": 920,
+      "height": 780,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/ready",
+      "width": 956,
+      "height": 772,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/attack_1",
+      "width": 1020,
+      "height": 768,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/attack_2",
+      "width": 1028,
+      "height": 784,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/dodge",
+      "width": 956,
+      "height": 772,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/hit",
+      "width": 944,
+      "height": 768,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/death",
+      "width": 996,
+      "height": 772,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/run",
+      "width": 1004,
+      "height": 768,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/breath",
+      "width": 1016,
+      "height": 788,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/shield",
+      "width": 1012,
+      "height": 792,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/ultimate",
+      "width": 940,
+      "height": 776,
+      "status": "PASS"
+    },
+    {
+      "key": "boss/victory_roar",
+      "width": 976,
+      "height": 832,
+      "status": "PASS"
+    },
+    {
+      "key": "warrior/idle",
+      "width": 1184,
+      "height": 1168,
+      "status": "PASS"
+    },
+    {
+      "key": "warrior/attack_1",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "warrior/attack_2",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "warrior/hit",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "warrior/victory",
+      "width": 1160,
+      "height": 1472,
+      "status": "PASS"
+    },
+    {
+      "key": "warrior/defeat",
+      "width": 1240,
+      "height": 1288,
+      "status": "PASS"
+    },
+    {
+      "key": "mage/idle",
+      "width": 1048,
+      "height": 1204,
+      "status": "PASS"
+    },
+    {
+      "key": "mage/attack_1",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "mage/attack_2",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "mage/hit",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "mage/victory",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "mage/defeat",
+      "width": 1272,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "wizard/idle",
+      "width": 916,
+      "height": 1180,
+      "status": "PASS"
+    },
+    {
+      "key": "wizard/attack_1",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "wizard/attack_2",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "wizard/hit",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "wizard/victory",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "wizard/defeat",
+      "width": 1196,
+      "height": 1200,
+      "status": "PASS"
+    },
+    {
+      "key": "witch/idle",
+      "width": 1032,
+      "height": 1232,
+      "status": "PASS"
+    },
+    {
+      "key": "witch/attack_1",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "witch/attack_2",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "witch/hit",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "witch/victory",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "witch/defeat",
+      "width": 1248,
+      "height": 1308,
+      "status": "PASS"
+    },
+    {
+      "key": "fairy/idle",
+      "width": 1164,
+      "height": 1216,
+      "status": "PASS"
+    },
+    {
+      "key": "fairy/attack_1",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "fairy/attack_2",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "fairy/hit",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "fairy/victory",
+      "width": 1252,
+      "height": 1252,
+      "status": "PASS"
+    },
+    {
+      "key": "fairy/defeat",
+      "width": 1164,
+      "height": 1244,
+      "status": "PASS"
+    }
+  ]
+}

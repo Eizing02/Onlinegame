@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "raid:assets:import": "node scripts/boss-raid/import-assets.mjs",
+    "raid:assets:validate": "node scripts/boss-raid/validate-assets.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -24,6 +26,7 @@
     "katex": "^0.17.0",
     "lucide-react": "^1.21.0",
     "next": "^16.3.4",
+    "pixi.js": "^8.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "^3.6.0",
@@ -41,6 +44,7 @@
     "@types/three": "^0.185.4",
     "eslint": "^9",
     "eslint-config-next": "^16.3.4",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

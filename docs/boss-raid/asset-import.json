@@ -1,0 +1,299 @@
+{
+  "sheets": 42,
+  "files": [
+    {
+      "key": "boss/idle",
+      "source": "Boss/idle.png",
+      "destination": "boss/idle.png",
+      "sha256": "5c36082b29da451fb69abc2ce03cca6ffb429e2d24e6393c414609ab6728c310",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/ready",
+      "source": "Boss/ready.png",
+      "destination": "boss/ready.png",
+      "sha256": "f068187b0023d600b8e9c148c44451fbdbfad42ca983de171a354c506a218cc1",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/attack_1",
+      "source": "Boss/attack_1.png",
+      "destination": "boss/attack_1.png",
+      "sha256": "33134fe59590777e8d42232797d564fd7f48a94cf20d633c17d4aca876b2b780",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/attack_2",
+      "source": "Boss/attack_2.png",
+      "destination": "boss/attack_2.png",
+      "sha256": "b36ddb23a6aad6e44d41320de9fd67fce8d98bfc180e8ef8933493472201b20a",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/dodge",
+      "source": "Boss/Backward Dodge.png",
+      "destination": "boss/backward_dodge.png",
+      "sha256": "5fecfa392c72fa95dd90d9bfe888d317412a51aa95a45f53e7d50c64f4895f5a",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/hit",
+      "source": "Boss/Damage Reaction.png",
+      "destination": "boss/damage_reaction.png",
+      "sha256": "355e2da2e555698764a507eddb8f755e55c272bb9ea4daeb1d58033d49587a0a",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/death",
+      "source": "Boss/Defeat Collapse & Death.png",
+      "destination": "boss/death.png",
+      "sha256": "382c1a3082cbe9829c01d4688ab1fb99f17e40c213d17c1f1e7d4bdb345e3cb2",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/run",
+      "source": "Boss/run.png",
+      "destination": "boss/run.png",
+      "sha256": "a3227d841501e4357db51fccf85f1f54d3a2bd55bfcea6c941e5b82825c69404",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/breath",
+      "source": "Boss/Shadow Flame Breath.png",
+      "destination": "boss/shadow_flame_breath.png",
+      "sha256": "fd2bd48c1018489e36c8b625033f391a3d04331bd42ce8935a6437f42110b10a",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/shield",
+      "source": "Boss/Shield Defend.png",
+      "destination": "boss/shield_defense.png",
+      "sha256": "1acd757e2430611a50e4a93513229c0b69548e8045f398ffe234afae9d55c436",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/ultimate",
+      "source": "Boss/ultimate.png",
+      "destination": "boss/ultimate.png",
+      "sha256": "c4e40bcb435f30339e8d500c19d436d40e8c41ac8cfc44ab3d9b8de8a8e98ab3",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "boss/victory_roar",
+      "source": "Boss/Victory Triumphant Roar.png",
+      "destination": "boss/victory_roar.png",
+      "sha256": "1b4ee7fd876cc7f58a43587a3da20730f48fa89c0170aeeb404f4c547bbcef0c",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "warrior/idle",
+      "source": "Warrior/idel.png",
+      "destination": "heroes/warrior/idle.png",
+      "sha256": "2d3ef31c237799ae3a1c761f5c160f5d62511f27ffb7b37691c48fbcae3f7411",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "warrior/attack_1",
+      "source": "Warrior/attack_1.png",
+      "destination": "heroes/warrior/attack_1.png",
+      "sha256": "2f81e9469dfbed5853715283bae33aa4a5893c3b5ba2dd342d0f868ae7734f36",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "warrior/attack_2",
+      "source": "Warrior/attack_2.png",
+      "destination": "heroes/warrior/attack_2.png",
+      "sha256": "b1d4cd3350cc9630f6a27008e621f226e16b8a3ccedb2f67a44664a0fed2c591",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "warrior/hit",
+      "source": "Warrior/hit.png",
+      "destination": "heroes/warrior/hit.png",
+      "sha256": "b8e1b9e09dd2878821a9c8afd0f364f3adfb0c3a5ccbd3ec73d8fc714b354613",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "warrior/victory",
+      "source": "Warrior/victory.png",
+      "destination": "heroes/warrior/victory.png",
+      "sha256": "e7043777a883c7c44a939c691419b9fd38ae107d0645dceb49531c3ea5ca36a1",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "warrior/defeat",
+      "source": "Warrior/defeat.png",
+      "destination": "heroes/warrior/defeat.png",
+      "sha256": "55e1a45febcac50f93df9faffed10c063d5698e4746a188cb8753d6730313769",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "mage/idle",
+      "source": "MAGE/idle.png",
+      "destination": "heroes/mage/idle.png",
+      "sha256": "f7152e18cca530c517f7dcaf33b17a26ff2ba4f8debc8218fbc7fc9ace2908f3",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "mage/attack_1",
+      "source": "MAGE/attack_1.png",
+      "destination": "heroes/mage/attack_1.png",
+      "sha256": "0b847ae0ea58a0d9deef3161c4926dcd4b9fb8db2a411e319c4aa27c8da5f83a",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "mage/attack_2",
+      "source": "MAGE/attack_2.png",
+      "destination": "heroes/mage/attack_2.png",
+      "sha256": "865faf4a79779de9bc3eefbf83a03edf61de78172e9b5f03d77738501fd1e1c4",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "mage/hit",
+      "source": "MAGE/hit.png",
+      "destination": "heroes/mage/hit.png",
+      "sha256": "c698a6e9c60ab15a54f9580557134a2b25b6d52b7112861d0906cb08dec79b62",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "mage/victory",
+      "source": "MAGE/victory.png",
+      "destination": "heroes/mage/victory.png",
+      "sha256": "802553e24cf9ca6f79bfddb676b5744889ecd257084904cfc088d6b4a738908c",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "mage/defeat",
+      "source": "MAGE/defeat.png",
+      "destination": "heroes/mage/defeat.png",
+      "sha256": "a3dd4b54df10b6afcd67c4567d74e20d0a2495cf1594279462614f90028a379b",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "wizard/idle",
+      "source": "wizard/idle.png",
+      "destination": "heroes/wizard/idle.png",
+      "sha256": "03ab2b69d12dfb1fe91c3e5d2b30fab1f41d477883a11615d9fce50e6a0a9d23",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "wizard/attack_1",
+      "source": "wizard/attack_1.png",
+      "destination": "heroes/wizard/attack_1.png",
+      "sha256": "de625489ac84640c774ee66f04b5ff7978e71fb8c736734167f936070638ae33",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "wizard/attack_2",
+      "source": "wizard/attack_2.png",
+      "destination": "heroes/wizard/attack_2.png",
+      "sha256": "8e46f27f895096fac94551722ed7971dc393a72ad70d52dc390bf12b4fb572cf",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "wizard/hit",
+      "source": "wizard/hit.png",
+      "destination": "heroes/wizard/hit.png",
+      "sha256": "9d80782acec40a2061c3b77fcbc24db98beb414889fa5806966b544472a07afa",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "wizard/victory",
+      "source": "wizard/victory.png",
+      "destination": "heroes/wizard/victory.png",
+      "sha256": "d8fe9f6b8aef0f14f739a345a45bd8c8af3d4171dce650e80bcfd963f23be0be",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "wizard/defeat",
+      "source": "wizard/defeat.png",
+      "destination": "heroes/wizard/defeat.png",
+      "sha256": "f44404542f5fdef5954fd5e2b3cedaee07d171ac2c51dd793709b546557e4508",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "witch/idle",
+      "source": "witch/idle.png",
+      "destination": "heroes/witch/idle.png",
+      "sha256": "31897c38429f1cecc1678d891dce1ba5e534179fa190390d01608781851a3a5f",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "witch/attack_1",
+      "source": "witch/attack_1.png",
+      "destination": "heroes/witch/attack_1.png",
+      "sha256": "c1d3deff2ae5ade5c33567e4df9eca20b729e57552968e6634de1fe687533589",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "witch/attack_2",
+      "source": "witch/attack_2.png",
+      "destination": "heroes/witch/attack_2.png",
+      "sha256": "ff7af1c24c4fc9b9f295722ed499ce5493ba654991496936a58fd81e654d82c2",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "witch/hit",
+      "source": "witch/hit.png",
+      "destination": "heroes/witch/hit.png",
+      "sha256": "5a05d3ebd876017f9179be6598a9510f53d06e26f2f917c886fce306db4244bc",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "witch/victory",
+      "source": "witch/victory.png",
+      "destination": "heroes/witch/victory.png",
+      "sha256": "4d4129e2c787045b2992e191d93307b5cc1629a42e3b2cc03362c782746df404",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "witch/defeat",
+      "source": "witch/defeat.png",
+      "destination": "heroes/witch/defeat.png",
+      "sha256": "336713bbfc97d2d043562cd4e511e1e5d0717db051714824b9c717899c7bcde7",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "fairy/idle",
+      "source": "fairy/idle.png",
+      "destination": "heroes/fairy/idle.png",
+      "sha256": "8a4e920501cdd4e4d6e604875a37a17072e701eaf32532d49bf63d23f41054c4",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "fairy/attack_1",
+      "source": "fairy/attack_1.png",
+      "destination": "heroes/fairy/attack_1.png",
+      "sha256": "85d2bda268b124f6324a955a37f195817ddb43ca54eae406bd461daedf4597b3",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "fairy/attack_2",
+      "source": "fairy/attack_2.png",
+      "destination": "heroes/fairy/attack_2.png",
+      "sha256": "e1982c45a092ce463dcfde583efd7b1224bca82bb651d051e9412783812604a7",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "fairy/hit",
+      "source": "fairy/hit.png",
+      "destination": "heroes/fairy/hit.png",
+      "sha256": "7aa7544827149aa97a9a7c20c51661d753168df0d45ad87db870987a3b8e11aa",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "fairy/victory",
+      "source": "fairy/victory.png",
+      "destination": "heroes/fairy/victory.png",
+      "sha256": "14cb0eb222e3885f101bcda61f67253c1bcecc28a762a1015f3aba443e05901c",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    },
+    {
+      "key": "fairy/defeat",
+      "source": "fairy/defeat.png",
+      "destination": "heroes/fairy/defeat.png",
+      "sha256": "926145280ecef2d6056c769de781b9437517261ef85a04cc175d11533ee8f417",
+      "origin": "User-provided original sprite sheet; copied unchanged."
+    }
+  ]
+}
