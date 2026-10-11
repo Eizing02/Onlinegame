@@ -854,11 +854,13 @@ export async function joinLocalGameSession({
   studentCode,
   displayName,
   teamId,
+  authUserId,
 }: {
   roomCode: string;
   studentCode: string;
   displayName: string;
   teamId?: string;
+  authUserId?: string;
 }) {
   return withLocalLock(async () => {
 
@@ -868,6 +870,7 @@ export async function joinLocalGameSession({
       studentCode,
       displayName,
       teamId,
+      authUserId,
     });
   }
 

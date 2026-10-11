@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { LogOut, Users } from "lucide-react";
 import { getSession } from "@/lib/auth/session";
 import { signOutAction } from "@/app/auth/actions";
 import { SessionGuard } from "./session-guard";
@@ -12,7 +12,8 @@ export async function AppShell({ children, room = false }: { children: React.Rea
     <header className="app-header"><div className="header-inner">
       <Link href="/" aria-label="KruEIonline หน้าหลัก"><Image alt="KruEIonline" className="brand-logo" height={100} width={180} priority src="/assets/brand/logo.png" /></Link>
       <nav aria-label="เมนูหลัก" className="header-actions">
-        {session && <><Link className="account-label" href={session.role === "teacher" ? "/teacher/question-sets" : "/join"}>
+        {session?.accessLevel === "super_admin" && <Link className="admin-nav" href="/admin/teachers" aria-label="จัดการครู"><Users size={19} aria-hidden="true" /><span>จัดการครู</span></Link>}
+        {session && <><Link className="account-label" aria-label={session.role === "student" && session.authMode === "google" ? "ข้อมูลบัญชี" : undefined} href={session.role === "teacher" ? "/teacher/question-sets" : session.authMode === "google" ? "/account" : "/join"}>
           <span>{session.role === "teacher" ? "ครู" : "นักเรียน"}</span><strong>{session.displayName}</strong>
         </Link><form action={signOutAction}><button className="icon-button" aria-label="ออกจากระบบ" title="ออกจากระบบ"><LogOut size={19} /></button></form></>}
       </nav>

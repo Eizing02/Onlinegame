@@ -29,6 +29,7 @@ export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookieOptions: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" },
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -39,7 +40,7 @@ export async function createSupabaseServerClient() {
             cookieStore.set(name, value, options);
           });
         } catch {
-          // Server Components cannot always mutate cookies. Middleware/actions can.
+          // Server Components cannot mutate cookies; proxy refreshes them first.
         }
       },
     },

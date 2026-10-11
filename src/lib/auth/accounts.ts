@@ -6,6 +6,7 @@ import { getDataDirectory } from "@/lib/data/paths";
 import { findSupabaseAccountByCode } from "@/lib/auth/supabase-accounts";
 import { normalizeUserCode, parseAccountRole, parseCsv } from "@/lib/auth/account-format";
 import type { SheetAccount } from "@/types/auth";
+import { getAuthMode } from "@/lib/auth/mode";
 
 export async function getSheetAccounts(): Promise<SheetAccount[]> {
   const csv = await readFile(path.join(getDataDirectory(), "student.csv"), "utf8");
@@ -30,8 +31,9 @@ export async function findAccountByCode(userCode: string) {
   return (await getSheetAccounts()).find(account => normalizeUserCode(account.userCode) === normalized) ?? null;
 }
 export async function findAccountByCredentials(userCode: string, password: string) {
+  if (getAuthMode() !== "legacy") return null;
   const account = await findAccountByCode(userCode);
-  if (!account) return null;
+  if (!account?.password) return null;
   const digest = (value: string) => createHash("sha256").update(value).digest();
   return timingSafeEqual(digest(account.password), digest(password)) ? account : null;
 }

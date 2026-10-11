@@ -6,9 +6,12 @@ import { normalizeUserCode } from "@/lib/auth/account-format";
 import { clearSession, createSession } from "@/lib/auth/session";
 import { getSessionLanding } from "@/lib/auth/landing";
 import { getDataBackend } from "@/lib/data/backend";
+import { getAuthMode, getTrustedAppUrl } from "@/lib/auth/mode";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type LoginState = { error: string; userCode: string };
 export async function signInWithSheetAction(_previous: LoginState, formData: FormData): Promise<LoginState> {
+  if (getAuthMode() !== "legacy") return { error: "กรุณาเข้าสู่ระบบด้วย Google", userCode: "" };
   const userCode = normalizeUserCode(String(formData.get("user_code") || ""));
   const password = String(formData.get("password") || "");
   if (!userCode || !password) return { error: "กรุณากรอกรหัสผู้ใช้และรหัสผ่านให้ครบ", userCode };
@@ -34,6 +37,37 @@ export async function signInWithSheetAction(_previous: LoginState, formData: For
   redirect(destination);
 }
 export async function signOutAction() {
+  if (getAuthMode() === "google") {
+    try {
+      const client = await createSupabaseServerClient();
+      // Local removes this browser's cookies; other classroom devices stay signed in.
+      await client.auth.signOut({ scope: "local" });
+    } catch { /* Local credentials must still be cleared when Auth is unavailable. */ }
+    finally {
+      const { cookies } = await import("next/headers");
+      const store = await cookies();
+      store.getAll().filter(cookie => /^sb-.+-auth-token(?:\.\d+|-code-verifier(?:\.\d+)?)?$/.test(cookie.name))
+        .forEach(cookie => store.delete(cookie.name));
+    }
+  }
   await clearSession();
   redirect("/login?notice=signed_out");
+}
+
+export async function signInWithGoogleAction(_previous: { error: string }): Promise<{ error: string }> {
+  void _previous;
+  if (getAuthMode() !== "google") return { error: "ยังไม่ได้เปิดใช้ Google Login" };
+  let destination: string;
+  try {
+    const client = await createSupabaseServerClient();
+    const { data, error } = await client.auth.signInWithOAuth({
+      provider: "google", options: {
+        redirectTo: new URL("/auth/callback", getTrustedAppUrl()).toString(),
+        skipBrowserRedirect: true, scopes: "openid email profile", queryParams: { prompt: "select_account" },
+      },
+    });
+    if (error || !data.url) return { error: "เปิด Google Login ไม่สำเร็จ กรุณาลองอีกครั้ง" };
+    destination = data.url;
+  } catch { return { error: "ระบบ Google Login ยังตั้งค่าไม่ครบ กรุณาติดต่อผู้ดูแล" }; }
+  redirect(destination);
 }

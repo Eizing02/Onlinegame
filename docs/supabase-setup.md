@@ -2,6 +2,10 @@
 
 เอกสารนี้ใช้เมื่อต้องการย้ายระบบจาก local JSON ไปใช้ Supabase เป็น backend จริง
 
+สำหรับ Google Login ให้ทำตาม [คู่มือ Google Auth](google-auth-setup.md) เพิ่มเติม ใช้ `AUTH_MODE=legacy` จนกว่า Staging และ Provider settings จะพร้อม
+
+[SQL สำหรับ Google Login พร้อมตรวจผลก่อน/หลังรัน](google-auth-sql.md): ฐานข้อมูลที่มี 001–007 แล้วเพิ่มเฉพาะ 008 ไม่มี migration 009
+
 ## 1. สร้าง Project ใน Supabase
 
 สร้าง project ใหม่ใน Supabase แล้วเตรียมค่า:
@@ -27,9 +31,18 @@ SUPABASE_SERVICE_ROLE_KEY=...
 
 ```txt
 supabase/migrations/001_initial_schema.sql
+supabase/migrations/002_enable_realtime_publication.sql
+supabase/migrations/003_gameplay_flow_upgrades.sql
+supabase/migrations/004_session_cleanup_functions.sql
+supabase/migrations/005_question_types_and_images.sql
+supabase/migrations/006_private_game_data.sql
+supabase/migrations/007_team_power_scoring.sql
+supabase/migrations/008_google_auth_identity_and_teacher_access.sql
 ```
 
 schema นี้มีตาราง:
+
+ฐานข้อมูลเดิมรันเฉพาะ migration ที่ยังไม่มี หลัง `006` Realtime เปิดเฉพาะ `game_session_updates` สำหรับแจ้งให้อ่านข้อมูลใหม่ เกม/คำตอบและข้อมูลส่วนตัวอ่านผ่าน Server ที่ตรวจสิทธิ์ ห้ามเปิด policy สาธารณะเก่ากลับมา
 
 - `accounts`
 - `question_sets`
@@ -48,7 +61,7 @@ schema นี้มีตาราง:
 - reconnect/last seen
 - กันตอบซ้ำด้วย `session_id + question_index + student_code`
 - คะแนนรวมและคะแนนเฉลี่ยทีม
-- Realtime publication สำหรับ `game_sessions`, `teams`, `participants`, `answers`, `game_events`
+- Realtime invalidation ผ่าน `game_session_updates` หลัง migration `006`; อ่านข้อมูลเกมจริงผ่าน Server
 
 ## 3. Seed บัญชีและชุดคำถาม
 
@@ -68,6 +81,7 @@ npm run seed:supabase
 สคริปต์นี้จะ:
 
 - นำ `data/student.csv` เข้า `accounts`
+- เพิ่มเฉพาะบัญชีที่ขาด โดยรักษา profile/password/role/คีย์เดิมและครู Google ที่ไม่มีรหัสผ่าน
 - นำ `data/question-sets.json` เข้า `question_sets`
 - นำคำถามเข้า `questions`
 
@@ -87,11 +101,12 @@ DATA_BACKEND=supabase
 
 ```env
 DATA_BACKEND=local
+AUTH_MODE=legacy
 ```
 
 ## 5. สิ่งที่ยังใช้ Server API
 
-ระบบยังคงให้ Next.js server actions/API เป็นตัวเขียนข้อมูล ไม่ให้ browser เขียน database โดยตรง เหตุผลคือระบบ login ตอนนี้เป็นรหัสจากชีท/ตาราง `accounts` ไม่ใช่ Supabase Auth เต็มรูปแบบ
+ระบบยังคงให้ Next.js server actions/API เป็นตัวเขียนข้อมูล ไม่ให้ browser เขียน database โดยตรง โหมด legacy ตรวจ session จากบัญชีเดิม ส่วน Google mode ตรวจ Supabase Auth และสิทธิ์ปัจจุบันใน DB ก่อนใช้ server-side service role
 
 ดังนั้น `SUPABASE_SERVICE_ROLE_KEY` ต้องอยู่เฉพาะฝั่ง server และห้ามเผยแพร่ใน client
 

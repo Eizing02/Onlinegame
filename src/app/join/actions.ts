@@ -47,6 +47,7 @@ export async function chooseTeamAction(formData: FormData) {
     roomCode,
     studentCode: student.userCode,
     displayName: student.displayName,
+    authUserId: student.authUserId,
     teamId,
   });
 
@@ -69,6 +70,7 @@ export async function randomTeamAction(formData: FormData) {
     roomCode,
     studentCode: student.userCode,
     displayName: student.displayName,
+    authUserId: student.authUserId,
   });
 
   if (!result.ok) {

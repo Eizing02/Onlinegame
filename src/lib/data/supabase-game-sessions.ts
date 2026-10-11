@@ -486,11 +486,13 @@ export async function joinSupabaseGameSession({
   studentCode,
   displayName,
   teamId,
+  authUserId,
 }: {
   roomCode: string;
   studentCode: string;
   displayName: string;
   teamId?: string;
+  authUserId?: string;
 }) {
   const session = await fetchSessionByRoomCode(roomCode);
 
@@ -502,6 +504,19 @@ export async function joinSupabaseGameSession({
   }
 
   const supabase = createSupabaseAdminClient();
+  if (authUserId) {
+    const { data, error } = await supabase.rpc("join_google_classroom", {
+      p_actor: authUserId, p_student_code: studentCode, p_room_code: session.roomCode, p_team_id: teamId || null,
+    });
+    if (error) throw error;
+    if (!data?.ok) {
+      const { authMessage } = await import("@/lib/auth/account-linking");
+      return { ok: false as const, reason: authMessage(data?.code || "AUTH_CONFIGURATION") };
+    }
+    const team = session.teams.find(item => item.id === data.teamId);
+    if (!team) return { ok: false as const, reason: "ไม่พบทีม กรุณาเปิดหน้าห้องใหม่" };
+    return { ok: true as const, roomCode: session.roomCode, team };
+  }
   const now = new Date().toISOString();
   const existingParticipant = session.participants.find(
     (participant) => participant.studentCode === studentCode,
