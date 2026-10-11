@@ -1,5 +1,54 @@
 @import "tailwindcss";
 
+.identity-page { max-width: 680px; margin: auto; padding: 40px 24px; display: grid; gap: 20px; line-height: 1.7; }
+.identity-page h1 { font-size: clamp(26px, 3vw, 34px); font-weight: 650; text-wrap: balance; }
+.identity-page h2 { font-size: 20px; font-weight: 600; }
+.identity-email { overflow-wrap: anywhere; }
+.identity-form { display: grid; gap: 20px; }
+.identity-form label, .teacher-search label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.identity-form input:not([type="hidden"]), .identity-form select, .teacher-search input { width: 100%; min-height: 48px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+.identity-form input[name="studentCode"] { font-size: 24px; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
+.identity-form input[aria-invalid="true"] { border-color: var(--danger); }
+.identity-form [id="student-code-help"] { font-size: 14px; margin-top: 8px; }
+.identity-details { display: grid; gap: 12px; }
+.identity-details > div { display: grid; grid-template-columns: 140px minmax(0,1fr); gap: 16px; }
+.identity-details dt { color: var(--muted); }
+.identity-details dd { overflow-wrap: anywhere; font-weight: 600; }
+.identity-preview { display: grid; gap: 16px; padding: 24px; background: var(--panel); border-radius: 14px; }
+.identity-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.identity-secondary, .admin-nav { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 10px; }
+.identity-secondary:hover, .admin-nav:hover { background: var(--panel-strong); }
+.identity-back { color: var(--cyan); text-decoration: underline; text-underline-offset: 4px; width: fit-content; }
+.identity-warning { color: var(--warning); font-size: 14px; }
+.identity-footnote { color: var(--muted); font-size: 14px; padding-top: 16px; border-top: 1px solid var(--border); }
+.identity-disclosure { padding: 16px 0; border-block: 1px solid var(--border); }
+.identity-disclosure summary, .teacher-edit summary { cursor: pointer; min-height: 44px; padding-block: 8px; color: var(--cyan); }
+.identity-disclosure[open] > .identity-form, .teacher-edit[open] > .identity-form { margin-top: 16px; }
+.teachers-page { max-width: 1040px; }
+.teacher-search > div { display: flex; gap: 12px; }
+.teacher-search input { flex: 1; min-width: 0; }
+.teacher-search button { flex-shrink: 0; min-width: 76px; white-space: nowrap; }
+.teacher-list { display: grid; }
+.teacher-list > li { padding: 24px 0; border-top: 1px solid var(--border); }
+.teacher-record { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 24px; }
+.teacher-record p { font-size: 14px; }
+.teacher-form { max-width: 540px; }
+.teacher-status { display: inline-block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.status-active { color: var(--success); }
+.status-pending { color: var(--warning); }
+.status-suspended { color: var(--danger); }
+.teacher-pagination { justify-content: flex-end; }
+.identity-empty { padding-block: 32px; }
+@media (max-width: 600px) {
+  .identity-page { padding: 28px 20px; gap: 16px; }
+  .identity-details > div { grid-template-columns: 1fr; gap: 2px; }
+  .identity-preview { padding: 20px; }
+  .teacher-record { grid-template-columns: 1fr; gap: 12px; }
+  .admin-nav { padding: 8px 10px; }
+  .admin-nav span { display: none; }
+  .identity-actions .game-button { flex: 1 1 auto; }
+}
+
 /* Classroom motion: quiet surroundings, immediate interaction, optional depth. */
 .app-shell { position: relative; isolation: isolate; }
 .app-header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--border); background: #080f24f5; }

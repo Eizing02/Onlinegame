@@ -4,8 +4,8 @@
 
 ## สถานะปัจจุบัน
 
-- Login ด้วยรหัสจาก `data/student.csv`
-- แยกครู/นักเรียนจากคอลัมน์ `role`
+- Login แบบ legacy จากข้อมูลบัญชีเดิม หรือ Google ผ่าน Supabase Auth เมื่อเปิด `AUTH_MODE=google` และตั้งค่าตามคู่มือ
+- แยกครู/นักเรียนจาก `accounts.role`; Google mode เพิ่มสิทธิ์ Super Admin และสถานะครูใน `teacher_access`
 - ครูสร้างชุดคำถามได้
 - ครูเพิ่มคำถาม คำตอบ คะแนน และเวลาต่อข้อได้
 - ชุดคำถามบันทึกไว้ที่ `data/question-sets.json`
@@ -83,12 +83,21 @@ npm run dev
 
 เปิด [http://localhost:3000](http://localhost:3000)
 
-ถ้าจะใช้ Supabase ให้ดู [docs/supabase-setup.md](<D:\สื่อการสอน codex\realtime qa\realtime-quiz-game\docs\supabase-setup.md>)
+ถ้าจะใช้ Supabase ให้ดู [Supabase setup](docs/supabase-setup.md) และ [Google Login / สิทธิ์ครู](docs/google-auth-setup.md)
+
+ระบบรองรับ `AUTH_MODE=legacy` (ค่าเริ่มต้น) หรือ `google` ผ่าน Supabase Auth แบบ PKCE/SSR โดยคงข้อมูลเกมและกติกาคะแนนเดิม Google mode ปิดการเข้าระบบด้วยรหัสผ่านและ legacy cookie ต้องรัน migration `008` และตั้ง Provider/Environment ก่อนเปิดใช้จริง
+
+นักเรียน Google ตรวจชื่อและชั้นก่อนเชื่อมรหัส 5 หลัก มีหน้าแก้รหัสภายหลัง ผู้ดูแลเพิ่มอีเมลครูและระงับสิทธิ์ได้ ครูแต่ละคนเห็นงานของตนเอง การผูกรหัส **ไม่พิสูจน์ว่าเป็นเจ้าของรหัส**; ดู [การผูกผิด/Recovery](docs/google-auth-recovery.md)
 
 ## Routes
 
 - `/` หน้าแรก
 - `/login` หน้า login รวมครูและนักเรียน
+- `/auth/callback` OAuth callback ที่ตรวจตัวตนฝั่ง Server
+- `/verify-student` ตรวจและยืนยันรหัสนักเรียนใน Google mode
+- `/account` ข้อมูลบัญชีและเปลี่ยนรหัสนักเรียน
+- `/admin/teachers` ผู้ดูแลหลักจัดการสิทธิ์ครู
+- `/access-denied` อธิบายสิทธิ์ที่ยังใช้งานไม่ได้และออกจากระบบ
 - `/teacher/question-sets` หน้ารวมชุดคำถามของครู
 - `/teacher/question-sets/[questionSetId]` หน้าเพิ่ม/ลบคำถามในชุดคำถาม
 - `/teacher/rooms/new` หน้าสร้างห้องเกมและกำหนดจำนวนทีม
@@ -101,5 +110,12 @@ npm run dev
 ```bash
 npm run lint
 npm run build
+npm run test:auth
+npm run test:sql
+npm run test:data
 npx playwright test "tests/smoke-login.spec.ts" "tests/question-sets.spec.ts" "tests/rooms.spec.ts" "tests/student-join.spec.ts" "tests/gameplay.spec.ts" --reporter=line
 ```
+
+Google E2E จำลองใช้ `npm run test:e2e:google` ดู [วิธีทดสอบและผลที่ต้องตรวจใน Staging](docs/google-auth-testing.md) สำหรับ build ที่ใช้ URL fixture ต้อง rebuild ด้วย Environment จริงก่อนนำไป deploy Mock ทดสอบ PKCE/cookies/SSR/RPC ได้ แต่ไม่ใช่การรับรอง OAuth จริง
+
+รายละเอียดไฟล์ที่เปลี่ยน ผลทดสอบ ความเสี่ยง และสิ่งที่ต้องทำก่อน Production อยู่ใน [รายงานส่งมอบ Google Auth](docs/google-auth-handover.md)

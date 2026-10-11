@@ -55,9 +55,26 @@ Migration หลักอยู่ที่ `supabase/migrations/001_initial_sch
 - event
 - สรุปผลหลังจบเกม
 
-Server actions ใช้ session จากชีทเพื่อตรวจ role ก่อนเขียนข้อมูลจริงผ่าน Supabase service role key
+Server actions ตรวจ session และ role ฝั่ง Server ก่อนเขียนข้อมูลจริงผ่าน Supabase service role key โหมด legacy ตรวจบัญชีเดิม ส่วน Google ตรวจ Supabase Auth และสิทธิ์ปัจจุบันในฐานข้อมูล
 
 โหมด backend:
 
 - `DATA_BACKEND=local` ใช้ `data/*.json` และ `data/student.csv`
 - `DATA_BACKEND=supabase` ใช้ตาราง Supabase ทั้งหมดผ่าน server-side service role
+
+## Google Auth — migration 008
+
+Google mode (`AUTH_MODE=google`) ต้องใช้ Supabase backend โดยเพิ่ม [008_google_auth_identity_and_teacher_access.sql](../supabase/migrations/008_google_auth_identity_and_teacher_access.sql) ต่อจาก 001–007:
+
+| ตาราง | หน้าที่และข้อจำกัด |
+|---|---|
+| `account_identities` | PK `auth_user_id` อ้าง `auth.users`; UNIQUE `user_code` อ้าง `accounts` ป้องกันผูกซ้ำทั้งสองด้าน |
+| `teacher_access` | สิทธิ์ `super_admin`/`teacher` และสถานะ `pending`/`active`/`suspended`; Google email lowercase UNIQUE; ต้องอ้างบัญชี role teacher |
+| `account_link_audit` | Audit การผูก ย้ายรหัส เพิ่ม/แก้ครู Bootstrap และ recovery; ไม่แก้หรือตามย้ายประวัติคำตอบ |
+| `auth_rate_limits` | ตัวนับแบบ fixed window ใน DB ร่วมทุก instance รวมความพยายามที่ไม่สำเร็จ |
+
+`accounts.password` อนุญาต NULL สำหรับครู Google ใหม่ แต่คง password ของบัญชีเดิมและคีย์ทุกบัญชี `accounts.role` ยังเป็น teacher/student; access level แยกอยู่ใน `teacher_access` ไม่เปลี่ยน schema เกมหรือสูตรคะแนน
+
+ตารางใหม่เปิด RLS โดยไม่มี policy ให้ browser; ถอน grants จาก PUBLIC/anon/authenticated ใช้ RPC ผ่าน trusted server/service role เท่านั้น การเปลี่ยนรหัสล็อก identity/account และปฏิเสธรหัสที่มี participant ในห้องไม่จบ Google join ใช้ `join_google_classroom` ร่วมล็อก identity เพื่อไม่ให้แข่งกับการย้ายรหัส ประวัติ `participants.student_code` และ `answers.student_code` คงเดิม
+
+ดู [setup/backup/rollback](google-auth-setup.md), [recovery](google-auth-recovery.md) และ [ผลทดสอบ](google-auth-handover.md) ก่อนใช้กับฐานข้อมูลจริง

@@ -5,6 +5,6 @@ const directory = path.resolve('tmp/e2e-data');
 await mkdir(directory, { recursive: true });
 await writeFile(path.join(directory, 'student.csv'), 'id,name,password,grade,role\nADMIN,ครูทดสอบ,teacher-test-only,TEACHER,TEACHER\n02074,นักเรียนหนึ่ง,student-test-only,ม.6,STUDENT\n02075,นักเรียนสอง,student-test-only,ม.6,STUDENT\n02077,นักเรียนสาม,student-test-only,ม.6,STUDENT\nT002,ครูอีกบัญชี,teacher-test-only,TEACHER,TEACHER\n');
 for (const file of ['question-sets.json', 'game-sessions.json']) await writeFile(path.join(directory, file), '[]\n');
-const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', '3100'], {stdio:'inherit', env: {...process.env, DATA_BACKEND:'local', DATA_DIRECTORY:directory, AUTH_SESSION_SECRET:'isolated-e2e-secret-do-not-use-in-production-123456'}});
+const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', '3100'], {stdio:'inherit', env: {...process.env, AUTH_MODE:'legacy', DATA_BACKEND:'local', DATA_DIRECTORY:directory, AUTH_SESSION_SECRET:'isolated-e2e-secret-do-not-use-in-production-123456'}});
 for (const signal of ['SIGINT','SIGTERM']) process.on(signal, () => child.kill(signal));
 child.on('exit', code => process.exit(code ?? 0));

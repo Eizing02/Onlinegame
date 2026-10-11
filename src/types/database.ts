@@ -9,11 +9,23 @@ export type Json =
 export type AccountRow = {
   user_code: string;
   display_name: string;
-  password: string;
+  password: string | null;
   grade: string | null;
   role: "teacher" | "student";
   created_at: string;
   updated_at: string;
+};
+
+export type AccountIdentityRow = { auth_user_id: string; user_code: string; linked_at: string; updated_at: string };
+export type TeacherAccessRow = {
+  user_code: string; google_email: string; access_level: "super_admin" | "teacher";
+  status: "active" | "pending" | "suspended"; created_by: string | null;
+  created_at: string; updated_at: string; last_login_at: string | null;
+};
+export type AccountLinkAuditRow = {
+  id: number; actor_auth_user_id: string | null; old_user_code: string | null; new_user_code: string | null;
+  action: "initial_claim" | "switch" | "teacher_linked" | "bootstrap" | "teacher_added" | "teacher_updated" | "recovery_unlink";
+  created_at: string;
 };
 
 export type QuestionSetRow = {

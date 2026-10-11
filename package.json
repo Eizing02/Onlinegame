@@ -7,11 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node tests/data-regression.cjs && node tests/sql-scoring.mjs && playwright test",
+    "test": "node tests/data-regression.cjs && node tests/google-identity.cjs && node tests/google-services.cjs && node tests/sql-scoring.mjs && node tests/sql-google-auth.mjs && playwright test",
     "test:e2e": "playwright test",
     "test:data": "node tests/data-regression.cjs",
     "seed:supabase": "node scripts/seed-supabase.mjs",
-    "test:sql": "node tests/sql-scoring.mjs"
+    "test:sql": "node tests/sql-scoring.mjs && node tests/sql-google-auth.mjs",
+    "test:auth": "node tests/google-identity.cjs && node tests/google-services.cjs && node tests/sql-google-auth.mjs",
+    "test:e2e:google": "playwright test --config=playwright.google.config.ts",
+    "test:staging:auth": "node tests/staging-google-races.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

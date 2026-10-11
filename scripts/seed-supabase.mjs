@@ -84,27 +84,44 @@ async function seedAccounts() {
     return;
   }
 
+  // Preserve canonical keys too: the importer uppercases codes, while old
+  // databases may contain lowercase admin/student keys referenced by history.
+  const existingCodes = new Set();
+  for (let offset = 0; ; offset += 1000) {
+    const { data, error } = await supabase.from("accounts").select("user_code").order("user_code").range(offset, offset + 999);
+    if (error) throw error;
+    data.forEach(row => existingCodes.add(row.user_code.toUpperCase()));
+    if (data.length < 1000) break;
+  }
+  const missing = accounts.filter(account => !existingCodes.has(account.user_code.toUpperCase()));
+  if (!missing.length) { console.log("Existing accounts preserved; no accounts to add."); return; }
   const { error } = await supabase
     .from("accounts")
-    .upsert(accounts, { onConflict: "user_code" });
+    // Existing profiles, roles, passwords and Google-only teachers are authoritative.
+    // Initial import adds missing rows; it never overwrites an existing account.
+    .upsert(missing, { onConflict: "user_code", ignoreDuplicates: true });
 
   if (error) {
     throw error;
   }
 
-  console.log(`Seeded ${accounts.length} accounts.`);
+  console.log(`Added ${missing.length} missing accounts; existing profiles preserved.`);
 }
 
 async function seedQuestionSets() {
   const questionSetsPath = path.join(rootDir, "data", "question-sets.json");
   const raw = await readFile(questionSetsPath, "utf8").catch(() => "[]");
   const questionSets = JSON.parse(raw);
+  const { data: teacherRows, error: teacherError } = await supabase.from("accounts").select("user_code").eq("role", "teacher");
+  if (teacherError) throw teacherError;
 
   for (const set of questionSets) {
+    const teachers = teacherRows.filter(row => row.user_code.toUpperCase() === String(set.teacherCode).toUpperCase());
+    if (teachers.length !== 1) throw new Error("Question set teacher key is missing or ambiguous; resolve it before seeding.");
     const { error: setError } = await supabase.from("question_sets").upsert(
       {
         id: set.id,
-        teacher_code: String(set.teacherCode).toUpperCase(),
+        teacher_code: teachers[0].user_code,
         title: set.title,
         description: set.description,
         created_at: set.createdAt,

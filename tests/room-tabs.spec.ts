@@ -21,6 +21,10 @@ test('one-screen room: all tabs, long choice question, draft, swipe, keyboard vi
   const report:unknown[]=[];
   async function inspect(target:Page,name:string,width:number,height:number){
     await target.setViewportSize({width,height}); await target.evaluate(()=>document.fonts.ready);
+    // Measure the settled control, rather than an interpolated enabled/disabled color.
+    await target.locator('.power-button').evaluateAll(async nodes=>{
+      await Promise.all(nodes.flatMap(node=>node.getAnimations()).filter(animation=>animation.effect?.getTiming().iterations!==Infinity).map(animation=>animation.finished.catch(()=>{})));
+    });
     const geometry=await target.evaluate(()=>({height:innerHeight,scrollHeight:document.documentElement.scrollHeight,width:innerWidth,scrollWidth:document.documentElement.scrollWidth}));
     const audit=await new AxeBuilder({page:target}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
     report.push({name,width,height,geometry,violations:audit.violations});
