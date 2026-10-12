@@ -1,0 +1,279 @@
+{
+  "defaultSceneId": "shadow-citadel",
+  "scenes": [
+    {
+      "sceneId": "shadow-citadel",
+      "label": "ลานปราสาทเงา",
+      "profiles": {
+        "wide": {
+          "images": {
+            "far": "background far.png",
+            "mid": "background mid.png",
+            "fight": "background fight.png"
+          },
+          "imageWidth": 1870,
+          "imageHeight": 841,
+          "playablePolygon": [
+            {
+              "u": 0.18,
+              "v": 0.665
+            },
+            {
+              "u": 0.3,
+              "v": 0.642
+            },
+            {
+              "u": 0.63,
+              "v": 0.641
+            },
+            {
+              "u": 0.83,
+              "v": 0.675
+            },
+            {
+              "u": 0.86,
+              "v": 0.746
+            },
+            {
+              "u": 0.73,
+              "v": 0.798
+            },
+            {
+              "u": 0.27,
+              "v": 0.796
+            },
+            {
+              "u": 0.15,
+              "v": 0.739
+            }
+          ],
+          "safeInset": 0.012,
+          "floorDepth": {
+            "backV": 0.65,
+            "frontV": 0.79,
+            "backScale": 0.88,
+            "frontScale": 1.04
+          },
+          "cameraBounds": {
+            "left": 0,
+            "top": 0,
+            "right": 1,
+            "bottom": 1
+          },
+          "boss": {
+            "foot": {
+              "u": 0.3,
+              "v": 0.736
+            },
+            "scaleMultiplier": 1,
+            "facing": "right",
+            "visualHeight": 320
+          },
+          "heroes": [
+            {
+              "foot": {
+                "u": 0.58,
+                "v": 0.759
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 170
+            },
+            {
+              "foot": {
+                "u": 0.68,
+                "v": 0.683
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 170
+            },
+            {
+              "foot": {
+                "u": 0.72,
+                "v": 0.774
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 170
+            },
+            {
+              "foot": {
+                "u": 0.77,
+                "v": 0.754
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 170
+            },
+            {
+              "foot": {
+                "u": 0.82,
+                "v": 0.707
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 170
+            }
+          ],
+          "layerAlignment": {
+            "far": {
+              "scale": 1,
+              "offsetU": 0,
+              "offsetV": 0
+            },
+            "mid": {
+              "scale": 1,
+              "offsetU": 0,
+              "offsetV": 0
+            },
+            "fight": {
+              "scale": 1,
+              "offsetU": 0,
+              "offsetV": 0
+            }
+          },
+          "calibration": {
+            "reviewed": true,
+            "reviewedAt": "2026-10-12",
+            "notes": "Top face traced from actual background fight.png. Verified actual Pixi renderer, grounded shadows and staggered 1-5 actors in source-wide composite and wide-verified.png; no source pixel changes."
+          }
+        },
+        "phone": {
+          "images": {
+            "far": "background far phone.png",
+            "mid": "background mid phone.png",
+            "fight": "background fight phone.png"
+          },
+          "imageWidth": 1024,
+          "imageHeight": 1536,
+          "playablePolygon": [
+            {
+              "u": 0.17,
+              "v": 0.426
+            },
+            {
+              "u": 0.36,
+              "v": 0.405
+            },
+            {
+              "u": 0.62,
+              "v": 0.405
+            },
+            {
+              "u": 0.83,
+              "v": 0.433
+            },
+            {
+              "u": 0.89,
+              "v": 0.482
+            },
+            {
+              "u": 0.8,
+              "v": 0.53
+            },
+            {
+              "u": 0.3,
+              "v": 0.523
+            },
+            {
+              "u": 0.12,
+              "v": 0.481
+            }
+          ],
+          "safeInset": 0.008,
+          "floorDepth": {
+            "backV": 0.415,
+            "frontV": 0.52,
+            "backScale": 0.88,
+            "frontScale": 1.04
+          },
+          "cameraBounds": {
+            "left": 0,
+            "top": 0.08,
+            "right": 1,
+            "bottom": 0.76
+          },
+          "boss": {
+            "foot": {
+              "u": 0.3,
+              "v": 0.473
+            },
+            "scaleMultiplier": 1,
+            "facing": "right",
+            "visualHeight": 350
+          },
+          "heroes": [
+            {
+              "foot": {
+                "u": 0.55,
+                "v": 0.489
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 185
+            },
+            {
+              "foot": {
+                "u": 0.66,
+                "v": 0.435
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 185
+            },
+            {
+              "foot": {
+                "u": 0.69,
+                "v": 0.506
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 185
+            },
+            {
+              "foot": {
+                "u": 0.78,
+                "v": 0.49
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 185
+            },
+            {
+              "foot": {
+                "u": 0.82,
+                "v": 0.456
+              },
+              "scaleMultiplier": 1,
+              "facing": "left",
+              "visualHeight": 185
+            }
+          ],
+          "layerAlignment": {
+            "far": {
+              "scale": 1.088204,
+              "offsetU": 0,
+              "offsetV": -0.09223
+            },
+            "mid": {
+              "scale": 1,
+              "offsetU": 0,
+              "offsetV": 0
+            },
+            "fight": {
+              "scale": 1,
+              "offsetU": 0,
+              "offsetV": 0
+            }
+          },
+          "calibration": {
+            "reviewed": true,
+            "reviewedAt": "2026-10-12",
+            "notes": "Separate phone floor traced from actual 1024x1536 fight. Camera excludes distant lower cliff; all standing zones remain visible. Far layer uniform center crop from 941x1672. Verified actual Pixi renderer, grounded shadows and staggered 1-5 actors in source-phone composite and phone-verified.png; no source pixel changes."
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "Calculated from retained 16-frame assets, 350ms projectile and 600ms half-speed effect; nominal only, not physical frame-time or asset-loading proof",
+  "commonWindowMs": 3000,
+  "rows": [
+    {
+      "hero": "warrior",
+      "attackAndBossHitMs": 1770,
+      "killAndVictoryMs": 2462,
+      "phaseThreeDefeatMs": 2439
+    },
+    {
+      "hero": "mage",
+      "attackAndBossHitMs": 2120,
+      "killAndVictoryMs": 2489,
+      "phaseThreeDefeatMs": 2439
+    },
+    {
+      "hero": "wizard",
+      "attackAndBossHitMs": 2120,
+      "killAndVictoryMs": 2489,
+      "phaseThreeDefeatMs": 2439
+    },
+    {
+      "hero": "witch",
+      "attackAndBossHitMs": 2120,
+      "killAndVictoryMs": 2489,
+      "phaseThreeDefeatMs": 2439
+    },
+    {
+      "hero": "fairy",
+      "attackAndBossHitMs": 2120,
+      "killAndVictoryMs": 2489,
+      "phaseThreeDefeatMs": 2439
+    }
+  ],
+  "originalAssetsAndMigrationsUnchanged": true
+}

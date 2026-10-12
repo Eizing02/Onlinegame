@@ -21,7 +21,7 @@ export function QuestionImage({ alt, className = "", src }: QuestionImageProps) 
   return (
     <>
       <div
-        className={`relative overflow-hidden rounded-md border border-border bg-slate-950/5 ${className}`}
+        className={`relative overflow-hidden rounded-md border border-border bg-muted/5 ${className}`}
       >
         <Image
           alt={alt}

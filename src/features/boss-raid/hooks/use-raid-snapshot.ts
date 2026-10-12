@@ -29,5 +29,6 @@ export function useRaidSnapshot(initial: RaidSnapshot, sessionId: string, teache
   const online=()=>void visible();document.addEventListener("visibilitychange",visible);window.addEventListener("online",online);void loop(generation);
   return()=>{alive=false;generation++;clearTimeout(timer);abort.current?.abort();document.removeEventListener("visibilitychange",visible);window.removeEventListener("online",online);};
  },[refresh,teamId,teacher]);
- return {snapshot,error,connected,refresh,teamId,selectTeam};
+ const getCurrent=useCallback(()=>latest.current,[]);
+ return {snapshot,error,connected,refresh,teamId,selectTeam,getCurrent};
 }

@@ -1,0 +1,229 @@
+{
+  "report": [
+    {
+      "name": "login",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "login",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "login-small",
+      "width": 320,
+      "height": 740,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "login-tablet",
+      "width": 768,
+      "height": 1024,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "login-landscape",
+      "width": 844,
+      "height": 390,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "question-sets",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "question-sets",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "question-editor",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "question-editor",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "new-room",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "new-room",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "join",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "join",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "team-selection",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "team-selection",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "student-lobby",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "student-lobby",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "teacher-lobby",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "teacher-lobby",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "teacher-small",
+      "width": 320,
+      "height": 740,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "question-active",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "question-active",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "teacher-active",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "teacher-active",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "answer-revealed",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "answer-revealed",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "result-dialog",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "result-dialog",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "student-results",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "student-results",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "teacher-results",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "name": "teacher-results",
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "violations": []
+    }
+  ],
+  "errors": []
+}

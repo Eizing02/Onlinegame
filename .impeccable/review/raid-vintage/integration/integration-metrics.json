@@ -1,0 +1,230 @@
+{
+  "scope": "Local production build, mock OAuth and isolated PGlite; not production database",
+  "report": [
+    {
+      "name": "teacher-desktop",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-mobile",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "phone",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-landscape",
+      "width": 844,
+      "height": 390,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-tablet",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "phone",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-low",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-audio-settings",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-audio-mobile",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "phone",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-audio-landscape",
+      "width": 844,
+      "height": 390,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "question-audio-320",
+      "width": 320,
+      "height": 400,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "dialog": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 400,
+        "top": 0,
+        "right": 320,
+        "bottom": 400,
+        "left": 0
+      },
+      "confirm": {
+        "x": 20,
+        "y": 340,
+        "width": 280,
+        "height": 44,
+        "top": 340,
+        "right": 300,
+        "bottom": 384,
+        "left": 20
+      },
+      "music": []
+    },
+    {
+      "name": "student-mobile",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "phone",
+      "music": []
+    },
+    {
+      "name": "student-desktop",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "music": []
+    },
+    {
+      "name": "teacher-hp-zero",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "phone",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3"
+      ]
+    },
+    {
+      "name": "teacher-final-phase",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "canvas": 1,
+      "profile": "wide",
+      "music": [
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_lobby.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_battle.mp3",
+        "http://127.0.0.1:3110/assets/boss-raid/audio/music/raid_final_phase.mp3"
+      ]
+    }
+  ],
+  "audits": [
+    {
+      "name": "teacher-desktop",
+      "violations": []
+    },
+    {
+      "name": "teacher-mobile",
+      "violations": []
+    },
+    {
+      "name": "teacher-landscape",
+      "violations": []
+    },
+    {
+      "name": "teacher-tablet",
+      "violations": []
+    },
+    {
+      "name": "teacher-low",
+      "violations": []
+    },
+    {
+      "name": "teacher-audio-settings",
+      "violations": []
+    },
+    {
+      "name": "teacher-audio-mobile",
+      "violations": []
+    },
+    {
+      "name": "teacher-audio-landscape",
+      "violations": []
+    },
+    {
+      "name": "question-audio-320",
+      "violations": []
+    },
+    {
+      "name": "student-mobile",
+      "violations": []
+    },
+    {
+      "name": "student-desktop",
+      "violations": []
+    },
+    {
+      "name": "teacher-hp-zero",
+      "violations": []
+    },
+    {
+      "name": "teacher-final-phase",
+      "violations": []
+    }
+  ],
+  "frameSamples": [],
+  "performanceCapture": "NOT_RUN in this recapture; prior samples are documented in validation.md"
+}

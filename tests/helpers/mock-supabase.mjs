@@ -52,6 +52,14 @@ export async function startMockSupabase(port = 3111, raid = false) {
         const row=(await db.query('select id from question_options where question_id=$1 and is_correct',[id])).rows[0];
         return json(response,{selectedOptionId:row?.id??null,answerText:'5'});
       }
+      if (raid && path === '/__test/raid-legacy') { await db.query('update boss_raid_sessions set rules_version=1 where session_id=$1',[url.searchParams.get('session')]); return json(response,{ok:true}); }
+      if (raid && path === '/__test/raid-phase-three') {
+        await db.query('update boss_raid_team_states set phase=3 where session_id=$1',[url.searchParams.get('session')]);return json(response,{ok:true});
+      }
+      if (raid && path === '/__test/raid-last-thirty') {
+        await db.query("update boss_raid_sessions set overall_ends_at=clock_timestamp()+interval '29 seconds' where session_id=$1",[url.searchParams.get('session')]);
+        return json(response,{ok:true});
+      }
       if (raid && path === '/__test/raid-expire') {
         await db.query("update boss_raid_sessions set started_at=now()-interval '10 seconds',overall_ends_at=now()-interval '1 second' where session_id=$1",[url.searchParams.get('session')]);
         return json(response,{ok:true});

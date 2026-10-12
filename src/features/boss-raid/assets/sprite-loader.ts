@@ -45,9 +45,10 @@ export class SpriteLoader {
     let bytes = [...this.entries.values()].reduce((n, e) => n + e.bytes, 0);
     for (const [key, entry] of [...this.entries].sort((a, b) => a[1].touched - b[1].touched)) {
       if (this.entries.size <= 8 && bytes <= 64 * 1024 ** 2) break;
-      if (!entry.refs) { bytes -= entry.bytes; this.disposeEntry(entry); this.entries.delete(key); }
+      if (!entry.refs && !this.pending.has(key)) { bytes -= entry.bytes; this.disposeEntry(entry); this.entries.delete(key); }
     }
   }
   private disposeEntry(entry: Entry) { entry.frames.forEach(frame => frame.destroy(false)); entry.base.destroy(true); }
+  metrics() { return { decodedBytes:[...this.entries.values()].reduce((n,e)=>n+e.bytes,0),sheets:this.entries.size,activeReferences:[...this.entries.values()].reduce((n,e)=>n+e.refs,0) }; }
   destroy() { this.destroyed = true; for (const entry of this.entries.values()) this.disposeEntry(entry); this.entries.clear(); this.waiters.splice(0).forEach(resolve => resolve()); }
 }

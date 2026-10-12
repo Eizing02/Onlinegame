@@ -39,7 +39,7 @@ export default async function QuestionSetsPage({
         </div>
 
         {params.error ? (
-          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <div className="rounded-md border border-danger bg-danger/10 px-4 py-3 text-sm font-medium text-danger">
             {params.error}
           </div>
         ) : null}
@@ -83,7 +83,7 @@ export default async function QuestionSetsPage({
           {data.questionSets.map((set) => (
             <Panel key={set.id} className="space-y-4">
               <div className="flex items-start gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-blue-50 text-primary">
+                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-success/10 text-primary">
                   <BookOpenCheck size={22} />
                 </span>
                 <div>

@@ -1,0 +1,305 @@
+{
+  "browser": "Chromium desktop emulation; not physical iOS/Android",
+  "results": [
+    {
+      "id": "button",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 3,
+      "nonSilent": true
+    },
+    {
+      "id": "button",
+      "mime": "audio/mpeg",
+      "duration": 3,
+      "nonSilent": true
+    },
+    {
+      "id": "critical",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "critical",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "defeat",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 4,
+      "nonSilent": true
+    },
+    {
+      "id": "defeat",
+      "mime": "audio/mpeg",
+      "duration": 4,
+      "nonSilent": true
+    },
+    {
+      "id": "claw",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "claw",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "death",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 4,
+      "nonSilent": true
+    },
+    {
+      "id": "death",
+      "mime": "audio/mpeg",
+      "duration": 4,
+      "nonSilent": true
+    },
+    {
+      "id": "fire",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2.76,
+      "nonSilent": true
+    },
+    {
+      "id": "fire",
+      "mime": "audio/mpeg",
+      "duration": 2.76,
+      "nonSilent": true
+    },
+    {
+      "id": "roar",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 10,
+      "nonSilent": true
+    },
+    {
+      "id": "roar",
+      "mime": "audio/mpeg",
+      "duration": 10,
+      "nonSilent": true
+    },
+    {
+      "id": "ultimate",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2.76,
+      "nonSilent": true
+    },
+    {
+      "id": "ultimate",
+      "mime": "audio/mpeg",
+      "duration": 2.76,
+      "nonSilent": true
+    },
+    {
+      "id": "fairy1",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "fairy1",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "fairy2",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "fairy2",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "heal",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "heal",
+      "mime": "audio/mpeg",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "mage1",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "mage1",
+      "mime": "audio/mpeg",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "mage2",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "mage2",
+      "mime": "audio/mpeg",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "hit",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 1.76,
+      "nonSilent": true
+    },
+    {
+      "id": "hit",
+      "mime": "audio/mpeg",
+      "duration": 1.76,
+      "nonSilent": true
+    },
+    {
+      "id": "shake",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 3,
+      "nonSilent": true
+    },
+    {
+      "id": "shake",
+      "mime": "audio/mpeg",
+      "duration": 3,
+      "nonSilent": true
+    },
+    {
+      "id": "shield",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2.68,
+      "nonSilent": true
+    },
+    {
+      "id": "shield",
+      "mime": "audio/mpeg",
+      "duration": 2.68,
+      "nonSilent": true
+    },
+    {
+      "id": "spawn",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2.68,
+      "nonSilent": true
+    },
+    {
+      "id": "spawn",
+      "mime": "audio/mpeg",
+      "duration": 2.68,
+      "nonSilent": true
+    },
+    {
+      "id": "victory",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 3,
+      "nonSilent": true
+    },
+    {
+      "id": "victory",
+      "mime": "audio/mpeg",
+      "duration": 3,
+      "nonSilent": true
+    },
+    {
+      "id": "warrior2",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "warrior2",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "warrior1",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 1.76,
+      "nonSilent": true
+    },
+    {
+      "id": "warrior1",
+      "mime": "audio/mpeg",
+      "duration": 1.76,
+      "nonSilent": true
+    },
+    {
+      "id": "witch1",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "witch1",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "witch2",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "witch2",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "wizard1",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "wizard1",
+      "mime": "audio/mpeg",
+      "duration": 1,
+      "nonSilent": true
+    },
+    {
+      "id": "wizard2",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "wizard2",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "countdown",
+      "mime": "audio/ogg; codecs=opus",
+      "duration": 2,
+      "nonSilent": true
+    },
+    {
+      "id": "countdown",
+      "mime": "audio/mpeg",
+      "duration": 2,
+      "nonSilent": true
+    }
+  ]
+}

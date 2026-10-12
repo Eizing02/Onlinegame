@@ -1,0 +1,618 @@
+[
+  {
+    "path": ".impeccable/review/raid-vintage/classic/answer-revealed-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/answer-revealed-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/join-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/join-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/login-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 926,
+    "expectedWidth": 1440,
+    "expectedHeight": 926
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/login-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 846,
+    "expectedWidth": 390,
+    "expectedHeight": 846
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/login-landscape-844.png",
+    "valid": true,
+    "width": 844,
+    "height": 680,
+    "expectedWidth": 844,
+    "expectedHeight": 680
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/login-small-320.png",
+    "valid": true,
+    "width": 320,
+    "height": 742,
+    "expectedWidth": 320,
+    "expectedHeight": 742
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/login-tablet-768.png",
+    "valid": true,
+    "width": 768,
+    "height": 1050,
+    "expectedWidth": 768,
+    "expectedHeight": 1050
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/new-room-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/new-room-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 1139,
+    "expectedWidth": 390,
+    "expectedHeight": 1139
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/question-active-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/question-active-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/question-editor-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 1362,
+    "expectedWidth": 1440,
+    "expectedHeight": 1362
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/question-editor-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 1934,
+    "expectedWidth": 390,
+    "expectedHeight": 1934
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/question-sets-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/question-sets-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/result-dialog-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/result-dialog-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/student-lobby-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/student-lobby-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/student-results-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/student-results-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/teacher-active-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/teacher-active-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/teacher-lobby-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/teacher-lobby-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/teacher-results-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/teacher-results-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 955,
+    "expectedWidth": 390,
+    "expectedHeight": 955
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/teacher-small-320.png",
+    "valid": true,
+    "width": 320,
+    "height": 740,
+    "expectedWidth": 320,
+    "expectedHeight": 740
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/team-selection-1440.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/classic/team-selection-390.png",
+    "valid": true,
+    "width": 390,
+    "height": 1286,
+    "expectedWidth": 390,
+    "expectedHeight": 1286
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/combat-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/confirmation-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/hero-desktop.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/hero-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/question-audio-320.png",
+    "valid": true,
+    "width": 320,
+    "height": 400,
+    "expectedWidth": 320,
+    "expectedHeight": 400
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/student-desktop.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/student-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-audio-landscape.png",
+    "valid": true,
+    "width": 844,
+    "height": 390,
+    "expectedWidth": 844,
+    "expectedHeight": 390
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-audio-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-audio-settings.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-desktop.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-final-phase.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-hp-zero.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-landscape.png",
+    "valid": true,
+    "width": 844,
+    "height": 390,
+    "expectedWidth": 844,
+    "expectedHeight": 390
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-low.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/integration/teacher-tablet.png",
+    "valid": true,
+    "width": 768,
+    "height": 1024,
+    "expectedWidth": 768,
+    "expectedHeight": 1024
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/login-desktop.png",
+    "valid": true,
+    "width": 1440,
+    "height": 926,
+    "expectedWidth": 1440,
+    "expectedHeight": 926
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/login-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 846,
+    "expectedWidth": 390,
+    "expectedHeight": 846
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/question-landscape.png",
+    "valid": true,
+    "width": 844,
+    "height": 390,
+    "expectedWidth": 844,
+    "expectedHeight": 390
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/question-party-desktop.png",
+    "valid": true,
+    "width": 1440,
+    "height": 900,
+    "expectedWidth": 1440,
+    "expectedHeight": 900
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/question-party-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/question-small.png",
+    "valid": true,
+    "width": 320,
+    "height": 400,
+    "expectedWidth": 320,
+    "expectedHeight": 400
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/question-tablet.png",
+    "valid": true,
+    "width": 768,
+    "height": 1024,
+    "expectedWidth": 768,
+    "expectedHeight": 1024
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/calibration-desktop.png",
+    "valid": true,
+    "width": 1366,
+    "height": 1527,
+    "expectedWidth": 1366,
+    "expectedHeight": 1527
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/calibration-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 2306,
+    "expectedWidth": 390,
+    "expectedHeight": 2306
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/desktop-1.png",
+    "valid": true,
+    "width": 1326,
+    "height": 500,
+    "expectedWidth": 1326,
+    "expectedHeight": 500
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/desktop-2.png",
+    "valid": true,
+    "width": 1326,
+    "height": 500,
+    "expectedWidth": 1326,
+    "expectedHeight": 500
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/desktop-3.png",
+    "valid": true,
+    "width": 1326,
+    "height": 500,
+    "expectedWidth": 1326,
+    "expectedHeight": 500
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/desktop-4.png",
+    "valid": true,
+    "width": 1326,
+    "height": 500,
+    "expectedWidth": 1326,
+    "expectedHeight": 500
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/desktop-5.png",
+    "valid": true,
+    "width": 1326,
+    "height": 500,
+    "expectedWidth": 1326,
+    "expectedHeight": 500
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/desktop-large.png",
+    "valid": true,
+    "width": 1400,
+    "height": 561,
+    "expectedWidth": 1400,
+    "expectedHeight": 561
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/ipad-landscape.png",
+    "valid": true,
+    "width": 984,
+    "height": 500,
+    "expectedWidth": 984,
+    "expectedHeight": 500
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/ipad-portrait.png",
+    "valid": true,
+    "width": 728,
+    "height": 561,
+    "expectedWidth": 728,
+    "expectedHeight": 561
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-1.png",
+    "valid": true,
+    "width": 366,
+    "height": 549,
+    "expectedWidth": 366,
+    "expectedHeight": 549
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-2.png",
+    "valid": true,
+    "width": 366,
+    "height": 549,
+    "expectedWidth": 366,
+    "expectedHeight": 549
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-3.png",
+    "valid": true,
+    "width": 366,
+    "height": 549,
+    "expectedWidth": 366,
+    "expectedHeight": 549
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-4.png",
+    "valid": true,
+    "width": 366,
+    "height": 549,
+    "expectedWidth": 366,
+    "expectedHeight": 549
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-5.png",
+    "valid": true,
+    "width": 366,
+    "height": 549,
+    "expectedWidth": 366,
+    "expectedHeight": 549
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-9-16.png",
+    "valid": true,
+    "width": 336,
+    "height": 417,
+    "expectedWidth": 336,
+    "expectedHeight": 417
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-landscape.png",
+    "valid": true,
+    "width": 804,
+    "height": 281,
+    "expectedWidth": 804,
+    "expectedHeight": 281
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/phone-verified.png",
+    "valid": true,
+    "width": 390,
+    "height": 621,
+    "expectedWidth": 390,
+    "expectedHeight": 621
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/small-phone.png",
+    "valid": true,
+    "width": 296,
+    "height": 370,
+    "expectedWidth": 296,
+    "expectedHeight": 370
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/scene/wide-verified.png",
+    "valid": true,
+    "width": 1326,
+    "height": 561,
+    "expectedWidth": 1326,
+    "expectedHeight": 561
+  },
+  {
+    "path": ".impeccable/review/raid-vintage/urgent-mobile.png",
+    "valid": true,
+    "width": 390,
+    "height": 844,
+    "expectedWidth": 390,
+    "expectedHeight": 844
+  }
+]

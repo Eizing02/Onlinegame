@@ -71,13 +71,13 @@ export default async function QuestionSetDetailPage({
           </div>
           <div className="space-y-3 sm:w-72">
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-md border border-border bg-white p-3">
+              <div className="rounded-md border border-border bg-surface p-3">
                 <p className="text-muted">จำนวนคำถาม</p>
                 <p className="mt-1 text-2xl font-semibold">
                   {questionSet.questions.length}
                 </p>
               </div>
-              <div className="rounded-md border border-border bg-white p-3">
+              <div className="rounded-md border border-border bg-surface p-3">
                 <p className="text-muted">คะแนนรวม</p>
                 <p className="mt-1 text-2xl font-semibold">{totalPoints}</p>
               </div>
@@ -85,7 +85,7 @@ export default async function QuestionSetDetailPage({
             <form action={deleteQuestionSetAction}>
               <input name="question_set_id" type="hidden" value={questionSet.id} />
               <ConfirmSubmitButton
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-danger bg-danger/10 px-3 text-sm font-semibold text-danger transition hover:bg-danger/10"
                 message="ลบชุดคำถามนี้? ถ้ามีห้องที่จบแล้วค้างอยู่ ระบบจะล้างข้อมูลรอบเล่นเก่าของชุดนี้ด้วย"
               >
                 <Trash2 size={17} />
@@ -96,12 +96,12 @@ export default async function QuestionSetDetailPage({
         </div>
 
         {query.error ? (
-          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <div className="rounded-md border border-danger bg-danger/10 px-4 py-3 text-sm font-medium text-danger">
             {query.error}
           </div>
         ) : null}
         {query.notice ? (
-          <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+          <div className="rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-medium text-success">
             {query.notice}
           </div>
         ) : null}
@@ -181,7 +181,7 @@ export default async function QuestionSetDetailPage({
               เลือกคำถามหลายข้อแล้วลบพร้อมกันได้
             </p>
             <button
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-danger bg-danger/10 px-3 text-sm font-semibold text-danger transition hover:bg-danger/10"
               form="bulk-delete-questions"
               type="submit"
             >
@@ -217,7 +217,7 @@ export default async function QuestionSetDetailPage({
                     {question.imageUrl ? (
                       <QuestionImage
                         alt={`รูปประกอบคำถามข้อ ${index + 1}`}
-                        className="mt-4 max-w-xl bg-white"
+                        className="mt-4 max-w-xl bg-surface"
                         src={question.imageUrl}
                       />
                     ) : null}
@@ -232,7 +232,7 @@ export default async function QuestionSetDetailPage({
                   <input name="question_id" type="hidden" value={question.id} />
                   <button
                     aria-label={`ลบข้อ ${index + 1}`}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 transition hover:bg-red-100"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-danger bg-danger/10 text-danger transition hover:bg-danger/10"
                     title="ลบคำถาม"
                     type="submit"
                   >
@@ -269,8 +269,8 @@ export default async function QuestionSetDetailPage({
                         <div
                           className={
                             option.isCorrect
-                              ? "rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 font-semibold text-emerald-700"
-                              : "rounded-md border border-border bg-white px-3 py-2"
+                              ? "rounded-md border border-success bg-success/10 px-3 py-2 font-semibold text-success"
+                              : "rounded-md border border-border bg-surface px-3 py-2"
                           }
                           key={option.id}
                         >

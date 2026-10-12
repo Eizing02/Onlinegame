@@ -1,0 +1,474 @@
+{
+  "sfxCount": 25,
+  "musicCount": 3,
+  "files": [
+    {
+      "id": "button",
+      "url": "/assets/boss-raid/audio/Button%20Click.opus",
+      "codec": "opus",
+      "seconds": 3.0065,
+      "channels": 2,
+      "bytes": 53632,
+      "status": "READY"
+    },
+    {
+      "id": "button",
+      "url": "/assets/boss-raid/audio/fallback/Button%20Click.mp3",
+      "codec": "mp3",
+      "seconds": 3,
+      "channels": 2,
+      "bytes": 48812,
+      "status": "READY"
+    },
+    {
+      "id": "critical",
+      "url": "/assets/boss-raid/audio/Critical%20Hit.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 31822,
+      "status": "READY"
+    },
+    {
+      "id": "critical",
+      "url": "/assets/boss-raid/audio/fallback/Critical%20Hit.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "defeat",
+      "url": "/assets/boss-raid/audio/Defeat.opus",
+      "codec": "opus",
+      "seconds": 4.0065,
+      "channels": 2,
+      "bytes": 59918,
+      "status": "READY"
+    },
+    {
+      "id": "defeat",
+      "url": "/assets/boss-raid/audio/fallback/Defeat.mp3",
+      "codec": "mp3",
+      "seconds": 4,
+      "channels": 2,
+      "bytes": 64940,
+      "status": "READY"
+    },
+    {
+      "id": "claw",
+      "url": "/assets/boss-raid/audio/Dragon%20Claw.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 28384,
+      "status": "READY"
+    },
+    {
+      "id": "claw",
+      "url": "/assets/boss-raid/audio/fallback/Dragon%20Claw.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "death",
+      "url": "/assets/boss-raid/audio/Dragon%20Death.opus",
+      "codec": "opus",
+      "seconds": 4.0065,
+      "channels": 2,
+      "bytes": 53596,
+      "status": "READY"
+    },
+    {
+      "id": "death",
+      "url": "/assets/boss-raid/audio/fallback/Dragon%20Death.mp3",
+      "codec": "mp3",
+      "seconds": 4,
+      "channels": 2,
+      "bytes": 64940,
+      "status": "READY"
+    },
+    {
+      "id": "fire",
+      "url": "/assets/boss-raid/audio/Dragon%20Fire.opus",
+      "codec": "opus",
+      "seconds": 2.7665,
+      "channels": 2,
+      "bytes": 34757,
+      "status": "READY"
+    },
+    {
+      "id": "fire",
+      "url": "/assets/boss-raid/audio/fallback/Dragon%20Fire.mp3",
+      "codec": "mp3",
+      "seconds": 2.76,
+      "channels": 2,
+      "bytes": 44972,
+      "status": "READY"
+    },
+    {
+      "id": "roar",
+      "url": "/assets/boss-raid/audio/Dragon%20Roar.opus",
+      "codec": "opus",
+      "seconds": 10.0065,
+      "channels": 2,
+      "bytes": 158863,
+      "status": "READY"
+    },
+    {
+      "id": "roar",
+      "url": "/assets/boss-raid/audio/fallback/Dragon%20Roar.mp3",
+      "codec": "mp3",
+      "seconds": 10,
+      "channels": 2,
+      "bytes": 160940,
+      "status": "READY"
+    },
+    {
+      "id": "ultimate",
+      "url": "/assets/boss-raid/audio/Dragon%20Ultimate.opus",
+      "codec": "opus",
+      "seconds": 2.7665,
+      "channels": 2,
+      "bytes": 43889,
+      "status": "READY"
+    },
+    {
+      "id": "ultimate",
+      "url": "/assets/boss-raid/audio/fallback/Dragon%20Ultimate.mp3",
+      "codec": "mp3",
+      "seconds": 2.76,
+      "channels": 2,
+      "bytes": 44972,
+      "status": "READY"
+    },
+    {
+      "id": "fairy1",
+      "url": "/assets/boss-raid/audio/Fairy%20%E2%80%94%20Light%20Bolt.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 32521,
+      "status": "READY"
+    },
+    {
+      "id": "fairy1",
+      "url": "/assets/boss-raid/audio/fallback/Fairy%20%E2%80%94%20Light%20Bolt.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "fairy2",
+      "url": "/assets/boss-raid/audio/Fairy%20%E2%80%94%20Starburst.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 35674,
+      "status": "READY"
+    },
+    {
+      "id": "fairy2",
+      "url": "/assets/boss-raid/audio/fallback/Fairy%20%E2%80%94%20Starburst.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "heal",
+      "url": "/assets/boss-raid/audio/Heal.opus",
+      "codec": "opus",
+      "seconds": 1.0065,
+      "channels": 2,
+      "bytes": 14570,
+      "status": "READY"
+    },
+    {
+      "id": "heal",
+      "url": "/assets/boss-raid/audio/fallback/Heal.mp3",
+      "codec": "mp3",
+      "seconds": 1,
+      "channels": 2,
+      "bytes": 16940,
+      "status": "READY"
+    },
+    {
+      "id": "mage1",
+      "url": "/assets/boss-raid/audio/Mage%20%E2%80%94%20Arcane%20Bolt.opus",
+      "codec": "opus",
+      "seconds": 1.0065,
+      "channels": 2,
+      "bytes": 14410,
+      "status": "READY"
+    },
+    {
+      "id": "mage1",
+      "url": "/assets/boss-raid/audio/fallback/Mage%20%E2%80%94%20Arcane%20Bolt.mp3",
+      "codec": "mp3",
+      "seconds": 1,
+      "channels": 2,
+      "bytes": 16940,
+      "status": "READY"
+    },
+    {
+      "id": "mage2",
+      "url": "/assets/boss-raid/audio/Mage%20%E2%80%94%20Frost%20Burst.opus",
+      "codec": "opus",
+      "seconds": 1.0065,
+      "channels": 2,
+      "bytes": 11669,
+      "status": "READY"
+    },
+    {
+      "id": "mage2",
+      "url": "/assets/boss-raid/audio/fallback/Mage%20%E2%80%94%20Frost%20Burst.mp3",
+      "codec": "mp3",
+      "seconds": 1,
+      "channels": 2,
+      "bytes": 16940,
+      "status": "READY"
+    },
+    {
+      "id": "hit",
+      "url": "/assets/boss-raid/audio/Normal%20Hit.opus",
+      "codec": "opus",
+      "seconds": 1.7665,
+      "channels": 2,
+      "bytes": 30593,
+      "status": "READY"
+    },
+    {
+      "id": "hit",
+      "url": "/assets/boss-raid/audio/fallback/Normal%20Hit.mp3",
+      "codec": "mp3",
+      "seconds": 1.76,
+      "channels": 2,
+      "bytes": 29228,
+      "status": "READY"
+    },
+    {
+      "id": "shake",
+      "url": "/assets/boss-raid/audio/Screen%20Shake.opus",
+      "codec": "opus",
+      "seconds": 3.0065,
+      "channels": 2,
+      "bytes": 51442,
+      "status": "READY"
+    },
+    {
+      "id": "shake",
+      "url": "/assets/boss-raid/audio/fallback/Screen%20Shake.mp3",
+      "codec": "mp3",
+      "seconds": 3,
+      "channels": 2,
+      "bytes": 48812,
+      "status": "READY"
+    },
+    {
+      "id": "shield",
+      "url": "/assets/boss-raid/audio/Shield.opus",
+      "codec": "opus",
+      "seconds": 2.6865,
+      "channels": 2,
+      "bytes": 44579,
+      "status": "READY"
+    },
+    {
+      "id": "shield",
+      "url": "/assets/boss-raid/audio/fallback/Shield.mp3",
+      "codec": "mp3",
+      "seconds": 2.68,
+      "channels": 2,
+      "bytes": 43820,
+      "status": "READY"
+    },
+    {
+      "id": "spawn",
+      "url": "/assets/boss-raid/audio/Spawn.opus",
+      "codec": "opus",
+      "seconds": 2.6865,
+      "channels": 2,
+      "bytes": 44820,
+      "status": "READY"
+    },
+    {
+      "id": "spawn",
+      "url": "/assets/boss-raid/audio/fallback/Spawn.mp3",
+      "codec": "mp3",
+      "seconds": 2.68,
+      "channels": 2,
+      "bytes": 43820,
+      "status": "READY"
+    },
+    {
+      "id": "victory",
+      "url": "/assets/boss-raid/audio/Victory.opus",
+      "codec": "opus",
+      "seconds": 3.0065,
+      "channels": 2,
+      "bytes": 54709,
+      "status": "READY"
+    },
+    {
+      "id": "victory",
+      "url": "/assets/boss-raid/audio/fallback/Victory.mp3",
+      "codec": "mp3",
+      "seconds": 3,
+      "channels": 2,
+      "bytes": 48812,
+      "status": "READY"
+    },
+    {
+      "id": "warrior2",
+      "url": "/assets/boss-raid/audio/Warrior%20%E2%80%94%20Shield%20Bash.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 29337,
+      "status": "READY"
+    },
+    {
+      "id": "warrior2",
+      "url": "/assets/boss-raid/audio/fallback/Warrior%20%E2%80%94%20Shield%20Bash.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "warrior1",
+      "url": "/assets/boss-raid/audio/Warrior%20%E2%80%94%20Sword%20Slash.opus",
+      "codec": "opus",
+      "seconds": 1.7665,
+      "channels": 2,
+      "bytes": 31149,
+      "status": "READY"
+    },
+    {
+      "id": "warrior1",
+      "url": "/assets/boss-raid/audio/fallback/Warrior%20%E2%80%94%20Sword%20Slash.mp3",
+      "codec": "mp3",
+      "seconds": 1.76,
+      "channels": 2,
+      "bytes": 29228,
+      "status": "READY"
+    },
+    {
+      "id": "witch1",
+      "url": "/assets/boss-raid/audio/Witch%20%E2%80%94%20Poison%20Orb.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 24913,
+      "status": "READY"
+    },
+    {
+      "id": "witch1",
+      "url": "/assets/boss-raid/audio/fallback/Witch%20%E2%80%94%20Poison%20Orb.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "witch2",
+      "url": "/assets/boss-raid/audio/Witch%20%E2%80%94%20Shadow%20Curse.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 33705,
+      "status": "READY"
+    },
+    {
+      "id": "witch2",
+      "url": "/assets/boss-raid/audio/fallback/Witch%20%E2%80%94%20Shadow%20Curse.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "wizard1",
+      "url": "/assets/boss-raid/audio/Wizard%20%E2%80%94%20Fireball.opus",
+      "codec": "opus",
+      "seconds": 1.0065,
+      "channels": 2,
+      "bytes": 14133,
+      "status": "READY"
+    },
+    {
+      "id": "wizard1",
+      "url": "/assets/boss-raid/audio/fallback/Wizard%20%E2%80%94%20Fireball.mp3",
+      "codec": "mp3",
+      "seconds": 1,
+      "channels": 2,
+      "bytes": 16940,
+      "status": "READY"
+    },
+    {
+      "id": "wizard2",
+      "url": "/assets/boss-raid/audio/Wizard%20%E2%80%94%20Lightning.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 29526,
+      "status": "READY"
+    },
+    {
+      "id": "wizard2",
+      "url": "/assets/boss-raid/audio/fallback/Wizard%20%E2%80%94%20Lightning.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "countdown",
+      "url": "/assets/boss-raid/audio/Countdown.opus",
+      "codec": "opus",
+      "seconds": 2.0065,
+      "channels": 2,
+      "bytes": 42419,
+      "status": "READY"
+    },
+    {
+      "id": "countdown",
+      "url": "/assets/boss-raid/audio/fallback/Countdown.mp3",
+      "codec": "mp3",
+      "seconds": 2,
+      "channels": 2,
+      "bytes": 33068,
+      "status": "READY"
+    },
+    {
+      "id": "raid_lobby",
+      "url": "/assets/boss-raid/audio/music/raid_lobby.mp3",
+      "seconds": 60.029375,
+      "status": "READY"
+    },
+    {
+      "id": "raid_battle",
+      "url": "/assets/boss-raid/audio/music/raid_battle.mp3",
+      "seconds": 60.029375,
+      "status": "READY"
+    },
+    {
+      "id": "raid_final_phase",
+      "url": "/assets/boss-raid/audio/music/raid_final_phase.mp3",
+      "seconds": 60.029375,
+      "status": "READY"
+    }
+  ]
+}

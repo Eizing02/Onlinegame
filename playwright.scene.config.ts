@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'./tests/boss-raid/scene-audio',workers:1,timeout:120000,expect:{timeout:20000},use:{baseURL:'http://127.0.0.1:3120',trace:'retain-on-failure'},outputDir:'test-results/scene-audio',webServer:{command:'node scripts/boss-raid/start-scene-test-server.mjs',url:'http://127.0.0.1:3120/dev/boss-raid/scene',timeout:120000,reuseExistingServer:!process.env.CI}});

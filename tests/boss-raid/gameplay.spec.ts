@@ -1,6 +1,9 @@
 import { test,expect,type Page } from '@playwright/test';
 import { browserRequest } from '../browser-request';
+import fs from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
+import {profileForStage,type SceneDefinition} from '../../src/features/boss-raid/scenes/geometry';
+import registry from '../../src/features/boss-raid/scenes/registry.json';
 const fixture='http://127.0.0.1:3111';
 async function login(page:Page,email:string,code?:string) {
  await page.goto('/login');await page.getByRole('button',{name:'เข้าสู่ระบบด้วย Google',exact:true}).click();await page.getByRole('link',{name:email,exact:true}).click();
@@ -9,16 +12,18 @@ async function login(page:Page,email:string,code?:string) {
 async function join(page:Page,room:string) {
  await page.goto(`/join?room_code=${room}`);await page.getByRole('button',{name:/ทีม 1/}).click();await expect(page).toHaveURL(new RegExp(`play/${room}/raid$`));
 }
+async function ready(page:Page,room:string){let state;await expect.poll(async()=>{state=await(await browserRequest(page,`/api/raid/${room}/snapshot`)).json();return Boolean(state.question)||Boolean(state.own?.finished)||state.status==='ended';}).toBe(true);return state!;}
+
 test('Google classroom Raid: independent answer, idempotency, visibility, spectator, reconnect, end and access guards',async({browser,page,request})=>{
  await request.post(`${fixture}/__test/reset`);await request.post(`${fixture}/__test/raid-bank`);
- await login(page,'piyawatpiwsiri@gmail.com');await page.goto('/teacher/rooms/new');
+ await login(page,'piyawatpiwsiri@gmail.com');expect((await request.get('http://127.0.0.1:3110/dev/boss-raid/scene')).status()).toBe(404);await page.goto('/teacher/rooms/new');
  await page.getByLabel('Boss Raid · Time Attack').check();await page.getByLabel('จำนวนทีม',{exact:true}).fill('2');await page.getByLabel('ชื่อกิจกรรม',{exact:true}).fill('ทดสอบ Boss Raid');
  await page.getByRole('button',{name:'สร้างห้อง Boss Raid',exact:true}).click();await expect(page).toHaveURL(/\/raid\/dashboard$/);const room=page.url().match(/rooms\/(\d{4})/)![1];
  const studentContext=await browser.newContext({baseURL:'http://127.0.0.1:3110'});const student=await studentContext.newPage();
  const otherContext=await browser.newContext({baseURL:'http://127.0.0.1:3110'});const other=await otherContext.newPage();
  try {
   await login(student,'pupil@example.com','01234');await join(student,room);await student.getByRole('button',{name:/นักรบ.*เลือกฮีโร่/}).click();
-  await login(other,'other@example.com','01235');await join(other,room);await expect(other.getByRole('button',{name:/นักรบ/})).toBeDisabled();await other.getByRole('button',{name:/จอมเวท.*เลือกฮีโร่/}).click();
+  await login(other,'other@example.com','01235');await join(other,room);await expect(other.getByRole('button',{name:/นักรบ/})).toBeEnabled();await other.getByRole('button',{name:/นักรบ.*เลือกฮีโร่/}).click();
   await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();await expect(student.locator('.raid-question-dialog')).toBeVisible();
   const snapshot=await (await browserRequest(student,`/api/raid/${room}/snapshot`)).json();
   expect(snapshot.team.memberCount).toBe(2);expect(JSON.stringify(snapshot)).not.toMatch(/correct_answer|isCorrect|correctAnswer/);
@@ -30,8 +35,8 @@ test('Google classroom Raid: independent answer, idempotency, visibility, specta
   const crossOrigin=await request.post(`http://127.0.0.1:3110/api/teacher/raid/${room}/control`,{headers:{Origin:'https://untrusted.example',Cookie:cookie},data:{command:'end'}});expect(crossOrigin.status()).toBe(403);
   const answer=await (await request.get(`${fixture}/__test/raid-correct-option?question=${snapshot.question.id}`,{maxRetries:1})).json();
   if(answer.selectedOptionId)await student.locator(`input[value="${answer.selectedOptionId}"]`).check();else await student.getByLabel('คำตอบของคุณ',{exact:true}).fill(answer.answerText);
-  await student.getByRole('button',{name:'ตรวจคำตอบก่อนส่ง',exact:true}).click();await student.getByRole('button',{name:'ยืนยันคำตอบ',exact:true}).click();
-  await expect(student.locator('#raid-question-title')).toContainText('ข้อ 2 / 10');
+  if(!answer.selectedOptionId)await student.getByRole('button',{name:'ตรวจคำตอบก่อนส่ง',exact:true}).click();const sentAt=Date.now();await student.getByRole('button',{name:/^ยืนยันคำตอบ/}).click();await expect(student.locator('.raid-question-dialog')).toHaveCount(0);await expect(student.locator('.raid-combat-feedback')).toBeVisible();
+  await expect(student.locator('#raid-question-title')).toContainText('ข้อ 2 / 10');expect(Date.now()-sentAt).toBeGreaterThanOrEqual(2900);
   const after=await (await browserRequest(student,`/api/raid/${room}/snapshot`)).json();expect(after.own.score).toBe(10);expect(after.own.cursor).toBe(1);
   expect((await (await browserRequest(other,`/api/raid/${room}/snapshot`)).json()).own.cursor).toBe(0);
   await student.reload();await expect(student.locator('#raid-question-title')).toContainText('ข้อ 2 / 10');expect((await (await browserRequest(student,`/api/raid/${room}/snapshot`)).json()).own.score).toBe(10);
@@ -55,7 +60,7 @@ for(const members of [1,3,5])test(`${members} real Google students: simultaneous
  try {
   const pupils=await Promise.all(contexts.map(c=>c.newPage()));
   for(let i=0;i<members;i++){await login(pupils[i],people[i][0],people[i][1]);await join(pupils[i],room);}
-  await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();await expect(pupils[0].locator('.raid-question-dialog')).toBeVisible();
+  if(members===1){await pupils[0].getByRole('button',{name:'ตั้งค่าภาพ',exact:true}).click();await pupils[0].getByRole('button',{name:'เปิดเสียงเกม',exact:true}).click();await pupils[0].getByRole('button',{name:'ตั้งค่าภาพ',exact:true}).click();await pupils[0].setViewportSize({width:320,height:400});} await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();await expect(pupils[0].locator('.raid-question-dialog')).toBeVisible(); if(members===1){await expect(pupils[0].getByRole('button',{name:'ปิดเสียงเกม',exact:true})).toBeVisible();const visible=await pupils[0].locator('.raid-question-dialog').evaluate(dialog=>{const bounds=dialog.getBoundingClientRect(),button=dialog.querySelector('.raid-question-footer button')!.getBoundingClientRect();return button.bottom<=bounds.bottom&&button.height>=44;});expect(visible).toBe(true);await pupils[0].getByRole('button',{name:'ปิดเสียงเกม',exact:true}).click();await pupils[0].setViewportSize({width:320,height:700});}
   const states=await Promise.all(pupils.map(async p=>(await browserRequest(p,`/api/raid/${room}/snapshot`)).json()));
   expect(states[0].team.heroes).toHaveLength(members);expect(new Set(states[0].team.heroes.map((h:{heroType:string})=>h.heroType)).size).toBe(members);
   const deadlines=new Set(states.map(s=>s.deadline));expect(deadlines.size).toBe(1);
@@ -64,7 +69,7 @@ for(const members of [1,3,5])test(`${members} real Google students: simultaneous
   // Walk the full independently shuffled bank to exercise every typed/long/image question.
   let seenImage=false;const kinds=new Set();
   for(let i=1;i<10;i++){
-   const current=await(await browserRequest(pupils[0],`/api/raid/${room}/snapshot`)).json();kinds.add(current.question.questionType);seenImage ||=Boolean(current.question.imageUrl);
+   const current=await ready(pupils[0],room);kinds.add(current.question.questionType);seenImage ||=Boolean(current.question.imageUrl);
    if(members===1&&current.question.imageUrl){
     const pupil=pupils[0];await pupil.setViewportSize({width:320,height:400});await pupil.reload();await expect(pupil.locator('#raid-question-title')).toContainText(`ข้อ ${i+1} / 10`);await pupil.getByLabel('คำตอบของคุณ',{exact:true}).fill('5');
     await expect(pupil.locator('.raid-question-points')).toContainText(`คะแนนสะสม ${i*10}`);
@@ -100,7 +105,7 @@ test('solo knockout, self-revival, kill once and shared mutation throttle',async
   const limited=burst.filter(r=>r.status()===429);expect(limited.length).toBeGreaterThan(0);expect(limited[0].headers()['retry-after']).toBe('10');expect(limited[0].headers()['cache-control']).toContain('no-store');
   await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();await expect(pupil.locator('.raid-question-dialog')).toBeVisible();
   for(let i=0;i<10;i++){
-   const s=await(await browserRequest(pupil,`/api/raid/${room}/snapshot`)).json();const correct=await(await request.get(`${fixture}/__test/raid-correct-option?question=${s.question.id}`,{maxRetries:1})).json();
+   const s=await ready(pupil,room);const correct=await(await request.get(`${fixture}/__test/raid-correct-option?question=${s.question.id}`,{maxRetries:1})).json();
    let option=correct.selectedOptionId;const text=i<7?'deliberately wrong':'5';
    if(i<7&&option)option=s.question.options.find((o:{id:string})=>o.id!==option).id;
    if(i===9)await request.post(`${fixture}/__test/raid-boss-one-hp?session=${s.sessionId}`);
@@ -113,5 +118,54 @@ test('solo knockout, self-revival, kill once and shared mutation throttle',async
   await expect(pupil.getByRole('status').filter({hasText:'ตอบครบ 10 ข้อแล้ว'})).toBeVisible();await expect(pupil.locator('canvas')).toHaveCount(1);
   const result=await(await browserRequest(pupil,`/api/raid/${room}/snapshot`)).json();expect(result.own.score).toBe(20);expect(result.own.academicPoints).toBe(30);expect(result.team.events.filter((e:{type:string})=>e.type==='boss_defeated')).toHaveLength(1);
   await pupil.reload();const restored=await(await browserRequest(pupil,`/api/raid/${room}/snapshot`)).json();expect(restored.team.defeatedAt).toBe(result.team.defeatedAt);expect(restored.question).toBeNull();
+ }finally{await context.close();}
+});
+
+
+test('legacy Raid stays manual and its normal combat queue remains available',async({browser,page,request})=>{
+ await request.post(fixture+'/__test/reset');await request.post(fixture+'/__test/raid-bank');
+ await login(page,'piyawatpiwsiri@gmail.com');await page.goto('/teacher/rooms/new');await page.getByLabel('Boss Raid · Time Attack').check();await page.getByLabel('จำนวนทีม',{exact:true}).fill('1');await page.getByRole('button',{name:'สร้างห้อง Boss Raid',exact:true}).click();await expect(page).toHaveURL(/\/raid\/dashboard$/);const room=page.url().match(/rooms\/(\d{4})/)![1];
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:3110'}),pupil=await context.newPage();
+ try{
+  await login(pupil,'pupil@example.com','01234');await join(pupil,room);let state=await(await browserRequest(pupil,`/api/raid/${room}/snapshot`)).json();expect((await request.post(fixture+`/__test/raid-legacy?session=${state.sessionId}`)).status()).toBe(200);await pupil.reload();
+  await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();state=await ready(pupil,room);expect(state.rulesVersion).toBe(1);await expect(pupil.locator('.raid-question-dialog')).toBeVisible();await expect(pupil.locator('.raid-scene-notice')).toHaveCount(0);
+  let submissions=0;pupil.on('request',r=>{if(r.method()==='POST'&&r.url().endsWith('/answer'))submissions++;});const q=state.question;
+  if(q.questionType==='short_text'){await pupil.getByLabel('คำตอบของคุณ',{exact:true}).fill('5');await pupil.getByRole('button',{name:'ตรวจคำตอบก่อนส่ง',exact:true}).click();}else await pupil.locator('input[name=raid_option]').first().check();
+  await pupil.waitForTimeout(5200);expect(submissions).toBe(0);await expect(pupil.locator('#raid-question-title')).toContainText('ข้อ 1 / 10');
+  const response=pupil.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/answer'));const start=Date.now();await pupil.getByRole('button',{name:/^ยืนยันคำตอบ/}).click();const result=await(await response).json();expect(result.ok).toBe(true);expect(result.presentation).toBeUndefined();
+  await expect(pupil.locator('.raid-combat-feedback')).toBeVisible();await expect(pupil.locator('.raid-question-dialog')).toHaveCount(0);await expect(pupil.locator('.raid-stage')).not.toHaveAttribute('data-answer-playing','true');await expect(pupil.locator('canvas')).toHaveCount(1);
+  await expect(pupil.locator('#raid-question-title')).toContainText('ข้อ 2 / 10');expect(Date.now()-start).toBeGreaterThanOrEqual(2900);expect(submissions).toBe(1);state=await ready(pupil,room);expect(state.team.events.some((e:{actorId:string;targetId:string})=>e.actorId===state.own.id||e.targetId===state.own.id)).toBe(true);
+ }finally{await context.close();}
+});
+
+test('vintage question HUD, auto-confirm, choice reset, actual combat completion and urgent timer',async({browser,page,request})=>{
+ const dir='.impeccable/review/raid-vintage';await fs.mkdir(dir,{recursive:true});
+ await request.post(fixture+'/__test/reset');await request.post(fixture+'/__test/raid-bank');
+ await page.setViewportSize({width:1440,height:900});await page.goto('/login');await page.screenshot({path:dir+'/login-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:dir+'/login-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:900});
+ await login(page,'piyawatpiwsiri@gmail.com');await page.goto('/teacher/rooms/new');await page.getByLabel('Boss Raid · Time Attack').check();await page.getByLabel('จำนวนทีม',{exact:true}).fill('1');await page.getByRole('button',{name:'สร้างห้อง Boss Raid',exact:true}).click();await expect(page).toHaveURL(/\/raid\/dashboard$/);const room=page.url().match(/rooms\/(\d{4})/)![1];
+ const context=await browser.newContext({baseURL:'http://127.0.0.1:3110',viewport:{width:390,height:844}}),pupil=await context.newPage();const reports:unknown[]=[];
+ async function shot(name:string,width:number,height:number){const previous=pupil.viewportSize();await pupil.setViewportSize({width,height});await pupil.evaluate(()=>document.fonts.ready);if(await pupil.locator('canvas').count()){const size=await pupil.locator('.raid-stage').evaluate(element=>({width:element.clientWidth,height:Math.max(1,element.clientHeight-(element.parentElement!.querySelector('.raid-hero-hud')?.clientHeight??0)-22)})),expected=profileForStage(size.width,size.height,registry.scenes[0].profiles as SceneDefinition['profiles']);await expect(pupil.locator('.raid-stage')).toHaveAttribute('data-scene-profile',expected);await expect(pupil.locator('.raid-scene-notice')).toHaveCount(0);if(previous?.width!==width||previous?.height!==height)await pupil.waitForTimeout(700);}await pupil.screenshot({path:dir+'/'+name+'.png',fullPage:true,animations:'disabled'});const report=await pupil.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,buttons:[...document.querySelectorAll('.raid-question-footer button')].map(b=>{const r=b.getBoundingClientRect();return {height:r.height,top:r.top,bottom:r.bottom,width:r.width};}),palette:getComputedStyle(document.body).backgroundColor}));expect(report.overflow).toBe(false);for(const b of report.buttons){expect(b.height).toBeGreaterThanOrEqual(44);expect(b.bottom).toBeLessThanOrEqual(height);}const violations=(await new AxeBuilder({page:pupil}).include('.raid-room').analyze()).violations.filter(v=>['serious','critical'].includes(v.impact??''));expect(violations).toEqual([]);reports.push({name,width,height,...report,violations});}
+ try{
+  await login(pupil,'pupil@example.com','01234');await join(pupil,room);await pupil.getByRole('button',{name:/พ่อมด.*เลือกฮีโร่/}).click();await expect(pupil.getByRole('button',{name:/พ่อมด.*คุณเลือกตัวนี้/})).toHaveAttribute('aria-pressed','true');await expect(pupil.getByRole('button',{name:/พ่อมด.*คุณเลือกตัวนี้/})).toBeEnabled();
+  const inactive=pupil.locator('.raid-hero-picker button[aria-pressed=false] .raid-hero-portrait').first();expect(await inactive.evaluate(e=>getComputedStyle(e).filter)).toContain('grayscale');await shot('hero-mobile',390,844);await shot('hero-desktop',1440,900);
+  await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();let state=await ready(pupil,room);
+  while(state.question.questionType==='short_text'){const q=state.question;await browserRequest(pupil,`/api/raid/${room}/answer`,{method:'POST',data:{questionId:q.id,displayIndex:q.displayIndex,idempotencyKey:crypto.randomUUID(),answerText:'5'}});state=await ready(pupil,room);}
+  await expect(pupil.locator('#raid-question-title')).toContainText(`ข้อ ${state.question.displayIndex+1}`);await pupil.getByRole('button',{name:/ปาร์ตี้/}).click();await expect(pupil.locator('.raid-party-list')).toContainText('นักเรียน หนึ่ง');await expect(pupil.locator('.raid-party-list')).toContainText('พ่อมด');await shot('question-party-desktop',1440,900);await shot('question-party-mobile',390,844);await pupil.getByRole('button',{name:/ปาร์ตี้/}).click();
+  await shot('question-small',320,400);await shot('question-landscape',844,390);await shot('question-tablet',768,1024);await pupil.setViewportSize({width:390,height:844});
+  let submissions=0;pupil.on('request',r=>{if(r.method()==='POST'&&r.url().endsWith('/answer'))submissions++;});
+  await request.post(fixture+`/__test/raid-phase-three?session=${state.sessionId}`);const expected=await(await request.get(fixture+`/__test/raid-correct-option?question=${state.question.id}`)).json(),wrong=state.question.options.find((o:{id:string})=>o.id!==expected.selectedOptionId)!;
+  await pupil.locator(`input[value="${expected.selectedOptionId}"]`).check();const start=Date.now();await pupil.waitForTimeout(1800);await pupil.locator(`input[value="${wrong.id}"]`).check();const reset=Date.now();await pupil.waitForTimeout(3300);expect(submissions).toBe(0);await shot('confirmation-mobile',390,844);
+  await expect(pupil.locator('.raid-combat-feedback')).toBeVisible();expect(Date.now()-reset).toBeGreaterThanOrEqual(4900);expect(Date.now()-start).toBeGreaterThanOrEqual(6500);expect(submissions).toBe(1);await expect(pupil.locator('.raid-question-dialog')).toHaveCount(0);
+  await expect(pupil.locator('.raid-stage')).toHaveAttribute('data-answer-playing','true');await expect(pupil.locator('.raid-stage')).toHaveAttribute('data-answer-completed','true');await shot('combat-mobile',390,844);
+  await expect(pupil.locator('#raid-question-title')).toContainText(`ข้อ ${state.question.displayIndex+2}`);expect(submissions).toBe(1);
+  state=await ready(pupil,room);await request.post(fixture+`/__test/raid-last-thirty?session=${state.sessionId}`);await expect(pupil.locator('.raid-timer')).toHaveAttribute('data-urgent','true');await expect(pupil.locator('.raid-time-warning')).toHaveText('30 วินาทีสุดท้าย');await shot('urgent-mobile',390,844);
+  const q=state.question;if(q.questionType==='short_text'){await pupil.getByLabel('คำตอบของคุณ',{exact:true}).fill('5');await pupil.getByRole('button',{name:'ตรวจคำตอบก่อนส่ง',exact:true}).click();}else await pupil.locator('input[name=raid_option]').first().check();
+  await pupil.route('**/api/raid/'+room+'/snapshot*',route=>route.abort());
+  await pupil.getByRole('button',{name:/^ยืนยันคำตอบ/}).click();await expect(pupil.locator('.raid-combat-feedback')).toBeVisible();expect(submissions).toBe(2);await pupil.waitForTimeout(3900);await expect(pupil.locator('.raid-question-dialog')).toHaveCount(0);await expect(pupil.locator('.raid-connection')).toContainText('คำตอบบันทึกแล้ว');
+  await pupil.unroute('**/api/raid/'+room+'/snapshot*');await expect(pupil.locator('#raid-question-title')).toContainText(`ข้อ ${q.displayIndex+2}`);
+  const last=await ready(pupil,room);if(last.question.questionType!=='short_text')await pupil.locator('input[name=raid_option]').first().check();else{await pupil.getByLabel('คำตอบของคุณ',{exact:true}).fill('5');await pupil.getByRole('button',{name:'ตรวจคำตอบก่อนส่ง',exact:true}).click();}
+  await request.post(fixture+`/__test/raid-expire?session=${last.sessionId}`);await expect(pupil.locator('.raid-question-dialog')).toHaveCount(0);await pupil.waitForTimeout(5100);expect(submissions).toBe(2);
+  await fs.writeFile(dir+'/hud-and-confirmation.json',JSON.stringify(reports,null,2));
  }finally{await context.close();}
 });

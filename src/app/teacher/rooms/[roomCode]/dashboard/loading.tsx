@@ -5,7 +5,7 @@ export default function DashboardLoading() {
   return (
     <AppShell>
       <section className="mx-auto w-full max-w-7xl px-6 py-8 lg:px-8">
-        <Panel className="h-80 animate-pulse bg-white" />
+        <Panel className="h-80 animate-pulse bg-surface" />
       </section>
     </AppShell>
   );

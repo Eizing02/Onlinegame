@@ -1,0 +1,145 @@
+{
+  "decode": 50,
+  "releaseCue": {
+    "sound": "warrior1",
+    "seq": 1,
+    "cueId": "0:warrior1",
+    "animation": "attack_1",
+    "frame": 7
+  },
+  "final": {
+    "muted": true,
+    "voices": 0,
+    "decodedBytes": 10951680,
+    "cacheEntries": 14,
+    "failures": [],
+    "music": null,
+    "dropped": [
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      },
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      },
+      {
+        "sound": "button",
+        "reason": "late:403"
+      },
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      }
+    ],
+    "musicPaused": true,
+    "musicReadyState": 4,
+    "played": [
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:233"
+      },
+      {
+        "sound": "hit",
+        "seq": 1,
+        "cueId": "boss:hit",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "warrior1",
+        "seq": 1,
+        "cueId": "0:warrior1",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:247"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:265"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:273"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:294"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:303"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:322"
+      },
+      {
+        "sound": "death",
+        "seq": 2,
+        "cueId": "boss:death",
+        "animation": "death",
+        "frame": 0
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:332"
+      },
+      {
+        "sound": "victory",
+        "seq": 2,
+        "cueId": "boss:victory",
+        "animation": "victory",
+        "frame": 0
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:345"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:368"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:376"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:396"
+      }
+    ],
+    "render": {
+      "scene": {
+        "decodedBytes": 18872040,
+        "sheets": 3,
+        "activeReferences": 3
+      },
+      "sprites": {
+        "decodedBytes": 43517888,
+        "sheets": 8,
+        "activeReferences": 6
+      },
+      "actorCount": 6,
+      "particles": 0,
+      "sparks": 0,
+      "frameP50Ms": 93.10000038146973,
+      "frameP95Ms": 166.2000002861023
+    }
+  }
+}

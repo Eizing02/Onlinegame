@@ -1,0 +1,151 @@
+{
+  "decode": 50,
+  "releaseCue": {
+    "sound": "warrior1",
+    "seq": 1,
+    "cueId": "0:warrior1",
+    "animation": "attack_1",
+    "frame": 7
+  },
+  "final": {
+    "muted": true,
+    "voices": 0,
+    "decodedBytes": 10951680,
+    "cacheEntries": 14,
+    "failures": [],
+    "music": null,
+    "dropped": [
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      },
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      },
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      }
+    ],
+    "musicPaused": true,
+    "musicReadyState": 4,
+    "played": [
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:61"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:73"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:76"
+      },
+      {
+        "sound": "hit",
+        "seq": 1,
+        "cueId": "boss:hit",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "warrior1",
+        "seq": 1,
+        "cueId": "0:warrior1",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:82"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:85"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:89"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:103"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:112"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:115"
+      },
+      {
+        "sound": "death",
+        "seq": 2,
+        "cueId": "boss:death",
+        "animation": "death",
+        "frame": 0
+      },
+      {
+        "sound": "victory",
+        "seq": 2,
+        "cueId": "boss:victory",
+        "animation": "victory",
+        "frame": 0
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:125"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:129"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:141"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:143"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:146"
+      }
+    ],
+    "render": {
+      "scene": {
+        "decodedBytes": 18872040,
+        "sheets": 3,
+        "activeReferences": 3
+      },
+      "sprites": {
+        "decodedBytes": 43517888,
+        "sheets": 8,
+        "activeReferences": 6
+      },
+      "actorCount": 6,
+      "particles": 0,
+      "sparks": 0,
+      "frameP50Ms": 66.60000000000036,
+      "frameP95Ms": 100
+    }
+  }
+}

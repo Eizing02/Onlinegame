@@ -1,80 +1,586 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-09T14:27:25.369Z",
-  "title": "Design System: KruEIonline Classroom Space",
+  "generatedAt": "2026-10-12T18:00:28.250Z",
+  "title": "Design System: KruEIonline Classic Classroom",
   "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Wine action",
+        "tonalRamp": [
+          "oklch(15.00% 0.1398 24.34)",
+          "oklch(26.43% 0.1398 24.34)",
+          "oklch(37.86% 0.1398 24.34)",
+          "oklch(49.29% 0.1398 24.34)",
+          "oklch(60.71% 0.1398 24.34)",
+          "oklch(72.14% 0.1398 24.34)",
+          "oklch(83.57% 0.1398 24.34)",
+          "oklch(95.00% 0.1398 24.34)"
+        ]
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "Wine hover",
+        "tonalRamp": [
+          "oklch(15.00% 0.1151 23.72)",
+          "oklch(26.43% 0.1151 23.72)",
+          "oklch(37.86% 0.1151 23.72)",
+          "oklch(49.29% 0.1151 23.72)",
+          "oklch(60.71% 0.1151 23.72)",
+          "oklch(72.14% 0.1151 23.72)",
+          "oklch(83.57% 0.1151 23.72)",
+          "oklch(95.00% 0.1151 23.72)"
+        ]
+      },
+      "on-primary": {
+        "role": "neutral",
+        "displayName": "Cream on wine",
+        "tonalRamp": [
+          "oklch(15.00% 0.0196 87.51)",
+          "oklch(26.43% 0.0196 87.51)",
+          "oklch(37.86% 0.0196 87.51)",
+          "oklch(49.29% 0.0196 87.51)",
+          "oklch(60.71% 0.0196 87.51)",
+          "oklch(72.14% 0.0196 87.51)",
+          "oklch(83.57% 0.0196 87.51)",
+          "oklch(95.00% 0.0196 87.51)"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Cream",
+        "tonalRamp": [
+          "oklch(15.00% 0.0196 87.51)",
+          "oklch(26.43% 0.0196 87.51)",
+          "oklch(37.86% 0.0196 87.51)",
+          "oklch(49.29% 0.0196 87.51)",
+          "oklch(60.71% 0.0196 87.51)",
+          "oklch(72.14% 0.0196 87.51)",
+          "oklch(83.57% 0.0196 87.51)",
+          "oklch(95.00% 0.0196 87.51)"
+        ]
+      },
+      "parchment": {
+        "role": "neutral",
+        "displayName": "Parchment",
+        "tonalRamp": [
+          "oklch(15.00% 0.0517 84.53)",
+          "oklch(26.43% 0.0517 84.53)",
+          "oklch(37.86% 0.0517 84.53)",
+          "oklch(49.29% 0.0517 84.53)",
+          "oklch(60.71% 0.0517 84.53)",
+          "oklch(72.14% 0.0517 84.53)",
+          "oklch(83.57% 0.0517 84.53)",
+          "oklch(95.00% 0.0517 84.53)"
+        ]
+      },
+      "accent-soft": {
+        "role": "secondary",
+        "displayName": "Mist blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0330 239.47)",
+          "oklch(26.43% 0.0330 239.47)",
+          "oklch(37.86% 0.0330 239.47)",
+          "oklch(49.29% 0.0330 239.47)",
+          "oklch(60.71% 0.0330 239.47)",
+          "oklch(72.14% 0.0330 239.47)",
+          "oklch(83.57% 0.0330 239.47)",
+          "oklch(95.00% 0.0330 239.47)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Cream page",
+        "tonalRamp": [
+          "oklch(15.00% 0.0196 87.51)",
+          "oklch(26.43% 0.0196 87.51)",
+          "oklch(37.86% 0.0196 87.51)",
+          "oklch(49.29% 0.0196 87.51)",
+          "oklch(60.71% 0.0196 87.51)",
+          "oklch(72.14% 0.0196 87.51)",
+          "oklch(83.57% 0.0196 87.51)",
+          "oklch(95.00% 0.0196 87.51)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Cream reading surface",
+        "tonalRamp": [
+          "oklch(15.00% 0.0196 87.51)",
+          "oklch(26.43% 0.0196 87.51)",
+          "oklch(37.86% 0.0196 87.51)",
+          "oklch(49.29% 0.0196 87.51)",
+          "oklch(60.71% 0.0196 87.51)",
+          "oklch(72.14% 0.0196 87.51)",
+          "oklch(83.57% 0.0196 87.51)",
+          "oklch(95.00% 0.0196 87.51)"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Parchment panel",
+        "tonalRamp": [
+          "oklch(15.00% 0.0517 84.53)",
+          "oklch(26.43% 0.0517 84.53)",
+          "oklch(37.86% 0.0517 84.53)",
+          "oklch(49.29% 0.0517 84.53)",
+          "oklch(60.71% 0.0517 84.53)",
+          "oklch(72.14% 0.0517 84.53)",
+          "oklch(83.57% 0.0517 84.53)",
+          "oklch(95.00% 0.0517 84.53)"
+        ]
+      },
+      "panel-strong": {
+        "role": "neutral",
+        "displayName": "Raised parchment",
+        "tonalRamp": [
+          "oklch(15.00% 0.0362 83.77)",
+          "oklch(26.43% 0.0362 83.77)",
+          "oklch(37.86% 0.0362 83.77)",
+          "oklch(49.29% 0.0362 83.77)",
+          "oklch(60.71% 0.0362 83.77)",
+          "oklch(72.14% 0.0362 83.77)",
+          "oklch(83.57% 0.0362 83.77)",
+          "oklch(95.00% 0.0362 83.77)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Brown ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0256 14.81)",
+          "oklch(26.43% 0.0256 14.81)",
+          "oklch(37.86% 0.0256 14.81)",
+          "oklch(49.29% 0.0256 14.81)",
+          "oklch(60.71% 0.0256 14.81)",
+          "oklch(72.14% 0.0256 14.81)",
+          "oklch(83.57% 0.0256 14.81)",
+          "oklch(95.00% 0.0256 14.81)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted brown ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0392 35.03)",
+          "oklch(26.43% 0.0392 35.03)",
+          "oklch(37.86% 0.0392 35.03)",
+          "oklch(49.29% 0.0392 35.03)",
+          "oklch(60.71% 0.0392 35.03)",
+          "oklch(72.14% 0.0392 35.03)",
+          "oklch(83.57% 0.0392 35.03)",
+          "oklch(95.00% 0.0392 35.03)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Brown border",
+        "tonalRamp": [
+          "oklch(15.00% 0.0613 71.43)",
+          "oklch(26.43% 0.0613 71.43)",
+          "oklch(37.86% 0.0613 71.43)",
+          "oklch(49.29% 0.0613 71.43)",
+          "oklch(60.71% 0.0613 71.43)",
+          "oklch(72.14% 0.0613 71.43)",
+          "oklch(83.57% 0.0613 71.43)",
+          "oklch(95.00% 0.0613 71.43)"
+        ]
+      },
+      "primary-blue": {
+        "role": "secondary",
+        "displayName": "Blue ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0513 234.79)",
+          "oklch(26.43% 0.0513 234.79)",
+          "oklch(37.86% 0.0513 234.79)",
+          "oklch(49.29% 0.0513 234.79)",
+          "oklch(60.71% 0.0513 234.79)",
+          "oklch(72.14% 0.0513 234.79)",
+          "oklch(83.57% 0.0513 234.79)",
+          "oklch(95.00% 0.0513 234.79)"
+        ]
+      },
+      "cyan": {
+        "role": "secondary",
+        "displayName": "Blue ink compatibility alias",
+        "tonalRamp": [
+          "oklch(15.00% 0.0513 234.79)",
+          "oklch(26.43% 0.0513 234.79)",
+          "oklch(37.86% 0.0513 234.79)",
+          "oklch(49.29% 0.0513 234.79)",
+          "oklch(60.71% 0.0513 234.79)",
+          "oklch(72.14% 0.0513 234.79)",
+          "oklch(83.57% 0.0513 234.79)",
+          "oklch(95.00% 0.0513 234.79)"
+        ]
+      },
+      "success": {
+        "role": "secondary",
+        "displayName": "Blue ink success",
+        "tonalRamp": [
+          "oklch(15.00% 0.0513 234.79)",
+          "oklch(26.43% 0.0513 234.79)",
+          "oklch(37.86% 0.0513 234.79)",
+          "oklch(49.29% 0.0513 234.79)",
+          "oklch(60.71% 0.0513 234.79)",
+          "oklch(72.14% 0.0513 234.79)",
+          "oklch(83.57% 0.0513 234.79)",
+          "oklch(95.00% 0.0513 234.79)"
+        ]
+      },
+      "warning": {
+        "role": "secondary",
+        "displayName": "Amber-brown warning",
+        "tonalRamp": [
+          "oklch(15.00% 0.0734 72.94)",
+          "oklch(26.43% 0.0734 72.94)",
+          "oklch(37.86% 0.0734 72.94)",
+          "oklch(49.29% 0.0734 72.94)",
+          "oklch(60.71% 0.0734 72.94)",
+          "oklch(72.14% 0.0734 72.94)",
+          "oklch(83.57% 0.0734 72.94)",
+          "oklch(95.00% 0.0734 72.94)"
+        ]
+      },
+      "danger": {
+        "role": "primary",
+        "displayName": "Wine danger",
+        "tonalRamp": [
+          "oklch(15.00% 0.1398 24.34)",
+          "oklch(26.43% 0.1398 24.34)",
+          "oklch(37.86% 0.1398 24.34)",
+          "oklch(49.29% 0.1398 24.34)",
+          "oklch(60.71% 0.1398 24.34)",
+          "oklch(72.14% 0.1398 24.34)",
+          "oklch(83.57% 0.1398 24.34)",
+          "oklch(95.00% 0.1398 24.34)"
+        ]
+      },
+      "selection-gold": {
+        "role": "tertiary",
+        "displayName": "Hero selection gold",
+        "tonalRamp": [
+          "oklch(15.00% 0.1177 79.66)",
+          "oklch(26.43% 0.1177 79.66)",
+          "oklch(37.86% 0.1177 79.66)",
+          "oklch(49.29% 0.1177 79.66)",
+          "oklch(60.71% 0.1177 79.66)",
+          "oklch(72.14% 0.1177 79.66)",
+          "oklch(83.57% 0.1177 79.66)",
+          "oklch(95.00% 0.1177 79.66)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Thai display",
+        "purpose": "Desktop login statement; compact sizes use the observed responsive overrides."
+      },
+      "room-title": {
+        "displayName": "Room title",
+        "purpose": "Teacher/student room identity; truncated only in the bounded room header."
+      },
+      "question": {
+        "displayName": "Question reading",
+        "purpose": "Long Thai question content; reduces to 16px on compact Raid layouts."
+      },
+      "body": {
+        "displayName": "Thai body",
+        "purpose": "Readable text and standard form input baseline."
+      },
+      "timer-warning": {
+        "displayName": "Timer warning",
+        "purpose": "Compact secondary HUD warning only; never question or answer text."
+      },
+      "numeric": {
+        "displayName": "Numeric/monospace",
+        "purpose": "Geist Mono where monospace is used; countdown and scores use tabular numerals."
+      }
+    },
     "shadows": [
       {
-        "name": "panel",
-        "value": "0 10px 26px rgba(0,0,0,.28)",
-        "purpose": "ความลึกของพื้นผิวเดิม"
+        "name": "primary",
+        "value": "0 4px 12px rgba(57,40,41,.14)",
+        "purpose": "Resting wine action shadow."
+      },
+      {
+        "name": "primary-pressed",
+        "value": "0 2px 6px #39282980",
+        "purpose": "Primary action pressed state."
+      },
+      {
+        "name": "question-card",
+        "value": "0 18px 48px rgba(57,40,41,.22)",
+        "purpose": "Question reading card above the arena."
+      },
+      {
+        "name": "party",
+        "value": "0 12px 30px rgba(57,40,41,.2)",
+        "purpose": "Own-team disclosure elevation."
+      },
+      {
+        "name": "audio-popover",
+        "value": "0 12px 32px rgba(57,40,41,.15)",
+        "purpose": "Bounded audio controls."
+      },
+      {
+        "name": "combat-feedback",
+        "value": "0 8px 24px rgba(57,40,41,.15)",
+        "purpose": "Server-confirmed combat result."
+      },
+      {
+        "name": "hero-selection",
+        "value": "0 0 18px rgba(208,160,74,.42)",
+        "purpose": "User-requested selected hero aura."
+      },
+      {
+        "name": "shared-glow",
+        "value": "0 16px 40px rgba(57,40,41,.12)",
+        "purpose": "Existing shared --shadow-glow token."
       }
     ],
     "motion": [
       {
+        "name": "action-state",
+        "value": "150ms",
+        "purpose": "Primary button transform and background response."
+      },
+      {
+        "name": "hero-state",
+        "value": "200ms",
+        "purpose": "Selected hero surface, filter, opacity, and scale; transitions disabled under reduced motion."
+      },
+      {
         "name": "question-arrive",
         "value": "200ms cubic-bezier(.16,1,.3,1)",
-        "purpose": "เปลี่ยนคำถามโดยไม่บังเนื้อหา"
+        "purpose": "Existing Classic question arrival; not the Raid combat interval."
+      },
+      {
+        "name": "classic-tab",
+        "value": "260ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "Existing Classic navigation transition; preserves panels."
+      },
+      {
+        "name": "raid-answer-presentation",
+        "value": "3000ms",
+        "purpose": "Common server-confirmed combat presentation interval; overall deadline continues."
+      },
+      {
+        "name": "raid-auto-confirm",
+        "value": "5000ms",
+        "purpose": "Numeric countdown and parchment sweep; immediate confirmation/cancel remain available."
+      },
+      {
+        "name": "raid-urgent-clock",
+        "value": "1000ms ease-in-out infinite",
+        "purpose": "Gentle final-30-second pulse with text; reduced motion uses static outline."
+      },
+      {
+        "name": "classic-reveal-fireworks",
+        "value": "4200ms maximum",
+        "purpose": "Existing pointer-transparent reveal; reduced mode retains the result without fireworks."
       }
     ],
     "breakpoints": [
       {
-        "name": "login-single-column",
-        "value": "800px"
+        "name": "login-and-raid-compact",
+        "value": "800px",
+        "purpose": "Single-column login, three-column hero selection, compact Raid reading/HUD."
+      },
+      {
+        "name": "classic-bottom-navigation",
+        "value": "767px",
+        "purpose": "Classic mobile navigation and one-column playing layout."
+      },
+      {
+        "name": "account-and-audio-mobile",
+        "value": "600px",
+        "purpose": "Compact account layout and bounded mobile audio panel."
+      },
+      {
+        "name": "raid-low-height",
+        "value": "500px height",
+        "purpose": "Tighter question card controls and answer region height."
+      },
+      {
+        "name": "raid-small-phone",
+        "value": "360px",
+        "purpose": "Tight HUD and cancel-action spacing."
+      },
+      {
+        "name": "classic-landscape",
+        "value": "600px height and 640px minimum width",
+        "purpose": "Classic header/navigation share a row."
       },
       {
         "name": "teacher-controls-first",
-        "value": "1280px"
+        "value": "1279px",
+        "purpose": "Existing teacher-control ordering."
       }
-    ]
+    ],
+    "focus": [
+      {
+        "name": "standard",
+        "value": "2px solid var(--cyan); outline-offset: 3px",
+        "purpose": "Blue ink focus on light surfaces."
+      }
+    ],
+    "backdrops": [
+      {
+        "name": "raid-question",
+        "value": "rgba(57,40,41,.38)",
+        "purpose": "Arena dimming behind native question dialog; HUD remains within dialog top layer."
+      }
+    ],
+    "assetTreatment": {
+      "backgrounds": "Grade decoded native-size scene layers once in the Canvas2D texture cache, evicting unused textures; low quality caps longest decoded dimension at 1024px and preserves native alignment ratios.",
+      "floorFilter": "grayscale(1) sepia(.42) brightness(1.12)",
+      "backgroundFilter": "grayscale(1) sepia(.12) hue-rotate(155deg) saturate(.65) brightness(1.14)",
+      "sprites": "Original sprite sources remain unchanged; selection grayscale/aura is presentation CSS.",
+      "performanceEvidence": "Source implementation only; no physical-device frame-time or whole-surface ship claim."
+    },
+    "responsiveBehavior": [
+      {
+        "name": "raid-question-viewport",
+        "height": "var(--raid-dialog-height,100dvh)",
+        "top": "var(--raid-dialog-top,0px)",
+        "purpose": "Track VisualViewport height/offset on resize and scroll, preserving the dialog HUD and confirmation footer as the visible area changes.",
+        "pinchZoomGuard": "Skip layout resizing when VisualViewport scale is greater than 1.05.",
+        "safeArea": "Left, right, and bottom spacing respect env(safe-area-inset-*).",
+        "lifecycle": "Batch viewport updates through requestAnimationFrame; remove resize/scroll listeners and cancel the pending frame on unmount.",
+        "evidence": "Compact viewport browser captures; no physical-device keyboard certification."
+      }
+    ],
+    "combatBehavior": {
+      "bossPhaseClips": "Queued and answer-priority attacks share bossAttackClip, retaining phase-3 ultimate and original sound/effect cues.",
+      "acknowledgedAnswerRecovery": "After a successful answer, wait for a snapshot with an advanced cursor before reopening the question; cached stale state cannot reopen the old question.",
+      "evidence": "Final focused vintage Playwright exercises a real phase-3 attack before next-question entry; full test scope belongs to validation.md, finish disposition to the reviewer.",
+      "legacyEmptyPacketFallback": "For v1 answers without an event packet, keep the common presentation delay while leaving the normal combat queue unlocked; do not acquire or finish an empty answer-priority presentation.",
+      "legacyEvidence": "Focused legacy Playwright passed: manual after 5.2 seconds, one submission, no empty priority lock, next-question entry at least 2.9 seconds later, canvas and own events retained.",
+      "nominalBudget": {
+        "artifact": ".impeccable/review/raid-vintage/nominal-animation-budget.json",
+        "classes": 5,
+        "maximumMs": 2489,
+        "commonWindowMs": 3000,
+        "scope": "Static retained clip/projectile/effect math only; not asset-loading latency, physical frame-time, or FPS proof."
+      }
+    },
+    "nativeProgress": {
+      "name": "teacher-boss-defeat-progress",
+      "height": "6px",
+      "radiusToken": "rounded.progress",
+      "appearance": "none",
+      "track": "var(--border)",
+      "fill": "var(--cyan)",
+      "browserSurfaces": [
+        "::-webkit-progress-bar",
+        "::-webkit-progress-value",
+        "::-moz-progress-bar"
+      ],
+      "semantics": "Boss defeat progress is bossMaxHp minus bossHp, with team context and current boss HP text.",
+      "scope": "Explicit theming of an existing native control; teacher composition is preserved."
+    }
   },
   "components": [
     {
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "คำสั่งหลักพร้อมสถานะกดและโฟกัส",
-      "html": "<button class=\"ds-primary\">เข้าสู่ระบบ</button>",
-      "css": ".ds-primary{min-height:48px;padding:12px 20px;border:0;border-radius:10px;background:var(--primary);color:var(--foreground);font:600 16px sans-serif;box-shadow:0 4px 12px #351b7f80}.ds-primary:hover{background:var(--primary-dark)}.ds-primary:active{transform:translateY(2px)}.ds-primary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}"
+      "description": "Wine action with cream on-primary text, hover, press, disabled, and focus states.",
+      "html": "<button class=\"ds-primary\">เข้าสู่ระบบด้วย Google</button>",
+      "css": ".ds-primary{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;min-height:48px;padding:12px 20px;border:0;border-radius:10px;background:var(--primary);color:var(--on-primary);font-size:16px;font-weight:600;box-shadow:0 4px 12px rgba(57,40,41,.14);transition:transform 150ms,background-color 150ms;cursor:pointer}.ds-primary:hover{background:var(--primary-dark)}.ds-primary:active{transform:translateY(2px);box-shadow:0 2px 6px #39282980}.ds-primary:disabled{opacity:.65;cursor:not-allowed}.ds-primary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
     },
     {
-      "name": "Login Input",
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Brown ink on a cream surface for a secondary action.",
+      "html": "<button class=\"ds-secondary\">กลับหน้าห้อง</button>",
+      "css": ".ds-secondary{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--foreground);font-size:14px;cursor:pointer}.ds-secondary:hover{background:var(--panel-strong)}.ds-secondary:disabled{opacity:.55;cursor:not-allowed}.ds-secondary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}"
+    },
+    {
+      "name": "Labeled Input",
       "kind": "input",
-      "description": "ช่องกรอกที่มี label จริง",
-      "html": "<label class=\"ds-label\">รหัสผู้ใช้<input class=\"ds-input\" placeholder=\"รหัสประจำตัว\" /></label>",
-      "css": ".ds-label{display:grid;gap:8px;color:var(--foreground);font:14px sans-serif}.ds-input{min-height:52px;padding:0 14px;font:16px sans-serif;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--foreground)}.ds-input::placeholder{color:#a6b4d4}.ds-input:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}"
+      "refersTo": "input",
+      "description": "A real Thai label, cream field, muted placeholder, and blue ink focus.",
+      "html": "<label class=\"ds-label\" for=\"ds-answer\">คำตอบของคุณ</label><input id=\"ds-answer\" class=\"ds-input\" placeholder=\"พิมพ์คำตอบ\" />",
+      "css": ".ds-label{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;display:block;margin-bottom:8px;color:var(--foreground);font-size:14px;font-weight:600}.ds-input{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;width:100%;min-height:52px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--foreground);font-size:16px;caret-color:var(--cyan)}.ds-input::placeholder{color:var(--muted)}.ds-input[aria-invalid=true]{border-color:var(--danger)}.ds-input:disabled{opacity:.55}.ds-input:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}"
     },
     {
       "name": "Classroom Navigation",
       "kind": "nav",
-      "description": "บัญชีและทางออกที่ชัดเจน",
-      "html": "<nav class=\"ds-nav\" aria-label=\"เมนูหลัก\"><a href=\"#\">KruEIonline</a><span>ครู</span><button>ออกจากระบบ</button></nav>",
-      "css": ".ds-nav{display:flex;align-items:center;gap:16px;padding:16px;background:var(--surface);color:var(--foreground)}.ds-nav a{color:var(--cyan);margin-right:auto}.ds-nav button{min-height:44px;padding:8px 12px;background:var(--panel);border:1px solid var(--border);color:var(--foreground);border-radius:10px}.ds-nav :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}"
+      "description": "Cream navigation with clear account context and a bounded exit action.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"เมนูหลัก\"><a href=\"#\">KruEIonline</a><span class=\"ds-account\">ครู</span><button>ออกจากระบบ</button></nav>",
+      "css": ".ds-nav{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;display:flex;align-items:center;gap:16px;padding:8px 16px;min-height:54px;border-bottom:1px solid var(--border);background:var(--surface);color:var(--foreground);font-size:14px}.ds-nav>a{color:var(--cyan);margin-right:auto;text-decoration:none}.ds-nav>a:hover{text-decoration:underline;text-underline-offset:4px}.ds-account{color:var(--muted)}.ds-nav>button{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;min-height:44px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);color:var(--foreground);border-radius:10px;cursor:pointer}.ds-nav>button:hover{background:var(--panel-strong)}.ds-nav>a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.ds-nav>button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}@media(max-width:420px){.ds-nav{gap:8px;padding-inline:10px}.ds-account{font-size:12px}}"
     },
     {
-      "name": "Status Chip",
-      "kind": "chip",
-      "description": "สถานะพร้อมข้อความ",
-      "html": "<span class=\"ds-status\">รอครูเริ่มเกม</span>",
-      "css": ".ds-status{display:inline-block;border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--warning);background:var(--surface);font:600 14px sans-serif}"
+      "name": "Status and Team Progress",
+      "kind": "custom",
+      "description": "Textual status and an independent native teacher progress preview with explicit blue-ink fill and brown track.",
+      "html": "<span class=\"ds-status\" role=\"status\">รอครูเริ่มเกม</span><label class=\"ds-progress-label\">ความคืบหน้าปราบบอส ทีม 1<progress class=\"ds-team-progress\" value=\"200\" max=\"750\" aria-label=\"ความคืบหน้าปราบบอส ทีม 1\"></progress><small>บอส HP 550/750</small></label>",
+      "css": ".ds-status{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;display:inline-block;margin-bottom:8px;color:var(--warning);font-size:14px;font-weight:600;line-height:1.5}.ds-progress-label{display:grid;gap:4px;color:var(--foreground);font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;font-size:14px}.ds-progress-label>small{color:var(--muted);font-size:12px}.ds-team-progress{width:100%;height:6px;appearance:none;border:0;border-radius:4px;overflow:hidden;background:var(--border);color:var(--cyan);accent-color:var(--cyan)}.ds-team-progress::-webkit-progress-bar{background:var(--border)}.ds-team-progress::-webkit-progress-value{background:var(--cyan)}.ds-team-progress::-moz-progress-bar{background:var(--cyan)}"
     },
     {
-      "name": "Panel",
+      "name": "Parchment Panel",
       "kind": "card",
-      "description": "พื้นผิวหลักของหน้าห้อง",
-      "html": "<section class=\"ds-panel\"><h2>ห้องที่เข้าร่วม</h2><p>คำถามจะแสดงเมื่อครูเริ่มเกม</p></section>",
-      "css": ".ds-panel{padding:20px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--foreground);box-shadow:0 10px 26px #0004}.ds-panel h2{font:600 24px sans-serif;margin:0 0 16px}.ds-panel p{font:16px/1.7 sans-serif;color:var(--muted)}"
+      "refersTo": "panel",
+      "description": "A softly curved, bordered parchment panel without a resting shadow.",
+      "html": "<section class=\"ds-panel\"><h2>เข้าสู่ระบบ</h2><p>เลือกบัญชี Google ของคุณเพื่อเข้าห้องหรือเปิดหน้าครู</p></section>",
+      "css": ".ds-panel{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;padding:20px;border:1px solid var(--border);border-radius:16px;background:var(--panel);color:var(--foreground);box-shadow:none}.ds-panel h2{margin:0 0 8px;font-size:28px;font-weight:650;line-height:1.5}.ds-panel p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}"
+    },
+    {
+      "name": "Overall Timer",
+      "kind": "custom",
+      "refersTo": "timer",
+      "description": "A static urgent-timer frame; the runtime clock is driven by the shared deadline.",
+      "html": "<div class=\"ds-timer\" data-urgent=\"true\" aria-label=\"เวลารวมเหลือ 28 วินาที\"><span>เวลารวม</span><strong>00:28</strong><small>30 วินาทีสุดท้าย</small></div>",
+      "css": ".ds-timer{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;display:grid;text-align:center;min-width:86px;padding:4px 10px;background:var(--surface);color:var(--foreground);border-radius:10px}.ds-timer>span{color:var(--muted);font-size:12px}.ds-timer>strong{font-size:24px;line-height:1.4;font-variant-numeric:tabular-nums}.ds-timer>small{font-size:10px}.ds-timer[data-urgent=true]{color:var(--danger);animation:ds-clock-pulse 1s ease-in-out infinite}@keyframes ds-clock-pulse{50%{background:color-mix(in srgb,var(--danger) 12%,var(--surface));outline:2px solid color-mix(in srgb,var(--danger) 45%,transparent)}}@media(max-width:800px){.ds-timer{min-width:72px}.ds-timer>strong{font-size:21px}}@media(prefers-reduced-motion:reduce){.ds-timer[data-urgent=true]{animation:none;outline:2px solid var(--danger)}}"
+    },
+    {
+      "name": "Own-team Party Disclosure",
+      "kind": "custom",
+      "refersTo": "party-toggle",
+      "description": "Native disclosure preview of the own-team popover; production uses aria-expanded/aria-controls.",
+      "html": "<details class=\"ds-party\"><summary>ปาร์ตี้ · 2 คน</summary><section class=\"ds-party-list\" aria-label=\"สมาชิกปาร์ตี้ของทีมคุณ\"><h3>สมาชิกในทีม</h3><ul><li><strong>นักเรียนหนึ่ง <small>· คุณ</small></strong><span>พ่อมด · HP 100</span></li><li><strong>นักเรียนสอง</strong><span>นักรบ · HP 90</span></li></ul></section></details>",
+      "css": ".ds-party{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;position:relative;color:var(--foreground);font-size:13px}.ds-party>summary{display:flex;align-items:center;min-height:44px;width:fit-content;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--panel);cursor:pointer}.ds-party>summary:hover{background:var(--panel-strong)}.ds-party[open]>summary{background:var(--accent-soft)}.ds-party>summary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.ds-party-list{width:min(310px,calc(100vw - 24px));max-height:min(360px,55dvh);overflow:auto;margin-top:8px;padding:12px 14px;border-radius:12px;background:var(--surface);box-shadow:0 12px 30px rgba(57,40,41,.2)}.ds-party-list h3{margin:0 0 6px;font-size:15px;font-weight:700}.ds-party-list ul{display:grid;list-style:none;padding:0;margin:0}.ds-party-list li{padding:8px 0;border-top:1px solid color-mix(in srgb,var(--border) 40%,transparent)}.ds-party-list strong{display:block;font-size:14px}.ds-party-list strong small{color:var(--primary);font-size:12px}.ds-party-list span{display:block;font-size:12px;color:var(--muted);line-height:1.5}"
+    },
+    {
+      "name": "Answer Confirmation",
+      "kind": "custom",
+      "refersTo": "answer-selected",
+      "description": "A static two-second frame of a selected wine answer and its five-second confirmation sweep.",
+      "html": "<label class=\"ds-choice\"><input type=\"radio\" name=\"ds-choice\" checked /><strong>ข</strong><span>คำตอบที่เลือก</span><span class=\"ds-sweep\" aria-hidden=\"true\"></span></label><div class=\"ds-confirm-footer\"><button class=\"ds-confirm\">ยืนยันคำตอบ ข. <span aria-hidden=\"true\">2</span><i class=\"ds-sweep\" aria-hidden=\"true\"></i></button><button class=\"ds-cancel\">ยกเลิกการเลือก</button></div>",
+      "css": ".ds-choice{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;min-height:48px;padding:10px 12px;border:1px solid var(--primary);border-radius:10px;background:var(--primary);color:var(--on-primary);font-size:16px;cursor:pointer}.ds-choice input{width:20px;height:20px;accent-color:var(--cream)}.ds-choice:has(input:focus-visible){outline:2px solid var(--cyan);outline-offset:3px}.ds-sweep{position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--parchment);transform:scaleX(.4);transform-origin:left;pointer-events:none}.ds-confirm-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;margin-top:12px}.ds-confirm{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;border:1px solid transparent;border-radius:10px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer}.ds-confirm>span{margin-left:auto;font-variant-numeric:tabular-nums}.ds-confirm:hover{background:var(--primary-dark)}.ds-confirm:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.ds-cancel{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;min-height:44px;padding:8px 10px;border:0;background:transparent;color:var(--primary);font-size:12px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.ds-cancel:hover{background:var(--panel-strong)}.ds-cancel:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}@media(max-width:360px){.ds-cancel{max-width:76px;padding:4px}.ds-confirm{gap:4px}}"
+    },
+    {
+      "name": "Selected Hero Tile",
+      "kind": "custom",
+      "refersTo": "hero-selected",
+      "description": "Gold boundary and aura with a textual selection marker; original raster portrait omitted from the token preview.",
+      "html": "<button class=\"ds-hero\" aria-pressed=\"true\"><strong>พ่อมด</strong><small><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"m20 6-11 11-5-5\"/></svg>คุณเลือกตัวนี้</small></button>",
+      "css": ".ds-hero{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:44px;padding:15px 7px;border:2px solid var(--selection-gold);border-radius:14px;background:var(--surface);color:var(--foreground);box-shadow:0 0 18px rgba(208,160,74,.42);font-size:16px;cursor:pointer;transition:background-color .2s,border-color .2s}.ds-hero small{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}.ds-hero:hover{background:var(--panel-strong)}.ds-hero:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.ds-hero:disabled[aria-pressed=true]{opacity:1}@media(max-width:800px){.ds-hero{padding:9px 5px}}@media(prefers-reduced-motion:reduce){.ds-hero{transition:none}}"
     }
   ],
   "narrative": {
-    "northStar": "ห้องเรียนในอวกาศ",
-    "overview": "พื้นหลังมืดกับจุดดาวเป็นบรรยากาศ ส่วนคำถามและคำสั่งต้องอ่านชัดและตอบสนองทันที",
+    "northStar": "ห้องเรียนคลาสสิกร่วมสมัย",
+    "overview": "ธีมวินเทจอ่อนโยนใช้พื้นครีม กระดาษสีน้ำตาลอ่อน น้ำเงินหม่น และสีไวน์ ทำให้ห้องเรียนดูอบอุ่นและร่วมสมัย ภาษาไทย คำถาม เวลา และคำสั่งสำคัญเป็นลำดับแรก บุคลิกของผลิตภัณฑ์ยังเรียบง่าย สนุก และเป็นระเบียบ\n\nนี่คือระบบภาพทดแทนธีมอวกาศเดิมที่ผู้ใช้อนุมัติสำหรับทั้งแอป ใช้ร่วมกันในหน้า Google sign-in หน้าบัญชีและผู้ดูแล Classic และ Boss Raid โลโก้ ภาพตัวละคร ภาพฉากต้นฉบับ และเสียงเดิมยังเป็นสินทรัพย์ของผลิตภัณฑ์ ฉากประกอบและเอฟเฟกต์ใช้เพื่อสื่อสถานะโดยไม่แย่งพื้นที่อ่านหรือควบคุม",
     "keyCharacteristics": [
-      "เรียบง่าย สนุก เป็นระเบียบ",
+      "พื้นสว่างอบอุ่นกับตัวอักษรสีน้ำตาลเข้ม",
       "ภาษาไทยอ่านง่ายบนมือถือและจอครู",
-      "3D เป็นฉากประกอบ การเล่นยังทำงานได้เมื่อไม่มี WebGL"
+      "ปุ่มหลักสีไวน์ สถานะและโฟกัสใช้น้ำเงินเข้มบนพื้นอ่อน",
+      "ภาพและเสียงเดิมคงเอกลักษณ์ การเคลื่อนไหวมีหน้าที่และลดได้"
     ],
     "rules": [
+      {
+        "name": "The Readable Ink Rule",
+        "body": "ตัวอักษรบนพื้นครีมใช้ `foreground` หรือหมึกตามสถานะ ตัวอักษรบนสีไวน์ใช้ `on-primary` เสมอ เพราะ `foreground` ปัจจุบันเป็นสีเข้ม",
+        "section": "colors"
+      },
+      {
+        "name": "The Status With Words Rule",
+        "body": "สี ขอบ ออร่า หรือการสั่นต้องมีข้อความ ไอคอน หรือสถานะควบคุมที่สื่อความหมายร่วมด้วย",
+        "section": "colors"
+      },
       {
         "name": "The Classroom Task Rule",
         "body": "การเคลื่อนไหวต้องไม่บังช่องตอบ ปุ่มควบคุม หรือเวลาที่เหลือ",
@@ -82,12 +588,18 @@
       }
     ],
     "dos": [
-      "แสดงข้อความสถานะพร้อมความหมายของสี",
-      "ใช้ภาพสำรองที่ยังสื่อความหมายเมื่อปิด 3D"
+      "**Do** ใช้ token ของชุดคลาสสิกร่วมสมัยร่วมกันทั้งหน้า Google บัญชี Classic และ Boss Raid",
+      "**Do** ใช้ `on-primary` บนพื้นไวน์ และหมึกเข้มบนพื้นครีม",
+      "**Do** แสดงข้อความสถานะพร้อมความหมายของสีและสถานะควบคุมที่เข้าถึงได้",
+      "**Do** รักษาโจทย์ ช้อย รูป และคำสั่งยืนยันให้เข้าถึงได้บนพื้นที่อ่านที่เลื่อนได้",
+      "**Do** เก็บภาพและเสียงต้นฉบับ และรักษาข้อความผลเมื่อปิด motion หรือฉากโหลดไม่ได้"
     ],
     "donts": [
-      "เปิดเสียงเองเมื่อผู้เล่นกดส่งคำตอบ",
-      "ใส่ตัวเลขห้องหรือคะแนนสมมติในหน้าเข้าสู่ระบบ"
+      "**Don't** ใช้ `foreground` สีเข้มเป็นตัวอักษรบนปุ่มไวน์",
+      "**Don't** ย้อม sprite ตัวละครด้วยกระบวนการปรับโทนภาพฉาก หรือแทนไฟล์ภาพ/เสียงต้นฉบับเพื่อเปลี่ยนธีม",
+      "**Don't** ใช้สีหรือ animation เพียงอย่างเดียวเพื่อบอกการเลือก ความถูกต้อง หรือเวลาที่เหลือ",
+      "**Don't** เปิดเสียงอัตโนมัติโดยไม่มีการกระทำเปิดเสียงของผู้ใช้",
+      "**Don't** ใส่ตัวเลขห้องหรือคะแนนสมมติในหน้าเข้าสู่ระบบ"
     ]
   }
 }

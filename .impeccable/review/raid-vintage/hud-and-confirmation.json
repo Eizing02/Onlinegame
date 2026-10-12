@@ -1,0 +1,147 @@
+[
+  {
+    "name": "hero-mobile",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "buttons": [],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "hero-desktop",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "buttons": [],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "question-party-desktop",
+    "width": 1440,
+    "height": 900,
+    "overflow": false,
+    "buttons": [
+      {
+        "height": 46,
+        "top": 693.4375,
+        "bottom": 739.4375,
+        "width": 640
+      }
+    ],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "question-party-mobile",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "buttons": [
+      {
+        "height": 46,
+        "top": 655.9375,
+        "bottom": 701.9375,
+        "width": 342
+      }
+    ],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "question-small",
+    "width": 320,
+    "height": 400,
+    "overflow": false,
+    "buttons": [
+      {
+        "height": 44,
+        "top": 318.625,
+        "bottom": 362.625,
+        "width": 280
+      }
+    ],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "question-landscape",
+    "width": 844,
+    "height": 390,
+    "overflow": false,
+    "buttons": [
+      {
+        "height": 44,
+        "top": 314.03125,
+        "bottom": 358.03125,
+        "width": 656
+      }
+    ],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "question-tablet",
+    "width": 768,
+    "height": 1024,
+    "overflow": false,
+    "buttons": [
+      {
+        "height": 46,
+        "top": 745.9375,
+        "bottom": 791.9375,
+        "width": 648
+      }
+    ],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "confirmation-mobile",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "buttons": [
+      {
+        "height": 46,
+        "top": 655.9375,
+        "bottom": 701.9375,
+        "width": 241.90625
+      },
+      {
+        "height": 46,
+        "top": 655.9375,
+        "bottom": 701.9375,
+        "width": 94.09375
+      }
+    ],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "combat-mobile",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "buttons": [],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  },
+  {
+    "name": "urgent-mobile",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "buttons": [
+      {
+        "height": 46,
+        "top": 577.625,
+        "bottom": 623.625,
+        "width": 342
+      }
+    ],
+    "palette": "rgb(245, 239, 225)",
+    "violations": []
+  }
+]

@@ -39,7 +39,8 @@ A zero-signup classroom competition tool powered by team-averaged scoring locked
 
 - Brand Name: KruEIonline Realtime Quiz Game.
 - Personality: Simple, playful, orderly.
-- Visual Language: Dark space/sci-fi theme (`#050716` background, cyan `#43ddff`, purple `#8b5cff`, success emerald `#3df0ad`, warning amber `#ffcb57`).
+- Visual Language: Gentle vintage/classic contemporary theme across the app: wine `#790D16`, parchment `#E5D3AF`, cream `#F5EFE1`, and mist blue `#AEC4D4`. Use dark brown ink on light surfaces, cream text on wine actions, and a gold accent for selected heroes. Preserve the original logo, character sprites, and source scene imagery.
+- Motion: Purposeful, calm state feedback with reduced-motion support. Boss Raid shows server-confirmed combat before the next question within a common three-second presentation; the overall deadline continues. Answer confirmation uses a visible five-second countdown and can be confirmed immediately or canceled. Preserve original audio sources and existing Classic gameplay.
 - Audio: Calming sci-fi background track and distinctive answer feedback sound effects.
 - Anti-references: Avoid visually chaotic, over-gamified, neon party-game noise (e.g. Kahoot/Blooket loud visuals) and avoid dense, dry enterprise dashboards.
 

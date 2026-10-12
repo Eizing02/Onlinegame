@@ -14,7 +14,7 @@ function Fireworks() {
     const dpr = Math.min(devicePixelRatio, 1.5);
     element.width = width * dpr; element.height = height * dpr;
     ctx.scale(dpr, dpr);
-    const colors = ["#ffcb57", "#43ddff", "#b69aff", "#3df0ad", "#f8fbff"];
+    const colors = ["#E5D3AF", "#AEC4D4", "#790D16", "#D0A04A", "#F5EFE1"];
     const perBurst = width < 600 ? 32 : 58;
     const particles = Array.from({length: perBurst * 6}, (_, i) => {
       const burst = Math.floor(i / perBurst), angle = (i % perBurst) / perBurst * Math.PI * 2;

@@ -6,6 +6,7 @@ import type { AppSession } from "@/types/auth";
 import type { RaidAnswerResult, RaidSnapshot } from "../types";
 
 const messages: Record<string, string> = {
+ PRESENTATION_PENDING: "กำลังแสดงผลการต่อสู้ รอจบแล้วทำข้อต่อไป",
  ACCESS_DENIED: "บัญชีนี้ไม่มีสิทธิ์เข้าห้องนี้", ROOM_NOT_FOUND: "ไม่พบห้อง Boss Raid นี้", ACTIVE_ROOM: "มีห้องที่ยังไม่จบอยู่แล้ว",
  TEAM_FULL: "ทีมนี้เต็มแล้ว กรุณาเลือกทีมอื่น", HERO_TAKEN: "เพื่อนเลือกฮีโร่นี้แล้ว กรุณาเลือกตัวอื่น", LOBBY_CLOSED: "เกมเริ่มแล้ว ไม่สามารถเปลี่ยนฮีโร่หรือทีมได้",
  NO_PLAYERS: "ต้องมีนักเรียนอย่างน้อยหนึ่งคนก่อนเริ่ม", RAID_ENDED: "ห้องนี้จบแล้ว", RAID_EXPIRED: "หมดเวลาแล้ว",
@@ -31,7 +32,7 @@ async function rpc<T>(name: string, args: Record<string, unknown>): Promise<T> {
  if (error) {
   // Never expose SQL, service credentials or frozen question content to the browser.
   if (error.message.includes("RAID_INVALID_QUESTION_SET")) throw new Error("ชุดคำถามต้องมีคะแนนรวมมากกว่า 0 และตัวเลือกที่ถูกต้องครบทุกข้อ");
-  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009 หรือลองอีกครั้ง");
+  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009 และ 010 หรือลองอีกครั้ง");
  }
  return data as T;
 }

@@ -1,0 +1,443 @@
+{
+  "sounds": {
+    "button": {
+      "filename": "Button Click.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Button%20Click.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Button%20Click.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "ui",
+      "gain": 0.25,
+      "priority": 1,
+      "dormant": false
+    },
+    "critical": {
+      "filename": "Critical Hit.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Critical%20Hit.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Critical%20Hit.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": true
+    },
+    "defeat": {
+      "filename": "Defeat.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Defeat.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Defeat.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "result",
+      "gain": 0.45,
+      "priority": 10,
+      "dormant": false
+    },
+    "claw": {
+      "filename": "Dragon Claw.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Dragon%20Claw.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Dragon%20Claw.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "boss",
+      "gain": 0.5,
+      "priority": 5,
+      "dormant": false
+    },
+    "death": {
+      "filename": "Dragon Death.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Dragon%20Death.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Dragon%20Death.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "result",
+      "gain": 0.45,
+      "priority": 10,
+      "dormant": false
+    },
+    "fire": {
+      "filename": "Dragon Fire.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Dragon%20Fire.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Dragon%20Fire.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "boss",
+      "gain": 0.5,
+      "priority": 5,
+      "dormant": false
+    },
+    "roar": {
+      "filename": "Dragon Roar.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Dragon%20Roar.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Dragon%20Roar.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "boss",
+      "gain": 0.5,
+      "priority": 5,
+      "dormant": false
+    },
+    "ultimate": {
+      "filename": "Dragon Ultimate.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Dragon%20Ultimate.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Dragon%20Ultimate.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "boss",
+      "gain": 0.5,
+      "priority": 10,
+      "dormant": false
+    },
+    "fairy1": {
+      "filename": "Fairy — Light Bolt.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Fairy%20%E2%80%94%20Light%20Bolt.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Fairy%20%E2%80%94%20Light%20Bolt.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "fairy2": {
+      "filename": "Fairy — Starburst.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Fairy%20%E2%80%94%20Starburst.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Fairy%20%E2%80%94%20Starburst.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "heal": {
+      "filename": "Heal.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Heal.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Heal.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "common",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "mage1": {
+      "filename": "Mage — Arcane Bolt.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Mage%20%E2%80%94%20Arcane%20Bolt.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Mage%20%E2%80%94%20Arcane%20Bolt.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "mage2": {
+      "filename": "Mage — Frost Burst.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Mage%20%E2%80%94%20Frost%20Burst.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Mage%20%E2%80%94%20Frost%20Burst.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "hit": {
+      "filename": "Normal Hit.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Normal%20Hit.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Normal%20Hit.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "common",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "shake": {
+      "filename": "Screen Shake.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Screen%20Shake.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Screen%20Shake.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "boss",
+      "gain": 0.5,
+      "priority": 5,
+      "dormant": false
+    },
+    "shield": {
+      "filename": "Shield.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Shield.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Shield.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "boss",
+      "gain": 0.5,
+      "priority": 5,
+      "dormant": false
+    },
+    "spawn": {
+      "filename": "Spawn.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Spawn.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Spawn.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "common",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": true
+    },
+    "victory": {
+      "filename": "Victory.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Victory.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Victory.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "result",
+      "gain": 0.45,
+      "priority": 10,
+      "dormant": false
+    },
+    "warrior2": {
+      "filename": "Warrior — Shield Bash.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Warrior%20%E2%80%94%20Shield%20Bash.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Warrior%20%E2%80%94%20Shield%20Bash.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "warrior1": {
+      "filename": "Warrior — Sword Slash.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Warrior%20%E2%80%94%20Sword%20Slash.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Warrior%20%E2%80%94%20Sword%20Slash.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "witch1": {
+      "filename": "Witch — Poison Orb.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Witch%20%E2%80%94%20Poison%20Orb.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Witch%20%E2%80%94%20Poison%20Orb.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "witch2": {
+      "filename": "Witch — Shadow Curse.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Witch%20%E2%80%94%20Shadow%20Curse.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Witch%20%E2%80%94%20Shadow%20Curse.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "wizard1": {
+      "filename": "Wizard — Fireball.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Wizard%20%E2%80%94%20Fireball.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Wizard%20%E2%80%94%20Fireball.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "wizard2": {
+      "filename": "Wizard — Lightning.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Wizard%20%E2%80%94%20Lightning.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Wizard%20%E2%80%94%20Lightning.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "hero",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    },
+    "countdown": {
+      "filename": "Countdown.opus",
+      "sources": [
+        {
+          "url": "/assets/boss-raid/audio/Countdown.opus",
+          "mime": "audio/ogg; codecs=opus"
+        },
+        {
+          "url": "/assets/boss-raid/audio/fallback/Countdown.mp3",
+          "mime": "audio/mpeg"
+        }
+      ],
+      "family": "common",
+      "gain": 0.45,
+      "priority": 5,
+      "dormant": false
+    }
+  },
+  "music": {
+    "raid_lobby": {
+      "url": "/assets/boss-raid/audio/music/raid_lobby.mp3",
+      "mime": "audio/mpeg"
+    },
+    "raid_battle": {
+      "url": "/assets/boss-raid/audio/music/raid_battle.mp3",
+      "mime": "audio/mpeg"
+    },
+    "raid_final_phase": {
+      "url": "/assets/boss-raid/audio/music/raid_final_phase.mp3",
+      "mime": "audio/mpeg"
+    }
+  }
+}
