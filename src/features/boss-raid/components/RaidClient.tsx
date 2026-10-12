@@ -5,6 +5,7 @@ import type { RaidAnswerResult, RaidQuestion, RaidSnapshot } from "../types";
 import { useRaidTabs } from "../hooks/use-raid-tabs";
 import { useRaidSnapshot } from "../hooks/use-raid-snapshot";
 import { useRaidAudio } from "../hooks/use-raid-audio";
+import { RaidAudioSettings } from "./RaidAudioSettings";
 import { useRaidVisibility } from "../hooks/use-raid-visibility";
 import { RaidArena } from "./RaidArena";
 import { HeroSelectLobby } from "./HeroSelectLobby";
@@ -19,7 +20,7 @@ export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:s
  const {tab,setTab,swipe}=useRaidTabs(["battle","team","results"],"battle");const [state,setState]=useState<QuestionState>("open");const [heldQuestion,setHeldQuestion]=useState<RaidQuestion|null>(initial.question);
  const question=["resolving","fading","error"].includes(state)?heldQuestion:snapshot.question;
  const [pending,setPending]=useState(false);const busy=useRef(false);const [error,setError]=useState("");const [feedback,setFeedback]=useState("");const submitted=useRef<Submission|null>(null);const timer=useRef<ReturnType<typeof setTimeout>|null>(null);
- const {muted,toggle}=useRaidAudio(snapshot.team?.events??[],snapshot.team?.id);
+ const audio=useRaidAudio(snapshot.team?.events??[],snapshot.team?.id,{sourceTeamId:snapshot.team?.id,eventSeq:snapshot.team?.eventSeq,status:snapshot.status,phase:snapshot.team?.phase,deadline:snapshot.deadline,serverNow:snapshot.serverNow,heroes:snapshot.team?.heroes});
  const [effectsEnabled,setEffectsEnabled]=useState(true);
  const [settings,setSettings]=useState(false);const [reduced,setReduced]=useState(false);const [quality,setQuality]=useState<"full"|"low">("full");
  useEffect(()=>()=>{if(timer.current)clearTimeout(timer.current);},[]);
@@ -48,18 +49,18 @@ export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:s
  useRaidVisibility(question,snapshot.visibilityEnabled&&snapshot.status==="running"&&Boolean(snapshot.own?.eligible)&&state==="open"&&!pending,report);
  const choose=async(heroType:string)=>{if(busy.current)return;busy.current=true;setPending(true);setError("");try{const result=await post("hero",{heroType});if(!result.ok)setError("ฮีโร่ถูกเลือกแล้ว หรือเกมเริ่มแล้ว กรุณาเลือกใหม่");await refresh();}catch(e){setError(e instanceof Error?e.message:"จองไม่สำเร็จ");}finally{busy.current=false;setPending(false);}};
  const tabs=[{id:"battle",label:"สนามต่อสู้",icon:Swords},{id:"team",label:"ทีมของฉัน",icon:Users},{id:"results",label:"อันดับ",icon:Trophy}];
- return <div className="raid-room">
+ return <div className="raid-room" onClickCapture={e=>{if(e.target instanceof Element&&e.target.closest('button:not(:disabled)'))audio.button();}}>
   <header className="raid-room-header"><div><h1>{snapshot.title}</h1><p>Boss Raid · ห้อง {snapshot.roomCode} · {snapshot.team?.name}</p></div><RaidTimer deadline={snapshot.deadline} serverNow={snapshot.serverNow} ended={snapshot.status==="ended"}/><button className="raid-icon" aria-label="ตั้งค่าภาพ" aria-expanded={settings} onClick={()=>setSettings(!settings)}><Settings2 size={20}/></button></header>
-  {settings&&<div className="raid-settings"><button onClick={()=>void toggle()}>{muted?"เปิดเสียงเอฟเฟกต์":"ปิดเสียงเอฟเฟกต์"}</button><label><input type="checkbox" checked={effectsEnabled} onChange={e=>setEffectsEnabled(e.target.checked)}/>เอฟเฟกต์ฉาก</label><label><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/>ลดการเคลื่อนไหว</label><label>คุณภาพภาพ<select value={quality} onChange={e=>setQuality(e.target.value as "full"|"low")}><option value="full">เต็ม · 60 FPS</option><option value="low">ประหยัด · 30 FPS</option></select></label></div>}
+  {settings&&<div className="raid-settings"><RaidAudioSettings audio={audio}/><label><input type="checkbox" checked={effectsEnabled} onChange={e=>setEffectsEnabled(e.target.checked)}/>เอฟเฟกต์ฉาก</label><label><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/>ลดการเคลื่อนไหว</label><label>คุณภาพภาพ<select value={quality} onChange={e=>setQuality(e.target.value as "full"|"low")}><option value="full">เต็ม</option><option value="low">ประหยัด</option></select></label></div>}
   {(!connected||error)&&<div role="status" className="raid-connection"><span>{error||connectionError} · เวลาเกมยังเดินต่อ</span><button onClick={()=>{setError("");void refresh();}}>เชื่อมต่ออีกครั้ง</button></div>}
   <nav className="raid-tabs" aria-label="เมนูห้อง Boss Raid">{tabs.map(t=><button key={t.id} aria-current={tab===t.id?"page":undefined} onClick={()=>setTab(t.id)}><t.icon size={18} aria-hidden="true"/>{t.label}</button>)}</nav>
   <div className="raid-room-content" tabIndex={0} role="region" aria-label="พื้นที่เกมและผล" {...swipe}>
    {snapshot.status==="lobby"?<HeroSelectLobby own={snapshot.own} heroes={snapshot.team?.heroes??[]} pending={pending} choose={choose}/> : tab==="results"||snapshot.status==="ended"?<RaidResults snapshot={snapshot}/> : tab==="team"?<section className="raid-team-list"><h2>ทีม {snapshot.team?.name}</h2>{snapshot.team?.heroes.map(hero=><div key={hero.id}><strong>{hero.displayName}</strong><span>HP {hero.hp}/100</span><span>{hero.cursor}/{snapshot.questionCount} ข้อ · {hero.score} คะแนน</span></div>)}</section>:<>
-    {snapshot.team&&<RaidArena heroes={snapshot.team.heroes} bossHp={snapshot.team.bossHp} bossMaxHp={snapshot.team.bossMaxHp} events={snapshot.team.events} reduced={reduced} quality={quality} effectsEnabled={effectsEnabled}/>}
+    {snapshot.team&&<RaidArena heroes={snapshot.team.heroes} bossHp={snapshot.team.bossHp} bossMaxHp={snapshot.team.bossMaxHp} events={snapshot.team.events} reduced={reduced} quality={quality} effectsEnabled={effectsEnabled} onCue={audio.cue}/>}
     <p className="raid-progress-copy" role="status">{!snapshot.own?.eligible?"คุณเข้าหลังเริ่มเกม รับชมทีมได้ คะแนนและจำนวนสมาชิกที่ล็อกไว้จะไม่เปลี่ยน":snapshot.own.finished?`ตอบครบ ${snapshot.questionCount} ข้อแล้ว รับชมทีมและอันดับต่อได้`:snapshot.own.hp===0?"HP 0 · ตอบถูกเพื่อฟื้นเพื่อนหนึ่งคน +10 HP (ทีมคนเดียวฟื้นตัวเอง)":"ตอบถูกเพื่อโจมตีบอส คุณทำข้อต่อไปได้ทันที"}</p>
    </>}
   </div>
-  {question&&snapshot.status==="running"&&state!=="expired"&&<RaidQuestionModal key={question.id} question={question} score={snapshot.own?.score??0} deadline={snapshot.deadline} serverNow={snapshot.serverNow} total={snapshot.questionCount} state={state} warnings={snapshot.warnings} visibilityEnabled={snapshot.visibilityEnabled} feedback={feedback} error={error} onSubmit={(answerText,selectedOptionId)=>{setHeldQuestion(question);const payload={questionId:question.id,displayIndex:question.displayIndex,answerText,selectedOptionId,idempotencyKey:crypto.randomUUID()};submitted.current=payload;void resolve(payload);}} onRetry={()=>{if(submitted.current)void resolve(submitted.current);else void refresh();}}/>}
+  {question&&snapshot.status==="running"&&state!=="expired"&&<RaidQuestionModal key={question.id} question={question} score={snapshot.own?.score??0} muted={audio.muted} onMute={()=>void audio.toggle()} deadline={snapshot.deadline} serverNow={snapshot.serverNow} total={snapshot.questionCount} state={state} warnings={snapshot.warnings} visibilityEnabled={snapshot.visibilityEnabled} feedback={feedback} error={error} onSubmit={(answerText,selectedOptionId)=>{setHeldQuestion(question);const payload={questionId:question.id,displayIndex:question.displayIndex,answerText,selectedOptionId,idempotencyKey:crypto.randomUUID()};submitted.current=payload;void resolve(payload);}} onRetry={()=>{if(submitted.current)void resolve(submitted.current);else void refresh();}}/>}
  </div>;
 }
 

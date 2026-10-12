@@ -1,0 +1,65 @@
+{
+  "images": 6,
+  "report": [
+    {
+      "sceneId": "shadow-citadel",
+      "profile": "wide",
+      "layer": "far",
+      "width": 1870,
+      "height": 841,
+      "decodedBytes": 6290680,
+      "reviewed": true,
+      "status": "READY"
+    },
+    {
+      "sceneId": "shadow-citadel",
+      "profile": "wide",
+      "layer": "mid",
+      "width": 1870,
+      "height": 841,
+      "decodedBytes": 6290680,
+      "reviewed": true,
+      "status": "READY"
+    },
+    {
+      "sceneId": "shadow-citadel",
+      "profile": "wide",
+      "layer": "fight",
+      "width": 1870,
+      "height": 841,
+      "decodedBytes": 6290680,
+      "reviewed": true,
+      "status": "READY"
+    },
+    {
+      "sceneId": "shadow-citadel",
+      "profile": "phone",
+      "layer": "far",
+      "width": 941,
+      "height": 1672,
+      "decodedBytes": 6293408,
+      "reviewed": true,
+      "status": "READY"
+    },
+    {
+      "sceneId": "shadow-citadel",
+      "profile": "phone",
+      "layer": "mid",
+      "width": 1024,
+      "height": 1536,
+      "decodedBytes": 6291456,
+      "reviewed": true,
+      "status": "READY"
+    },
+    {
+      "sceneId": "shadow-citadel",
+      "profile": "phone",
+      "layer": "fight",
+      "width": 1024,
+      "height": 1536,
+      "decodedBytes": 6291456,
+      "reviewed": true,
+      "status": "READY"
+    }
+  ]
+}

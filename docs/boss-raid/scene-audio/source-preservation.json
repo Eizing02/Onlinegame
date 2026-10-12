@@ -1,0 +1,144 @@
+{
+  "images": [
+    {
+      "filename": "background far.png",
+      "pixelsMatch": true
+    },
+    {
+      "filename": "background mid.png",
+      "pixelsMatch": true
+    },
+    {
+      "filename": "background fight.png",
+      "pixelsMatch": true
+    },
+    {
+      "filename": "background far phone.png",
+      "pixelsMatch": true
+    },
+    {
+      "filename": "background mid phone.png",
+      "pixelsMatch": true
+    },
+    {
+      "filename": "background fight phone.png",
+      "pixelsMatch": true
+    }
+  ],
+  "sounds": [
+    {
+      "filename": "Button Click.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Critical Hit.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Defeat.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Dragon Claw.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Dragon Death.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Dragon Fire.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Dragon Roar.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Dragon Ultimate.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Fairy — Light Bolt.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Fairy — Starburst.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Heal.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Mage — Arcane Bolt.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Mage — Frost Burst.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Normal Hit.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Screen Shake.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Shield.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Spawn.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Victory.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Warrior — Shield Bash.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Warrior — Sword Slash.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Witch — Poison Orb.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Witch — Shadow Curse.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Wizard — Fireball.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Wizard — Lightning.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "Countdown.opus",
+      "bytesMatch": true
+    },
+    {
+      "filename": "raid_lobby.mp3",
+      "bytesMatch": true
+    },
+    {
+      "filename": "raid_battle.mp3",
+      "bytesMatch": true
+    },
+    {
+      "filename": "raid_final_phase.mp3",
+      "bytesMatch": true
+    }
+  ],
+  "originalSpritePngDiff": "empty; validated separately in Git",
+  "status": "PASS"
+}

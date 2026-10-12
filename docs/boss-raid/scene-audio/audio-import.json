@@ -1,0 +1,673 @@
+{
+  "source": "D:\\sound effect",
+  "sfxCount": 25,
+  "audit": [
+    {
+      "id": "button",
+      "filename": "Button Click.opus",
+      "bytes": 53632,
+      "sha256": "8fa5d338fbb25d1a12bbb90b019af02528996617c333d2118ce0b2974213b2fb",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "3.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "critical",
+      "filename": "Critical Hit.opus",
+      "bytes": 31822,
+      "sha256": "d1f8b04032d94b576f3758fbedff8114210d7c607b57af4aba3361ee8ba9f394",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": true
+    },
+    {
+      "id": "defeat",
+      "filename": "Defeat.opus",
+      "bytes": 59918,
+      "sha256": "9611162775566f943bf0ffccd086f7c4d01e363c1d3b4392e25b892030e2ea26",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "4.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "claw",
+      "filename": "Dragon Claw.opus",
+      "bytes": 28384,
+      "sha256": "8b5ca98ac93b4f519526d2f3370d2a801fc0ab1785d8e26ec007a7ac1d1307f3",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "death",
+      "filename": "Dragon Death.opus",
+      "bytes": 53596,
+      "sha256": "eb386cbca2a4cfc2f69cbe5c050091cd9eea87be1b640edf493e587b2678e8ca",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "4.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "fire",
+      "filename": "Dragon Fire.opus",
+      "bytes": 34757,
+      "sha256": "f0bfec3d68591765fa0de28dda13a862eb3a7e68f774b310d9d734faf9c0554a",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.766500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "roar",
+      "filename": "Dragon Roar.opus",
+      "bytes": 158863,
+      "sha256": "d02c2517b9ae10e7dbdacaaa257cf7831aed16a58710b8d21c614296452e7a52",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "10.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "ultimate",
+      "filename": "Dragon Ultimate.opus",
+      "bytes": 43889,
+      "sha256": "f4a01946594c8d53b6149c4cf9bc4de00d21afe3d98ff3264ce1693c76779447",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.766500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "fairy1",
+      "filename": "Fairy — Light Bolt.opus",
+      "bytes": 32521,
+      "sha256": "29e044d9dfb78c15d6ee9594f27a7e8f266e989922c11eae6fc7097aa346dd8e",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "fairy2",
+      "filename": "Fairy — Starburst.opus",
+      "bytes": 35674,
+      "sha256": "56dbe9e596662c597df6e1b1465d9bebbc78cd4c573c326e12bf0d4d533e4438",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "heal",
+      "filename": "Heal.opus",
+      "bytes": 14570,
+      "sha256": "792e52924b588ad1aff252ab9204a6b38c9559add4504f7f8b3621e250ef69c0",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "1.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "mage1",
+      "filename": "Mage — Arcane Bolt.opus",
+      "bytes": 14410,
+      "sha256": "038b08b8d287d16fe5c16006b9d8b336759122ea757dd6ca90419f258bac955d",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "1.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "mage2",
+      "filename": "Mage — Frost Burst.opus",
+      "bytes": 11669,
+      "sha256": "5e8076207702e76ff34c7f601c941788d2546a08ff1346e43df6e2f75eb94339",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "1.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "hit",
+      "filename": "Normal Hit.opus",
+      "bytes": 30593,
+      "sha256": "cf0ea9606205c80df75f52aa098adbaf0b7f64718a13a0bd7a49bbe4da7c2c98",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "1.766500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "shake",
+      "filename": "Screen Shake.opus",
+      "bytes": 51442,
+      "sha256": "14f02015ab48b055d796cfe23034a6ba47b59175270ebcb676ecafd70186fbaa",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "3.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "shield",
+      "filename": "Shield.opus",
+      "bytes": 44579,
+      "sha256": "fd347dd6be4cefe7ea19b36cadc721b1a97ffb7775b6954134edfafdbc17753c",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.686500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "spawn",
+      "filename": "Spawn.opus",
+      "bytes": 44820,
+      "sha256": "204441435d9274b5a4d7fb2861045714b36cf5c5a276ccac177b573d11c737c3",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.686500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": true
+    },
+    {
+      "id": "victory",
+      "filename": "Victory.opus",
+      "bytes": 54709,
+      "sha256": "e12efa38e3740bab5698bbbb5bb39ba5be04748b8678f860654310a38820a7ad",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "3.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "warrior2",
+      "filename": "Warrior — Shield Bash.opus",
+      "bytes": 29337,
+      "sha256": "324b5e199b6ccf79a44c33dc62b048e3e519a9266506ea28128875ad9b8d08e7",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "warrior1",
+      "filename": "Warrior — Sword Slash.opus",
+      "bytes": 31149,
+      "sha256": "a946bd0be69609f12736c64a84a5f36fb2e8b0d980368ebb46d82297ca946eab",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "1.766500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "witch1",
+      "filename": "Witch — Poison Orb.opus",
+      "bytes": 24913,
+      "sha256": "9e6c9343c2ac9133aee510f90d98fb0d3f3ac08c5334f6485323f97e773c5657",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "witch2",
+      "filename": "Witch — Shadow Curse.opus",
+      "bytes": 33705,
+      "sha256": "b8b14404bfb87ecabb31446e76b8c80f5ccf2b1bf5399cedb1a41a4c0f95ac1f",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "wizard1",
+      "filename": "Wizard — Fireball.opus",
+      "bytes": 14133,
+      "sha256": "3ce149ae8456a31986694d51c60b43267661193bd2005cfa8fcf29e1e2e41a46",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "1.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "wizard2",
+      "filename": "Wizard — Lightning.opus",
+      "bytes": 29526,
+      "sha256": "c3a8c2c35b675f78ca28273f57404c7da19753db7841621141ab44abc712cdc5",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    },
+    {
+      "id": "countdown",
+      "filename": "Countdown.opus",
+      "bytes": 42419,
+      "sha256": "8004579e2592485456255c03e3dc5908dc3b00261ec31e73f9c1537c1d1e8f1e",
+      "container": "ogg",
+      "codec": "opus",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "opus",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "format_name": "ogg",
+          "duration": "2.006500"
+        }
+      },
+      "fallback": "mp3",
+      "status": "READY",
+      "dormant": false
+    }
+  ],
+  "music": {
+    "raid_lobby": {
+      "url": "/assets/boss-raid/audio/music/raid_lobby.mp3",
+      "mime": "audio/mpeg"
+    },
+    "raid_battle": {
+      "url": "/assets/boss-raid/audio/music/raid_battle.mp3",
+      "mime": "audio/mpeg"
+    },
+    "raid_final_phase": {
+      "url": "/assets/boss-raid/audio/music/raid_final_phase.mp3",
+      "mime": "audio/mpeg"
+    }
+  },
+  "extraFiles": [],
+  "musicAuthorization": "User confirmed all three MP3 tracks in this task.",
+  "converter": true
+}

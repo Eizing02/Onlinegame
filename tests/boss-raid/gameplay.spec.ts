@@ -11,7 +11,7 @@ async function join(page:Page,room:string) {
 }
 test('Google classroom Raid: independent answer, idempotency, visibility, spectator, reconnect, end and access guards',async({browser,page,request})=>{
  await request.post(`${fixture}/__test/reset`);await request.post(`${fixture}/__test/raid-bank`);
- await login(page,'piyawatpiwsiri@gmail.com');await page.goto('/teacher/rooms/new');
+ await login(page,'piyawatpiwsiri@gmail.com');expect((await request.get('http://127.0.0.1:3110/dev/boss-raid/scene')).status()).toBe(404);await page.goto('/teacher/rooms/new');
  await page.getByLabel('Boss Raid · Time Attack').check();await page.getByLabel('จำนวนทีม',{exact:true}).fill('2');await page.getByLabel('ชื่อกิจกรรม',{exact:true}).fill('ทดสอบ Boss Raid');
  await page.getByRole('button',{name:'สร้างห้อง Boss Raid',exact:true}).click();await expect(page).toHaveURL(/\/raid\/dashboard$/);const room=page.url().match(/rooms\/(\d{4})/)![1];
  const studentContext=await browser.newContext({baseURL:'http://127.0.0.1:3110'});const student=await studentContext.newPage();
@@ -55,7 +55,7 @@ for(const members of [1,3,5])test(`${members} real Google students: simultaneous
  try {
   const pupils=await Promise.all(contexts.map(c=>c.newPage()));
   for(let i=0;i<members;i++){await login(pupils[i],people[i][0],people[i][1]);await join(pupils[i],room);}
-  await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();await expect(pupils[0].locator('.raid-question-dialog')).toBeVisible();
+  if(members===1){await pupils[0].getByRole('button',{name:'ตั้งค่าภาพ',exact:true}).click();await pupils[0].getByRole('button',{name:'เปิดเสียงเกม',exact:true}).click();await pupils[0].getByRole('button',{name:'ตั้งค่าภาพ',exact:true}).click();await pupils[0].setViewportSize({width:320,height:400});} await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();await expect(pupils[0].locator('.raid-question-dialog')).toBeVisible(); if(members===1){await expect(pupils[0].getByRole('button',{name:'ปิดเสียงเกม',exact:true})).toBeVisible();const visible=await pupils[0].locator('.raid-question-dialog').evaluate(dialog=>{const bounds=dialog.getBoundingClientRect(),button=dialog.querySelector('.raid-question-footer button')!.getBoundingClientRect();return button.bottom<=bounds.bottom&&button.height>=44;});expect(visible).toBe(true);await pupils[0].getByRole('button',{name:'ปิดเสียงเกม',exact:true}).click();await pupils[0].setViewportSize({width:320,height:700});}
   const states=await Promise.all(pupils.map(async p=>(await browserRequest(p,`/api/raid/${room}/snapshot`)).json()));
   expect(states[0].team.heroes).toHaveLength(members);expect(new Set(states[0].team.heroes.map((h:{heroType:string})=>h.heroType)).size).toBe(members);
   const deadlines=new Set(states.map(s=>s.deadline));expect(deadlines.size).toBe(1);
