@@ -9,6 +9,7 @@ import {
   activateLocalTeamPower,
 } from "@/lib/data/game-sessions";
 import { normalizeRoomCode } from "@/lib/game/room-code";
+import { roomIsRaid } from "@/features/boss-raid/server/config";
 
 type PlayApiProps = {
   params: Promise<{ roomCode: string }>;
@@ -22,6 +23,7 @@ export async function GET(request: Request, { params }: PlayApiProps) {
   }
 
   const { roomCode } = await params;
+  if (await roomIsRaid(roomCode)) return NextResponse.json({ error: "ห้องนี้ใช้ Boss Raid", code: "RAID_MODE", redirectTo: `/play/${roomCode}/raid` }, { status: 409 });
   const result = await getStudentPlaySnapshot({
     roomCode: normalizeRoomCode(roomCode),
     studentCode: auth.session.userCode,
@@ -59,6 +61,7 @@ export async function POST(request: Request, { params }: PlayApiProps) {
 
   const { roomCode } = await params;
   const normalizedRoomCode = normalizeRoomCode(roomCode);
+  if (await roomIsRaid(normalizedRoomCode)) return NextResponse.json({ error: "คำสั่ง Classic ใช้กับ Boss Raid ไม่ได้", code: "RAID_MODE" }, { status: 409 });
   const result =
     action === "rename_team"
       ? await renameLocalTeam({

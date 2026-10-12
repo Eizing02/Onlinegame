@@ -1,0 +1,349 @@
+[
+  {
+    "name": "create-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": false,
+    "canvas": 0,
+    "dialog": false
+  },
+  {
+    "name": "create-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 0,
+    "dialog": false
+  },
+  {
+    "name": "arena-1-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-1-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-2-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-2-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-3-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-3-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-4-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-4-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "lobby-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 0,
+    "dialog": false
+  },
+  {
+    "name": "arena-5-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-5-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-5-teacher-320",
+    "viewport": {
+      "width": 320,
+      "height": 700
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-5-tablet",
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "question-user-320",
+    "viewport": {
+      "width": 320,
+      "height": 700
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": true,
+    "dialogBounds": {
+      "x": 19,
+      "y": 63,
+      "width": 282,
+      "height": 574,
+      "top": 63,
+      "right": 301,
+      "bottom": 637,
+      "left": 19
+    },
+    "confirmBounds": {
+      "x": 36,
+      "y": 574,
+      "width": 248,
+      "height": 46,
+      "top": 574,
+      "right": 284,
+      "bottom": 620,
+      "left": 36
+    },
+    "answerBounds": {
+      "x": 36,
+      "y": 400.84375,
+      "width": 248,
+      "height": 53,
+      "top": 400.84375,
+      "right": 284,
+      "bottom": 453.84375,
+      "left": 36
+    }
+  },
+  {
+    "name": "question-keyboard-320",
+    "viewport": {
+      "width": 320,
+      "height": 400
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": true,
+    "dialogBounds": {
+      "x": 19,
+      "y": 36,
+      "width": 282,
+      "height": 328,
+      "top": 36,
+      "right": 301,
+      "bottom": 364,
+      "left": 19
+    },
+    "confirmBounds": {
+      "x": 32,
+      "y": 309,
+      "width": 256,
+      "height": 44,
+      "top": 309,
+      "right": 288,
+      "bottom": 353,
+      "left": 32
+    },
+    "answerBounds": {
+      "x": 32,
+      "y": 206,
+      "width": 256,
+      "height": 44,
+      "top": 206,
+      "right": 288,
+      "bottom": 250,
+      "left": 32
+    }
+  },
+  {
+    "name": "question-choice-320",
+    "viewport": {
+      "width": 320,
+      "height": 700
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": true,
+    "dialogBounds": {
+      "x": 19,
+      "y": 67.328125,
+      "width": 282,
+      "height": 565.34375,
+      "top": 67.328125,
+      "right": 301,
+      "bottom": 632.671875,
+      "left": 19
+    },
+    "confirmBounds": {
+      "x": 36,
+      "y": 569.671875,
+      "width": 248,
+      "height": 46,
+      "top": 569.671875,
+      "right": 284,
+      "bottom": 615.671875,
+      "left": 36
+    }
+  },
+  {
+    "name": "question-true-false-320",
+    "viewport": {
+      "width": 320,
+      "height": 700
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": true,
+    "dialogBounds": {
+      "x": 19,
+      "y": 110.828125,
+      "width": 282,
+      "height": 478.34375,
+      "top": 110.828125,
+      "right": 301,
+      "bottom": 589.171875,
+      "left": 19
+    },
+    "confirmBounds": {
+      "x": 36,
+      "y": 526.171875,
+      "width": 248,
+      "height": 46,
+      "top": 526.171875,
+      "right": 284,
+      "bottom": 572.171875,
+      "left": 36
+    }
+  },
+  {
+    "name": "arena-5-user-320",
+    "viewport": {
+      "width": 320,
+      "height": 700
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-injured-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "arena-zero-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 1,
+    "dialog": false
+  },
+  {
+    "name": "local-frame-sample",
+    "frameP50Ms": 66.69999999999709,
+    "frameP95Ms": 133.40000000000146,
+    "jsHeapBytes": 11200000,
+    "scope": "Headless desktop Chromium fixture; not a low-end mobile GPU guarantee"
+  },
+  {
+    "name": "results-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": false,
+    "canvas": 0,
+    "dialog": false
+  },
+  {
+    "name": "results-mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": false,
+    "canvas": 0,
+    "dialog": false
+  }
+]

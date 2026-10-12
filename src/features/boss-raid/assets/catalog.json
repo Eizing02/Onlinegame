@@ -1,0 +1,14 @@
+{
+  "heroes": ["warrior", "mage", "wizard", "witch", "fairy"],
+  "heroClips": ["idle", "attack_1", "attack_2", "hit", "victory", "defeat"],
+  "bossClips": {
+    "idle": "idle", "ready": "ready", "attack_1": "attack_1", "attack_2": "attack_2",
+    "dodge": "backward_dodge", "hit": "damage_reaction", "death": "death", "run": "run",
+    "breath": "shadow_flame_breath", "shield": "shield_defense", "ultimate": "ultimate", "victory_roar": "victory_roar"
+  },
+  "bossAliases": {
+    "death": ["Defeat Collapse & Death"], "dodge": ["Backward Dodge"], "hit": ["Damage Reaction"],
+    "breath": ["Shadow Flame Breath"], "shield": ["Shield Defend", "Shield Defense"],
+    "victory_roar": ["Victory Triumphant Roar"]
+  }
+}

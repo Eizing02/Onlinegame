@@ -4,7 +4,9 @@
 
 สำหรับ Google Login ให้ทำตาม [คู่มือ Google Auth](google-auth-setup.md) เพิ่มเติม ใช้ `AUTH_MODE=legacy` จนกว่า Staging และ Provider settings จะพร้อม
 
-[SQL สำหรับ Google Login พร้อมตรวจผลก่อน/หลังรัน](google-auth-sql.md): ฐานข้อมูลที่มี 001–007 แล้วเพิ่มเฉพาะ 008 ไม่มี migration 009
+[SQL สำหรับ Google Login พร้อมตรวจผลก่อน/หลังรัน](google-auth-sql.md): ฐานข้อมูลที่มี 001–007 แล้วเพิ่มเฉพาะ 008 สำหรับ Google Login
+
+Boss Raid เป็นส่วนเพิ่มแยกต่างหาก: [คู่มือ migration 009 และ feature flag](boss-raid/deploy.md) ไม่รัน SQL เดิมซ้ำ และต้องผ่าน staging/ขออนุญาตก่อนแก้ Production ใช้ Google/RBAC เดิม ไม่มีการตั้ง OAuth เพิ่มสำหรับ Raid
 
 ## 1. สร้าง Project ใน Supabase
 

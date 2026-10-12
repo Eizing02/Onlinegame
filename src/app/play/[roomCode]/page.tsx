@@ -5,6 +5,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { requireRole } from "@/lib/auth/session";
 import { getStudentPlaySnapshot } from "@/lib/data/game-sessions";
 import { normalizeRoomCode } from "@/lib/game/room-code";
+import { roomIsRaid } from "@/features/boss-raid/server/config";
 
 type PlayPageProps = {
   params: Promise<{ roomCode: string }>;
@@ -14,6 +15,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
   const student = await requireRole("student");
   const { roomCode } = await params;
   const normalizedRoomCode = normalizeRoomCode(roomCode);
+  if (await roomIsRaid(normalizedRoomCode)) redirect(`/play/${normalizedRoomCode}/raid`);
   const result = await getStudentPlaySnapshot({
     roomCode: normalizedRoomCode,
     studentCode: student.userCode,

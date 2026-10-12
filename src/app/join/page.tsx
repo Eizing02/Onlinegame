@@ -43,6 +43,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
   const currentTeam = existingParticipant?.teamId
     ? teamSummaries.find((team) => team.id === existingParticipant.teamId)
     : null;
+  const isRaid = gameSession?.gameMode === "boss_raid";
   const isLateJoin = gameSession ? gameSession.status !== "lobby" : false;
   const roomError =
     roomCode && !canLookupRoom
@@ -181,7 +182,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
 
               {isLateJoin ? (
                 <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
-                  เกมเริ่มแล้ว หากเข้าหลังจากนี้จะร่วมเล่นได้แต่ไม่ถูกนำไปคิดคะแนนรอบนี้
+                  {isRaid ? "Boss Raid เริ่มแล้ว ผู้เข้าร่วมใหม่รับชมได้อย่างเดียว โดยไม่เพิ่มจำนวนฮีโร่หรือเปลี่ยนคะแนนเฉลี่ย" : "เกมเริ่มแล้ว หากเข้าหลังจากนี้จะร่วมเล่นได้แต่ไม่ถูกนำไปคิดคะแนนรอบนี้"}
                 </div>
               ) : null}
 
@@ -202,7 +203,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                       className="flex min-h-28 w-full flex-col items-start justify-between rounded-lg border-2 border-cyan/25 bg-panel-strong p-4 text-left transition hover:border-cyan hover:bg-cyan/10 disabled:cursor-not-allowed disabled:border-border disabled:bg-slate-100 disabled:text-muted data-[current=true]:border-warning data-[current=true]:bg-warning/15"
                       data-current={existingParticipant?.teamId === team.id}
                       disabled={
-                        (team.isFull &&
+                        (team.isFull && !(isRaid && isLateJoin) &&
                           existingParticipant?.teamId !== team.id) ||
                         (isLateJoin &&
                           Boolean(existingParticipant?.teamId) &&

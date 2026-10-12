@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "raid:assets:import": "node scripts/boss-raid/import-assets.mjs",
+    "raid:assets:validate": "node scripts/boss-raid/validate-assets.mjs",
+    "raid:assets:provenance": "node scripts/boss-raid/stamp-provenance.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -14,7 +17,10 @@
     "test:sql": "node tests/sql-scoring.mjs && node tests/sql-google-auth.mjs && node tests/sql-google-deployment.mjs",
     "test:auth": "node tests/google-identity.cjs && node tests/google-services.cjs && node tests/sql-google-auth.mjs",
     "test:e2e:google": "playwright test --config=playwright.google.config.ts",
-    "test:staging:auth": "node tests/staging-google-races.mjs"
+    "test:staging:auth": "node tests/staging-google-races.mjs",
+    "test:raid": "node tests/boss-raid/unit.mjs && node tests/boss-raid/sql-rules.mjs",
+    "test:e2e:raid": "playwright test --config=playwright.raid.config.ts",
+    "test:staging:raid": "node scripts/boss-raid/staging-load.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
@@ -24,6 +30,7 @@
     "katex": "^0.17.0",
     "lucide-react": "^1.21.0",
     "next": "^16.3.4",
+    "pixi.js": "^8.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "^3.6.0",
@@ -41,6 +48,7 @@
     "@types/three": "^0.185.4",
     "eslint": "^9",
     "eslint-config-next": "^16.3.4",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
