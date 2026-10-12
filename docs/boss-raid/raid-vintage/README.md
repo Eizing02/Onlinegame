@@ -25,7 +25,9 @@
 
 ## SQL และการเผยแพร่
 
-**มี SQL ใหม่ แต่ไม่ได้รันบน Production และไม่ได้ push/deploy ในงานนี้**
+**มี SQL ใหม่ แต่ยังไม่ได้รันบน Production**
+
+วันที่ 13 ตุลาคม 2026 ผู้ใช้อนุญาตให้พุชขึ้น GitHub แล้ว งานอยู่บน branch `feat/boss-raid-scene-audio` และ [Draft PR #3](https://github.com/Eizing02/Onlinegame/pull/3) เป้าหมาย `main` ยังไม่ได้ merge หรือสั่ง deploy จากงานนี้ ต้องทำขั้นตอน SQL 010 ก่อนเปิดใช้กติกา v2
 
 1. ต้องมี migration 009 Boss Raid อยู่แล้ว
 2. ตรวจไฟล์ `supabase/migrations/010_raid_pacing_and_duplicate_heroes.sql` แล้วรันหนึ่งครั้งใน Supabase SQL Editor เมื่อพร้อมอัปเดตระบบ ไฟล์นี้ใช้ transaction และไม่มีคำสั่งลบข้อมูลห้อง/บัญชี/คำถาม
