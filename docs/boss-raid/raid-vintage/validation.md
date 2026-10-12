@@ -2,7 +2,7 @@
 
 ตรวจในเครื่อง 12–13 ตุลาคม 2026 (Asia/Bangkok) บน branch `feat/boss-raid-scene-audio` เริ่มจาก `80ca22a` ใช้ localhost, mock OAuth/Supabase และ PGlite การทดสอบไม่มีคำสั่งเขียนฐานข้อมูล Production หรือ deploy
 
-หลังตรวจเสร็จ ผู้ใช้อนุญาตให้พุช GitHub วันที่ 13 ตุลาคม 2026 จึงเผยแพร่ branch และเปิด [Draft PR #3](https://github.com/Eizing02/Onlinegame/pull/3) โดยยังไม่ได้ merge เข้า `main` หรือรัน migration 010 บน Production ผลทดสอบด้านล่างยังเป็นผลจากในเครื่อง
+หลังตรวจเสร็จ ผู้ใช้อนุญาตให้พุช GitHub วันที่ 13 ตุลาคม 2026 จึงเผยแพร่ branch และเปิด [PR #3](https://github.com/Eizing02/Onlinegame/pull/3) ต่อมาผู้ใช้แจ้งว่ารัน migration 010 เรียบร้อยแล้วและอนุญาตให้รวมเข้า `main` Agent ไม่ได้รัน SQL เพิ่มบน Production ผลทดสอบด้านล่างยังเป็นผลจากในเครื่อง และไม่ได้ใช้คำแจ้งของผู้ใช้แทนการตรวจฐานข้อมูลด้วยตนเอง
 
 ## ผลทดสอบ
 
