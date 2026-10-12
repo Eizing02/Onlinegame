@@ -1,4 +1,4 @@
-disposition: fix
+﻿disposition: fix
 
 Reviewed scope: all 77 authoritative captures exist, decode, and match the manifest dimensions. I inspected 29 originals at native size (all 12 root captures, all 13 integration captures, and Classic question-editor desktop/mobile, question-active mobile, and teacher-small 320); the other 48 originals were visually inspected on seven labelled reviewer contact sheets. Scene images are arena crops; calibration images are developer full pages. No capture was blank, black, misnamed, or malformed. This is a screenshot and sampled-source review, with supplied local runtime evidence; it does not certify physical devices, keyboards, school GPUs, audio loudness, FPS, production load, or deployment. Unread: 215 individual historical detector advisory contexts and generated sidecar tonal-ramp metadata; existing asset provenance was not re-audited. No approved comp, comp-led state/spec/diffs, or critique-reference comp exists or is owed for this user-pinned, code-led build.
 
@@ -42,7 +42,7 @@ Keep the pinned four-color identity, readable Thai question regions, fixed confi
 
 ## verdict
 
-1. **Resolved — teacher team progress palette.** The same integration/teacher-hp-zero.png and integration/teacher-final-phase.png now visibly render blue ink on the documented brown track at 20% and 60% completion. The previously sampled fill pixels, (40,251) and (90,302), both changed from #008000 to #25475A. src/features/boss-raid/raid.css:45 now authors appearance, track and WebKit/Mozilla fill styling with --border/--cyan. The correction reaches the original global-palette and browser-surface requirement.
+1. **Resolved — teacher team progress palette.** The same integration/teacher-hp-zero.png and integration/teacher-final-phase.png now visibly render blue ink on the documented brown track with boss HP 2750/3750 and 750/3750 respectively (26.67% and 80% boss-damage progress). The previously sampled fill pixels, (40,251) and (90,302), both changed from #008000 to #25475A. src/features/boss-raid/raid.css:45 now authors appearance, track and WebKit/Mozilla fill styling with --border/--cyan. The correction reaches the original global-palette and browser-surface requirement.
 
 All 13 overwritten integration originals were reopened at native size. They decode at the updated manifest dimensions and show valid content; no regression from this visual correction was observed. The updated integration metrics report 0 overflow and 0 reported serious/critical Axe violations. No second detector ran.
 
