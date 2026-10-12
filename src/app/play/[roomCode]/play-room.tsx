@@ -548,8 +548,8 @@ export function PlayRoom({
             role="status"
             className={
               message.includes("ไม่ได้") || message.includes("ไม่")
-                ? "rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
-                : "rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700"
+                ? "rounded-md border border-danger bg-danger/10 px-4 py-3 text-sm font-medium text-danger"
+                : "rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-medium text-success"
             }
           >
             {message}
@@ -561,7 +561,7 @@ export function PlayRoom({
               <MathText text={snapshot.currentQuestion.questionText}/>
               {snapshot.currentQuestion.imageUrl && <QuestionImage className="room-question-image" src={snapshot.currentQuestion.imageUrl} alt={'รูปประกอบคำถามข้อ ' + snapshot.currentQuestion.questionNumber}/>}
                             {showCorrectAnswer && snapshot.currentQuestion.correctAnswer ? (
-                <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                <div className="rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-semibold text-success">
                   เฉลย:{" "}
                   <MathText
                     className="inline"
@@ -588,12 +588,12 @@ export function PlayRoom({
                       <button
                         className={
                           isCorrectOption
-                            ? "min-h-14 rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3 text-left font-semibold text-emerald-700 shadow-sm"
+                            ? "min-h-14 rounded-md border border-success bg-success/10 px-4 py-3 text-left font-semibold text-success shadow-sm"
                             : isWrongSelection
-                              ? "min-h-14 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-left font-semibold text-red-700 shadow-sm"
+                              ? "min-h-14 rounded-md border border-danger bg-danger/10 px-4 py-3 text-left font-semibold text-danger shadow-sm"
                               : isSelected
                                 ? "min-h-14 rounded-md border border-primary bg-primary/10 px-4 py-3 text-left font-semibold text-primary shadow-sm"
-                                : "min-h-14 rounded-md border border-border bg-white px-4 py-3 text-left font-semibold transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-muted"
+                                : "min-h-14 rounded-md border border-border bg-surface px-4 py-3 text-left font-semibold transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:bg-surface disabled:text-muted"
                         }
                         disabled={
                           !snapshot.canSubmitAnswer ||
@@ -621,14 +621,14 @@ export function PlayRoom({
               ) : null}
 </div>
                             {snapshot.currentAnswer ? (
-                <div className="rounded-md border border-border bg-white p-4">
+                <div className="rounded-md border border-border bg-surface p-4">
                   <div className="flex items-center gap-2 text-sm font-semibold">
                     {!snapshot.isAnswerRevealed ? (
                       <Lock className="text-cyan" size={18} />
                     ) : snapshot.currentAnswer.isCorrect ? (
-                      <CheckCircle2 className="text-emerald-700" size={18} />
+                      <CheckCircle2 className="text-success" size={18} />
                     ) : (
-                      <XCircle className="text-red-700" size={18} />
+                      <XCircle className="text-danger" size={18} />
                     )}
                     {snapshot.isAnswerRevealed
                       ? snapshot.currentAnswer.isCorrect
@@ -657,7 +657,7 @@ export function PlayRoom({
                       aria-label="คำตอบของคุณ"
                       rows={2}
                       maxLength={2000}
-                      className="student-answer-input w-full rounded-md border border-border bg-white p-3 outline-none focus:border-primary disabled:bg-slate-50"
+                      className="student-answer-input w-full rounded-md border border-border bg-surface p-3 outline-none focus:border-primary disabled:bg-surface"
                       disabled={!snapshot.canSubmitAnswer || isTimerExpired}
                       onChange={(event) =>
                         setAnswerDraft({
@@ -677,7 +677,7 @@ export function PlayRoom({
                     />
                   ) : null}
                   <button
-                    className="answer-submit inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-slate-300"
+                    className="answer-submit inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-muted"
                     disabled={!canSubmit}
                     onClick={() => void submitAnswer()}
                     type="button"
@@ -697,7 +697,7 @@ export function PlayRoom({
           {!snapshot.participant.isScoreEligible && <p className="room-eligibility text-warning">เข้าหลังเริ่ม · ร่วมตอบได้แต่ไม่นับคะแนน</p>}
         </div>},
         {label:'ทีม',content:<div className="room-scroll team-details">
-          <h2>ทีมของเรา</h2>          <div className="w-full rounded-md border border-border bg-blue-50 p-3 sm:max-w-sm">
+          <h2>ทีมของเรา</h2>          <div className="w-full rounded-md border border-border bg-success/10 p-3 sm:max-w-sm">
             {snapshot.canRenameTeam ? (
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-primary">
@@ -755,7 +755,7 @@ export function PlayRoom({
                   <div className="grid gap-3 sm:grid-cols-3">
           <div className="rounded-md border border-border bg-surface p-4">
             <p className="text-sm text-muted">สถานะผู้เล่น</p>
-            <p className="mt-1 font-semibold text-emerald-700">
+            <p className="mt-1 font-semibold text-success">
               {snapshot.participant.isScoreEligible
                 ? "ร่วมคะแนน"
                 : "ร่วมเล่น ไม่นับคะแนน"}
@@ -782,7 +782,7 @@ export function PlayRoom({
         </div>}
       ]}/>
       {questionExpanded === snapshot.currentQuestion?.id && snapshot.currentQuestion && <Modal title="โจทย์เต็ม" onClose={()=>setQuestionExpanded(null)}><div className="expanded-question"><h2>ข้อ {snapshot.currentQuestion.questionNumber}/{snapshot.currentQuestion.totalQuestions}</h2><MathText text={snapshot.currentQuestion.questionText}/>{snapshot.currentQuestion.imageUrl && <QuestionImage src={snapshot.currentQuestion.imageUrl} alt="รูปประกอบคำถาม"/>}              {showCorrectAnswer && snapshot.currentQuestion.correctAnswer ? (
-                <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                <div className="rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-semibold text-success">
                   เฉลย:{" "}
                   <MathText
                     className="inline"

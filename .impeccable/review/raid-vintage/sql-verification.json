@@ -1,0 +1,66 @@
+{
+  "scope": "PGlite local isolated database after 009+010; no production query",
+  "checks": 5,
+  "column": {
+    "column_name": "next_question_available_at",
+    "data_type": "timestamp with time zone"
+  },
+  "indexAbsent": true,
+  "privateFunctions": [
+    {
+      "proname": "create_boss_raid_room",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "proname": "reserve_raid_hero",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "proname": "start_boss_raid",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "proname": "raid_resolve",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "proname": "report_raid_visibility",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "proname": "get_private_raid_snapshot",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    }
+  ],
+  "publicationAbsent": true
+}

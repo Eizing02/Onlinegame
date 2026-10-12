@@ -80,7 +80,7 @@
 .teacher-command-bar button { min-height:48px; }
 .teacher-players, .teacher-scores { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.5fr); gap:20px; align-items:start; }
 .teacher-players .teacher-roster { order:0; }
-.teacher-players .text-red-700 { color:#ffd0da; }
+.teacher-players .text-red-700 { color:#790D16; }
 @media(max-width:767px) {
   .room-route { padding:4px 10px 0; }
   .room-app .header-inner { height:48px; padding-inline:12px; }

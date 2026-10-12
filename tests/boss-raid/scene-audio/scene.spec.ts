@@ -1,7 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-const evidence='.impeccable/review/scene-audio';
+const evidence=process.env.RAID_SCENE_EVIDENCE_DIR??'.impeccable/review/scene-audio';
 async function placement(page:Page){return page.locator('[data-placement]').evaluate(e=>JSON.parse((e as HTMLElement).dataset.placement!));}
 async function ready(page:Page){await expect.poll(async()=>{try{return(await placement(page)).fallback;}catch{return true;}}).toBe(false);await expect(page.locator('canvas')).toHaveCount(1);await page.evaluate(()=>{if(!document.getElementById('scene-hide-dev-ui')){const style=document.createElement('style');style.id='scene-hide-dev-ui';style.textContent='nextjs-portal{display:none!important}';document.head.append(style);}});}
 async function metrics(page:Page){await page.getByRole('button',{name:'ตรวจสถานะเสียง',exact:true}).click();return JSON.parse(await page.getByTestId('audio-diagnostics').innerText());}

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { GAME_PALETTE } from "@/lib/theme/palette";
 import { Orbit, Trophy } from "lucide-react";
 import { useExperience } from "@/components/game/experience";
 
@@ -37,9 +38,9 @@ export function Scene3D({ variant = "planet" }: { variant?: "planet" | "trophy" 
       renderer.setClearColor(0x000000, 0);
       canvas.setAttribute("aria-hidden", "true");
       element.appendChild(canvas);
-      scene.add(new THREE.HemisphereLight(0xc5eaff, 0x161329, 2.5));
+      scene.add(new THREE.HemisphereLight(GAME_PALETTE.cream, GAME_PALETTE.ink, 2.5));
       const light = new THREE.DirectionalLight(0xffffff, 4); light.position.set(-3, 4, 5); scene.add(light);
-      const rim = new THREE.DirectionalLight(0x8b5cff, 3); rim.position.set(3, -1, -2); scene.add(rim);
+      const rim = new THREE.DirectionalLight(GAME_PALETTE.wine, 3); rim.position.set(3, -1, -2); scene.add(rim);
       const group = new THREE.Group(); scene.add(group);
       const geometries: import("three").BufferGeometry[] = [];
       const materials: InstanceType<typeof THREE.Material>[] = [];
@@ -49,19 +50,19 @@ export function Scene3D({ variant = "planet" }: { variant?: "planet" | "trophy" 
         const mesh = new THREE.Mesh(geometry, material); mesh.position.set(...position); group.add(mesh); return mesh;
       };
       if (variant === "planet") {
-        add(new THREE.IcosahedronGeometry(.95, 2), 0x738df8, [0, 0, 0]);
-        const ring = add(new THREE.TorusGeometry(1.42, .045, 8, 64), 0x66e3ff, [0, 0, 0], .6);
+        add(new THREE.IcosahedronGeometry(.95, 2), GAME_PALETTE.mist, [0, 0, 0]);
+        const ring = add(new THREE.TorusGeometry(1.42, .045, 8, 64), GAME_PALETTE.wine, [0, 0, 0], .6);
         ring.rotation.x = 1.12; ring.rotation.y = -.3;
-        add(new THREE.IcosahedronGeometry(.18, 0), 0xffcb57, [1.8, .52, .3]);
-        const orbit = add(new THREE.TorusGeometry(1.92, .012, 4, 72), 0x6678ac, [0, 0, 0]); orbit.rotation.x = .9;
+        add(new THREE.IcosahedronGeometry(.18, 0), GAME_PALETTE.gold, [1.8, .52, .3]);
+        const orbit = add(new THREE.TorusGeometry(1.92, .012, 4, 72), GAME_PALETTE.blueInk, [0, 0, 0]); orbit.rotation.x = .9;
       } else {
-        add(new THREE.CylinderGeometry(.67, .32, .75, 12, 1, true), 0xffcc69, [0, .35, 0], .65);
-        add(new THREE.CylinderGeometry(.31, .18, .16, 12), 0xeaa845, [0, -.1, 0], .65);
-        add(new THREE.CylinderGeometry(.1, .14, .48, 12), 0xffcf78, [0, -.4, 0], .65);
-        add(new THREE.CylinderGeometry(.4, .48, .12, 12), 0xffcc69, [0, -.7, 0], .65);
-        add(new THREE.BoxGeometry(1.02, .2, .78), 0x33467b, [0, -.87, 0]);
+        add(new THREE.CylinderGeometry(.67, .32, .75, 12, 1, true), GAME_PALETTE.gold, [0, .35, 0], .65);
+        add(new THREE.CylinderGeometry(.31, .18, .16, 12), GAME_PALETTE.parchment, [0, -.1, 0], .65);
+        add(new THREE.CylinderGeometry(.1, .14, .48, 12), GAME_PALETTE.gold, [0, -.4, 0], .65);
+        add(new THREE.CylinderGeometry(.4, .48, .12, 12), GAME_PALETTE.gold, [0, -.7, 0], .65);
+        add(new THREE.BoxGeometry(1.02, .2, .78), GAME_PALETTE.wine, [0, -.87, 0]);
         for (const side of [-1, 1]) {
-          const handle = add(new THREE.TorusGeometry(.32, .055, 8, 20), 0xffcc69, [side * .64, .25, 0], .65); handle.scale.x = .75;
+          const handle = add(new THREE.TorusGeometry(.32, .055, 8, 20), GAME_PALETTE.gold, [side * .64, .25, 0], .65); handle.scale.x = .75;
         }
         group.rotation.x = .1;
       }

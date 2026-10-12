@@ -54,12 +54,12 @@ const statusBadgeClassName: Record<
   TeacherDashboardSnapshot["status"],
   string
 > = {
-  lobby: "border-amber-200 bg-amber-50 text-amber-700",
+  lobby: "border-warning bg-warning/10 text-warning",
   playing: "border-cyan/40 bg-cyan/10 text-cyan",
   question_active: "border-cyan/40 bg-cyan/10 text-cyan",
-  answer_locked: "border-amber-200 bg-amber-50 text-amber-700",
-  showing_answer: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  ended: "border-red-200 bg-red-50 text-red-700",
+  answer_locked: "border-warning bg-warning/10 text-warning",
+  showing_answer: "border-success bg-success/10 text-success",
+  ended: "border-danger bg-danger/10 text-danger",
 };
 
 const AUDIO_ASSETS = {
@@ -125,9 +125,9 @@ function ControlButton({
     <button
       className={
         variant === "primary"
-          ? "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-primary/50 bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:border-cyan/60 hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-slate-300"
+          ? "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-primary/50 bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:border-cyan/60 hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-muted"
           : variant === "danger"
-            ? "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+            ? "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-danger bg-danger/10 px-4 text-sm font-semibold text-danger transition hover:bg-danger/10 disabled:cursor-not-allowed disabled:opacity-50"
             : "inline-flex h-11 items-center justify-center gap-2 rounded-md border border-cyan/35 bg-cyan/10 px-4 text-sm font-semibold text-cyan transition hover:border-cyan hover:bg-cyan/20 disabled:cursor-not-allowed disabled:opacity-50"
       }
       disabled={disabled || pendingCommand !== null}
@@ -439,7 +439,7 @@ export function LiveRoomPanels({
         </div>
 
         {snapshot.status === "lobby" ? (
-          <div className="space-y-2 rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          <div className="space-y-2 rounded-md border border-warning bg-warning/10 p-4 text-sm text-warning">
             {!snapshot.canStart ? (
               <p>ต้องมีนักเรียนอย่างน้อย 1 คนก่อนเริ่มเกม</p>
             ) : null}
@@ -459,8 +459,8 @@ export function LiveRoomPanels({
           <div
             className={
               controlMessage.includes("ไม่") || controlMessage.includes("ไม่ได้")
-                ? "rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
-                : "rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700"
+                ? "rounded-md border border-danger bg-danger/10 px-4 py-3 text-sm font-medium text-danger"
+                : "rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-medium text-success"
             }
           >
             {controlMessage}
@@ -498,7 +498,7 @@ export function LiveRoomPanels({
                 <span
                   className={
                     remainingSeconds <= 10
-                      ? "inline-flex h-11 items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700"
+                      ? "inline-flex h-11 items-center gap-2 rounded-md border border-danger bg-danger/10 px-3 text-sm font-semibold text-danger"
                       : "inline-flex h-11 items-center gap-2 rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan"
                   }
                 >
@@ -523,7 +523,7 @@ export function LiveRoomPanels({
                 {snapshot.currentQuestion.imageUrl ? (
                   <QuestionImage
                     alt={`รูปประกอบคำถามข้อ ${snapshot.currentQuestion.questionNumber}`}
-                    className="mt-4 bg-white"
+                    className="mt-4 bg-surface"
                     src={snapshot.currentQuestion.imageUrl}
                   />
                 ) : null}
@@ -537,8 +537,8 @@ export function LiveRoomPanels({
                       <div
                         className={
                           option.isCorrect
-                            ? "rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700"
-                            : "rounded-md border border-border bg-slate-50 px-3 py-2 text-sm font-semibold"
+                            ? "rounded-md border border-success bg-success/10 px-3 py-2 text-sm font-semibold text-success"
+                            : "rounded-md border border-border bg-surface px-3 py-2 text-sm font-semibold"
                         }
                         key={option.id}
                       >
@@ -551,7 +551,7 @@ export function LiveRoomPanels({
                   </div>
                 ) : null}
                 {snapshot.currentQuestion.correctAnswer ? (
-                  <div className="mt-2 text-sm font-semibold text-emerald-700">
+                  <div className="mt-2 text-sm font-semibold text-success">
                     เฉลย:{" "}
                     <MathText
                       className="inline"
@@ -653,7 +653,7 @@ export function LiveRoomPanels({
                 className="flex items-start gap-3 text-sm"
                 key={participant.id}
               >
-                <span className="mt-1 h-8 w-8 shrink-0 rounded-full bg-blue-50" />
+                <span className="mt-1 h-8 w-8 shrink-0 rounded-full bg-success/10" />
                 <span>
                   <span>{participant.displayName}</span>
                   <span className="ml-2 text-muted">
@@ -662,7 +662,7 @@ export function LiveRoomPanels({
                       : "ยังไม่เลือกทีม"}
                   </span>
                   {participant.joinedAfterStart ? (
-                    <span className="block text-xs text-amber-700">
+                    <span className="block text-xs text-warning">
                       เข้าหลังเริ่มเกม ไม่นับคะแนน
                     </span>
                   ) : null}
@@ -684,11 +684,11 @@ export function LiveRoomPanels({
           <div className="space-y-3">
             {showAnswerStatus ? (
               <div className="flex flex-wrap gap-2 text-xs font-semibold">
-                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                <span className="inline-flex items-center gap-1 rounded-full border border-success bg-success/10 px-2.5 py-1 text-success">
                   <span className="h-2 w-2 rounded-full bg-success" />
                   ตอบแล้ว
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-red-700">
+                <span className="inline-flex items-center gap-1 rounded-full border border-danger bg-danger/10 px-2.5 py-1 text-danger">
                   <span className="h-2 w-2 rounded-full bg-danger" />
                   ยังไม่ตอบ
                 </span>
@@ -721,8 +721,8 @@ export function LiveRoomPanels({
                             <span
                               className={
                                 answered
-                                  ? "inline-flex w-full items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 font-semibold text-emerald-700"
-                                  : "inline-flex w-full items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 font-semibold text-red-700"
+                                  ? "inline-flex w-full items-center gap-2 rounded-md border border-success bg-success/10 px-3 py-2 font-semibold text-success"
+                                  : "inline-flex w-full items-center gap-2 rounded-md border border-danger bg-danger/10 px-3 py-2 font-semibold text-danger"
                               }
                             >
                               <span
@@ -757,7 +757,7 @@ export function LiveRoomPanels({
         </Panel></div>},
         {label:'คะแนน',content:<div className="room-scroll teacher-scores" tabIndex={0} role="region" aria-label="คะแนนและอันดับทีม">        <Panel>
           <div className="mb-4 flex items-center gap-2">
-            <BarChart3 size={20} className="text-amber-600" />
+            <BarChart3 size={20} className="text-warning" />
             <h2 className="font-semibold">คะแนนแต่ละกลุ่ม</h2>
           </div>
           <div className="space-y-3">
@@ -773,7 +773,7 @@ export function LiveRoomPanels({
                     {team.rawScore}
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-slate-100">
+                <div className="h-2 rounded-full bg-surface">
                   <div
                     className="h-2 rounded-full bg-primary"
                     style={{
@@ -788,7 +788,7 @@ export function LiveRoomPanels({
 
         <Panel>
           <div className="mb-4 flex items-center gap-2">
-            <Trophy size={20} className="text-emerald-700" />
+            <Trophy size={20} className="text-success" />
             <h2 className="font-semibold">อันดับ</h2>
           </div>
           <TeamStandings teams={snapshot.rankedTeams} />

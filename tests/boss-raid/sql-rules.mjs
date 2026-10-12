@@ -12,6 +12,7 @@ async function room(n=1,count=10,visibility=true) {
  await db.query('delete from questions where question_set_id=$1',[ids.set]);
  for(let i=0;i<count;i++) await db.query('insert into questions(question_set_id,question_text,correct_answer,points,order_index) values($1,$2,$3,10,$4)',[ids.set,`ข้อ ${i}`,`answer-${i}`,i]);
  active=await call('create_boss_raid_room',['ADMIN',ids.set,'ทดสอบ',1,5,180,visibility]);eq(active.ok,true);
+ await db.query('update boss_raid_sessions set rules_version=1 where session_id=$1',[active.sessionId]); // Existing-v1 regression after migration 010.
  for(let i=0;i<n;i++) eq((await call('join_boss_raid',[active.roomCode,students[i],null,null])).ok,true);
  return active;
 }

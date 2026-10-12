@@ -29,7 +29,7 @@ export async function createGoogleDatabase({ applyAuthMigration = true, applyRai
     create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,raw_app_meta_data jsonb,raw_user_meta_data jsonb);
     create table auth.identities(id uuid primary key default gen_random_uuid(),user_id uuid references auth.users(id),provider text,identity_data jsonb);`);
   for (const file of (await readdir('supabase/migrations')).filter(name => name.endsWith('.sql')).sort()) {
-    if (file.startsWith('008') || file.startsWith('009')) continue;
+    if (file.startsWith('008') || file.startsWith('009') || file.startsWith('010')) continue;
     let sql = await readFile(`supabase/migrations/${file}`, 'utf8');
     sql = sql.replace('create extension if not exists pgcrypto;', '');
     if (file.startsWith('005')) sql = sql.split('insert into storage.buckets')[0];
@@ -47,7 +47,10 @@ export async function createGoogleDatabase({ applyAuthMigration = true, applyRai
     insert into questions(id,question_set_id,question_text,correct_answer,points) values('${ids.question}','${ids.set}','2+3','5',10);`);
   // Apply the auth migration to existing classroom records, as on an upgrade.
   if (applyAuthMigration) await db.exec(await readFile('supabase/migrations/008_google_auth_identity_and_teacher_access.sql', 'utf8'));
-  if (applyRaidMigration) await db.exec(await readFile('supabase/migrations/009_boss_raid_time_attack.sql', 'utf8'));
+  if (applyRaidMigration) {
+    await db.exec(await readFile('supabase/migrations/009_boss_raid_time_attack.sql', 'utf8'));
+    await db.exec(await readFile('supabase/migrations/010_raid_pacing_and_duplicate_heroes.sql', 'utf8'));
+  }
   return db;
 }
 export async function rpc(db, name, args) {

@@ -40,18 +40,18 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
         </div>
 
         {params.error ? (
-          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <div className="rounded-md border border-danger bg-danger/10 px-4 py-3 text-sm font-medium text-danger">
             {params.error}
           </div>
         ) : null}
         {params.notice ? (
-          <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+          <div className="rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-medium text-success">
             {params.notice}
           </div>
         ) : null}
 
         {!canCreateRoom ? (
-          <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+          <div className="rounded-md border border-warning bg-warning/10 px-4 py-3 text-sm font-medium text-warning">
             {activeRoom
               ? `มีห้อง ${activeRoom.roomCode} ที่ยังไม่จบอยู่ กรุณาใช้ห้องเดิมหรือจบเกมก่อนสร้างห้องใหม่`
               : "ต้องมีชุดคำถามที่มีคำถามอย่างน้อย 1 ข้อก่อน ถึงจะสร้างห้องเกมได้"}
@@ -59,7 +59,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
         ) : null}
 
         {activeRoom ? (
-          <Panel className="flex flex-col justify-between gap-4 border-amber-200 bg-amber-50 sm:flex-row sm:items-center">
+          <Panel className="flex flex-col justify-between gap-4 border-warning bg-warning/10 sm:flex-row sm:items-center">
             <div>
               <p className="text-sm font-medium text-muted">ห้องที่ยัง active</p>
               <h2 className="mt-1 text-2xl font-semibold">
@@ -78,7 +78,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
                 <input name="room_code" type="hidden" value={activeRoom.roomCode} />
                 <input name="return_to" type="hidden" value="/teacher/rooms/new" />
                 <ConfirmSubmitButton
-                  className="inline-flex h-11 w-full items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 text-sm font-semibold text-red-700 transition hover:bg-red-100 sm:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center rounded-md border border-danger bg-danger/10 px-4 text-sm font-semibold text-danger transition hover:bg-danger/10 sm:w-auto"
                   message={`ปิดห้อง ${activeRoom.roomCode} และลบข้อมูลรอบเล่นทั้งหมด? หลังปิดห้องจะดูสรุปย้อนหลังไม่ได้`}
                 >
                   ปิดห้องนี้

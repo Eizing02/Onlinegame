@@ -1,0 +1,545 @@
+{
+  "scope": "77 original captures inspected by builder; screenshot evidence only, not physical device or timing certification",
+  "captures": [
+    {
+      "path": ".impeccable/review/raid-vintage/classic/answer-revealed-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 63384,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/answer-revealed-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 48327,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/join-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 54352,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/join-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 40665,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/login-1440.png",
+      "width": 1440,
+      "height": 926,
+      "bytes": 83473,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/login-390.png",
+      "width": 390,
+      "height": 846,
+      "bytes": 42661,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/login-landscape-844.png",
+      "width": 844,
+      "height": 680,
+      "bytes": 74146,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/login-small-320.png",
+      "width": 320,
+      "height": 742,
+      "bytes": 41951,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/login-tablet-768.png",
+      "width": 768,
+      "height": 1050,
+      "bytes": 54099,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/new-room-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 87943,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/new-room-390.png",
+      "width": 390,
+      "height": 1139,
+      "bytes": 75105,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/question-active-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 58467,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/question-active-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 44259,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/question-editor-1440.png",
+      "width": 1440,
+      "height": 1362,
+      "bytes": 126206,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/question-editor-390.png",
+      "width": 390,
+      "height": 1934,
+      "bytes": 109406,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/question-sets-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 69133,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/question-sets-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 53915,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/result-dialog-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 55474,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/result-dialog-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 34180,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/student-lobby-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 58352,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/student-lobby-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 48895,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/student-results-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 44927,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/student-results-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 36450,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/teacher-active-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 74278,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/teacher-active-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 59937,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/teacher-lobby-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 75104,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/teacher-lobby-390.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 60321,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/teacher-results-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 81971,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/teacher-results-390.png",
+      "width": 390,
+      "height": 955,
+      "bytes": 61025,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/teacher-small-320.png",
+      "width": 320,
+      "height": 740,
+      "bytes": 56520,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/team-selection-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 82160,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/classic/team-selection-390.png",
+      "width": 390,
+      "height": 1286,
+      "bytes": 68483,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/combat-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 408246,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/confirmation-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 99307,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/hero-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 127774,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/hero-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 99831,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/question-audio-320.png",
+      "width": 320,
+      "height": 400,
+      "bytes": 33564,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/student-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 1211610,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/student-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 444806,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-audio-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 140566,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-audio-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 249518,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-audio-settings.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 1003612,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 1019058,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-final-phase.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 1003186,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-hp-zero.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 323476,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 169598,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-low.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 934384,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 329089,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/integration/teacher-tablet.png",
+      "width": 768,
+      "height": 1024,
+      "bytes": 658320,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/login-desktop.png",
+      "width": 1440,
+      "height": 926,
+      "bytes": 78060,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/login-mobile.png",
+      "width": 390,
+      "height": 846,
+      "bytes": 37645,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/question-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 41877,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/question-party-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 597339,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/question-party-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 96322,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/question-small.png",
+      "width": 320,
+      "height": 400,
+      "bytes": 32383,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/question-tablet.png",
+      "width": 768,
+      "height": 1024,
+      "bytes": 187962,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/calibration-desktop.png",
+      "width": 1366,
+      "height": 1527,
+      "bytes": 793156,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/calibration-mobile.png",
+      "width": 390,
+      "height": 2306,
+      "bytes": 498069,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/desktop-1.png",
+      "width": 1326,
+      "height": 500,
+      "bytes": 703531,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/desktop-2.png",
+      "width": 1326,
+      "height": 500,
+      "bytes": 706982,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/desktop-3.png",
+      "width": 1326,
+      "height": 500,
+      "bytes": 710845,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/desktop-4.png",
+      "width": 1326,
+      "height": 500,
+      "bytes": 714665,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/desktop-5.png",
+      "width": 1326,
+      "height": 500,
+      "bytes": 717003,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/desktop-large.png",
+      "width": 1400,
+      "height": 561,
+      "bytes": 915591,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/ipad-landscape.png",
+      "width": 984,
+      "height": 500,
+      "bytes": 700959,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/ipad-portrait.png",
+      "width": 728,
+      "height": 561,
+      "bytes": 456409,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-1.png",
+      "width": 366,
+      "height": 549,
+      "bytes": 376057,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-2.png",
+      "width": 366,
+      "height": 549,
+      "bytes": 378198,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-3.png",
+      "width": 366,
+      "height": 549,
+      "bytes": 380364,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-4.png",
+      "width": 366,
+      "height": 549,
+      "bytes": 382065,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-5.png",
+      "width": 366,
+      "height": 549,
+      "bytes": 384006,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-9-16.png",
+      "width": 336,
+      "height": 417,
+      "bytes": 275052,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-landscape.png",
+      "width": 804,
+      "height": 281,
+      "bytes": 190547,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/phone-verified.png",
+      "width": 390,
+      "height": 621,
+      "bytes": 448667,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/small-phone.png",
+      "width": 296,
+      "height": 370,
+      "bytes": 214031,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/scene/wide-verified.png",
+      "width": 1326,
+      "height": 561,
+      "bytes": 908802,
+      "required": true
+    },
+    {
+      "path": ".impeccable/review/raid-vintage/urgent-mobile.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 185483,
+      "required": true
+    }
+  ],
+  "finalCorrection": "Teacher progress corrected; all13 integration paths recaptured/reopened, reviewer scored single material fix resolved with disposition ship. Final root12 also rechecked using native originals and final contact sheet."
+}

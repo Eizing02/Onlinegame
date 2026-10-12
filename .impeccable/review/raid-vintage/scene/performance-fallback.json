@@ -1,0 +1,153 @@
+{
+  "environment": "Headless Chromium on this Windows host; not physical device FPS or exact GPU allocation",
+  "full": {
+    "muted": false,
+    "voices": 1,
+    "decodedBytes": 10951680,
+    "cacheEntries": 14,
+    "failures": [],
+    "music": "raid_battle",
+    "dropped": [
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      },
+      {
+        "sound": "button",
+        "reason": "late:1611"
+      }
+    ],
+    "musicPaused": false,
+    "musicReadyState": 4,
+    "played": [
+      {
+        "sound": "warrior1",
+        "seq": 1,
+        "cueId": "0:warrior1",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "hit",
+        "seq": 1,
+        "cueId": "boss:hit",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:79"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:116"
+      }
+    ],
+    "render": {
+      "scene": {
+        "decodedBytes": 18872040,
+        "sheets": 3,
+        "activeReferences": 3
+      },
+      "sprites": {
+        "decodedBytes": 37690112,
+        "sheets": 8,
+        "activeReferences": 6
+      },
+      "actorCount": 6,
+      "particles": 0,
+      "sparks": 0,
+      "frameP50Ms": 83.2000002861023,
+      "frameP95Ms": 127.7999997138977
+    }
+  },
+  "low": {
+    "muted": false,
+    "voices": 1,
+    "decodedBytes": 10951680,
+    "cacheEntries": 14,
+    "failures": [],
+    "music": "raid_battle",
+    "dropped": [
+      {
+        "sound": "button",
+        "reason": "muted/hidden/unavailable"
+      },
+      {
+        "sound": "button",
+        "reason": "late:1611"
+      }
+    ],
+    "musicPaused": false,
+    "musicReadyState": 4,
+    "played": [
+      {
+        "sound": "warrior1",
+        "seq": 1,
+        "cueId": "0:warrior1",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "hit",
+        "seq": 1,
+        "cueId": "boss:hit",
+        "animation": "attack_1",
+        "frame": 7
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:79"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:116"
+      },
+      {
+        "sound": "button",
+        "seq": 0,
+        "cueId": "button:176"
+      }
+    ],
+    "render": {
+      "scene": {
+        "decodedBytes": 5664768,
+        "sheets": 3,
+        "activeReferences": 3
+      },
+      "sprites": {
+        "decodedBytes": 28520128,
+        "sheets": 6,
+        "activeReferences": 6
+      },
+      "actorCount": 6,
+      "particles": 0,
+      "sparks": 0,
+      "frameP50Ms": 80.19999980926514,
+      "frameP95Ms": 126.39999961853027
+    }
+  },
+  "requested": [
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Normal%20Hit.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Heal.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/music/raid_battle.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Dragon%20Death.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Victory.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Countdown.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Warrior%20%E2%80%94%20Sword%20Slash.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Warrior%20%E2%80%94%20Shield%20Bash.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Mage%20%E2%80%94%20Arcane%20Bolt.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Mage%20%E2%80%94%20Frost%20Burst.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Wizard%20%E2%80%94%20Fireball.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Wizard%20%E2%80%94%20Lightning.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Witch%20%E2%80%94%20Poison%20Orb.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Witch%20%E2%80%94%20Shadow%20Curse.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Fairy%20%E2%80%94%20Light%20Bolt.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Fairy%20%E2%80%94%20Starburst.mp3",
+    "http://127.0.0.1:3120/assets/boss-raid/audio/fallback/Button%20Click.mp3"
+  ]
+}

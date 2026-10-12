@@ -33,7 +33,7 @@ export function QuestionTypeFields() {
               className={
                 selected
                   ? "inline-flex h-12 items-center justify-center gap-2 rounded-md border border-primary bg-primary px-3 text-sm font-semibold text-white shadow-sm"
-                  : "inline-flex h-12 items-center justify-center gap-2 rounded-md border border-border bg-white px-3 text-sm font-semibold text-foreground transition hover:border-primary hover:text-primary"
+                  : "inline-flex h-12 items-center justify-center gap-2 rounded-md border border-border bg-surface px-3 text-sm font-semibold text-foreground transition hover:border-primary hover:text-primary"
               }
               key={option.value}
               onClick={() => setQuestionType(option.value)}
@@ -71,7 +71,7 @@ export function QuestionTypeFields() {
             { label: "ผิด", value: "false" },
           ].map((option) => (
             <label
-              className="flex cursor-pointer items-center gap-3 rounded-md border border-border bg-white p-3 font-semibold transition hover:border-primary"
+              className="flex cursor-pointer items-center gap-3 rounded-md border border-border bg-surface p-3 font-semibold transition hover:border-primary"
               key={option.value}
             >
               <input
@@ -91,7 +91,7 @@ export function QuestionTypeFields() {
         <div className="space-y-3">
           {MULTIPLE_CHOICE_LABELS.map((label, index) => (
             <div
-              className="grid gap-2 rounded-md border border-border bg-white p-3 sm:grid-cols-[auto_1fr]"
+              className="grid gap-2 rounded-md border border-border bg-surface p-3 sm:grid-cols-[auto_1fr]"
               key={label}
             >
               <label className="flex items-center gap-2 text-sm font-semibold">
@@ -119,7 +119,7 @@ export function QuestionTypeFields() {
         <label className="text-sm font-medium" htmlFor="image_file">
           รูปประกอบ
         </label>
-        <label className="mt-2 flex cursor-pointer items-center justify-between gap-3 rounded-md border border-dashed border-primary/50 bg-white px-3 py-3 text-sm font-semibold text-primary transition hover:bg-primary/5">
+        <label className="mt-2 flex cursor-pointer items-center justify-between gap-3 rounded-md border border-dashed border-primary/50 bg-surface px-3 py-3 text-sm font-semibold text-primary transition hover:bg-primary/5">
           <span className="inline-flex items-center gap-2">
             <ImagePlus size={18} />
             เลือกรูปภาพ

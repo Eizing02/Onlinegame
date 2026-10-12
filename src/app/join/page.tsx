@@ -71,17 +71,17 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
         <div className="space-y-5">
           <Panel className="space-y-5 border-cyan/25">
             {query.error ? (
-              <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+              <div className="rounded-md border border-danger bg-danger/10 px-4 py-3 text-sm font-medium text-danger">
                 {query.error}
               </div>
             ) : null}
             {query.notice ? (
-              <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+              <div className="rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-medium text-success">
                 {query.notice}
               </div>
             ) : null}
             {roomError ? (
-              <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+              <div className="rounded-md border border-warning bg-warning/10 px-4 py-3 text-sm font-medium text-warning">
                 {roomError}
               </div>
             ) : null}
@@ -136,7 +136,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                       <form action={leaveTeamAction}>
                         <input name="room_code" type="hidden" value={roomCode} />
                         <button
-                          className="inline-flex h-11 items-center justify-center rounded-md border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+                          className="inline-flex h-11 items-center justify-center rounded-md border border-danger bg-danger/10 px-3 text-sm font-semibold text-danger transition hover:bg-danger/10"
                           type="submit"
                         >
                           ออกจากทีม
@@ -181,13 +181,13 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
               </div>
 
               {isLateJoin ? (
-                <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+                <div className="rounded-md border border-warning bg-warning/10 px-4 py-3 text-sm font-medium text-warning">
                   {isRaid ? "Boss Raid เริ่มแล้ว ผู้เข้าร่วมใหม่รับชมได้อย่างเดียว โดยไม่เพิ่มจำนวนฮีโร่หรือเปลี่ยนคะแนนเฉลี่ย" : "เกมเริ่มแล้ว หากเข้าหลังจากนี้จะร่วมเล่นได้แต่ไม่ถูกนำไปคิดคะแนนรอบนี้"}
                 </div>
               ) : null}
 
               {existingParticipant?.teamId ? (
-                <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                <div className="rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-medium text-success">
                   {isLateJoin
                     ? "คุณอยู่ในทีมแล้ว ระบบจะพากลับเข้าห้องเดิมและทีมเดิมเมื่อเข้าเล่น"
                     : `คุณอยู่ใน ${currentTeam?.teamName ?? "ทีมเดิม"} หากเข้าผิดกลุ่มสามารถเลือกทีมใหม่หรือออกจากทีมได้`}
@@ -200,7 +200,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                     <input name="room_code" type="hidden" value={roomCode} />
                     <input name="team_id" type="hidden" value={team.id} />
                     <button
-                      className="flex min-h-28 w-full flex-col items-start justify-between rounded-lg border-2 border-cyan/25 bg-panel-strong p-4 text-left transition hover:border-cyan hover:bg-cyan/10 disabled:cursor-not-allowed disabled:border-border disabled:bg-slate-100 disabled:text-muted data-[current=true]:border-warning data-[current=true]:bg-warning/15"
+                      className="flex min-h-28 w-full flex-col items-start justify-between rounded-lg border-2 border-cyan/25 bg-panel-strong p-4 text-left transition hover:border-cyan hover:bg-cyan/10 disabled:cursor-not-allowed disabled:border-border disabled:bg-surface disabled:text-muted data-[current=true]:border-warning data-[current=true]:bg-warning/15"
                       data-current={existingParticipant?.teamId === team.id}
                       disabled={
                         (team.isFull && !(isRaid && isLateJoin) &&
@@ -219,7 +219,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
                         {team.memberCount}/{team.maxMembers} คน
                       </span>
                       {team.isFull ? (
-                        <span className="text-sm font-semibold text-red-700">
+                        <span className="text-sm font-semibold text-danger">
                           {existingParticipant?.teamId === team.id
                             ? "ทีมปัจจุบัน"
                             : "ทีมเต็มแล้ว"}
