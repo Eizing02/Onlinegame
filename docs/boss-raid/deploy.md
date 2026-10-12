@@ -1,6 +1,6 @@
 # Boss Raid rollout — manual, approval required
 
-This task does not authorize production SQL, publishing assets, GitHub upload or deployment. Follow these steps first on a separate staging project. Google Cloud OAuth/Provider settings remain as configured; Boss Raid needs no additional Google Client ID/Secret.
+The user authorized pushing the completed Boss Raid code/assets to GitHub on 2026-10-12 and reported that the SQL was already applied. The agent has not independently verified that remote database, executed production SQL, or enabled the production feature flag. Follow the verification/release gates below; GitHub publication does not prove production readiness. Google Cloud OAuth/Provider settings remain as configured; Boss Raid needs no additional Google Client ID/Secret.
 
 1. Back up database and record counts/IDs of accounts, identities, teacher access, question sets/questions/options and existing rooms. Confirm 001–008 already installed and Google Login/Classic work.
 2. Review `supabase/migrations/009_boss_raid_time_attack.sql`. It is additive: a default `classic` mode and private Raid tables/functions/guards. Do not run 001–008 again on an existing project. Do not rename student codes, truncate or recreate old tables. If 009 already exists, stop; it is forward-only, not an idempotent reinstall.

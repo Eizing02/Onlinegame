@@ -4,7 +4,7 @@
 
 Teachers can create Boss Raid — Time Attack from the existing question bank. Each real team member answers an independently shuffled, persisted question sequence under one server deadline. Correct alive answers award original question points and damage the team's boss; wrong answers reduce hero HP. At HP0, correct answers heal one injured teammate (or self in a solo team) without Raid score/damage. Killing the boss records one authoritative timestamp while remaining answers still count. Teachers observe all teams, animate one selected team and export academic results. Average-score and fastest-kill standings stay independent.
 
-Classic, Google Login, teacher ownership/RBAC, student codes and previous records are retained. Upstream baseline `2d460c77e428a5c475885383705ef6637c9b246d`; feature branch `feat/boss-raid-time-attack`. There is no production SQL execution, remote push, sprite upload or deployment in this delivery.
+Classic, Google Login, teacher ownership/RBAC, student codes and previous records are retained. Upstream baseline `2d460c77e428a5c475885383705ef6637c9b246d`; feature branch `feat/boss-raid-time-attack`. Initial implementation and tests were local only. In the subsequent user instruction on 2026-10-12, the user reported applying SQL and authorized GitHub publication of the completed code/assets. The agent has not executed production SQL, independently verified the remote migration, or enabled the production feature flag; staging/device gates remain open.
 
 ## Changes by phase
 

@@ -38,4 +38,4 @@
 - [รายงานส่งมอบและผลทดสอบ](implementation-report.md)
 - [ตรวจ UI เทียบระบบออกแบบเดิม](ui-review-report.md)
 
-ยังไม่รัน SQL บน Production ไม่ push ภาพส่วนตัว และไม่ deploy งานนี้ สิ่งที่เพิ่มเป็นไฟล์โค้ด SQL และการทดสอบในเครื่องเท่านั้น
+ผู้ใช้แจ้งว่ารัน SQL แล้วและอนุญาตให้พุชโค้ด/ภาพ Boss Raid ขึ้น GitHub เมื่อ 2026-10-12 งานอยู่บน branch `feat/boss-raid-time-attack` ยังไม่ได้ตรวจฐานข้อมูลที่ผู้ใช้รันจากระยะไกลหรือเปิด feature flag บน Production โดย agent ดูขั้นตอนตรวจและเปิดใช้ใน `deploy.md`
