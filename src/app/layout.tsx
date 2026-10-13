@@ -4,6 +4,7 @@ import "katex/dist/katex.min.css";
 import "./globals.css";
 import "./room-layout.css";
 import { ExperienceProvider, SpaceBackground } from "@/components/game/experience";
+import { AudioProvider } from "@/components/audio/audio-provider";
 
 const geistSans = Noto_Sans_Thai({
   variable: "--font-geist-sans",
@@ -71,7 +72,7 @@ export default function RootLayout({
       lang="th"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col"><ExperienceProvider><SpaceBackground />{children}</ExperienceProvider></body>
+      <body className="min-h-full flex flex-col"><AudioProvider><ExperienceProvider><SpaceBackground />{children}</ExperienceProvider></AudioProvider></body>
     </html>
   );
 }

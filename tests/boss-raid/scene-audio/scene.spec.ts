@@ -5,6 +5,16 @@ const evidence=process.env.RAID_SCENE_EVIDENCE_DIR??'.impeccable/review/scene-au
 async function placement(page:Page){return page.locator('[data-placement]').evaluate(e=>JSON.parse((e as HTMLElement).dataset.placement!));}
 async function ready(page:Page){await expect.poll(async()=>{try{return(await placement(page)).fallback;}catch{return true;}}).toBe(false);await expect(page.locator('canvas')).toHaveCount(1);await page.evaluate(()=>{if(!document.getElementById('scene-hide-dev-ui')){const style=document.createElement('style');style.id='scene-hide-dev-ui';style.textContent='nextjs-portal{display:none!important}';document.head.append(style);}});}
 async function metrics(page:Page){await page.getByRole('button',{name:'ตรวจสถานะเสียง',exact:true}).click();return JSON.parse(await page.getByTestId('audio-diagnostics').innerText());}
+test('shared audio panel keeps full-width sliders and wine contrast inside calibration',async({page})=>{
+ await fs.mkdir(evidence,{recursive:true});await page.goto('/dev/boss-raid/scene');await ready(page);
+ for(const [name,width,height] of [['desktop',1366,768],['phone',390,844]] as [string,number,number][]){
+  await page.setViewportSize({width,height});await page.getByRole('button',{name:'ตั้งค่าเสียง',exact:true}).click();
+  const panel=page.locator('.audio-panel:popover-open');await expect(panel).toBeVisible();
+  const styles=await panel.evaluate(element=>{const label=element.querySelector('.audio-level')!,input=label.querySelector('input')!,action=element.querySelector('.audio-mute')!;return{font:getComputedStyle(label).fontSize,range:input.getBoundingClientRect().width,label:label.getBoundingClientRect().width,background:getComputedStyle(action).backgroundColor,color:getComputedStyle(action).color};});
+  expect(styles.font).toBe('16px');expect(styles.range).toBeCloseTo(styles.label,0);expect(styles.background).toBe('rgb(121, 13, 22)');expect(styles.color).toBe('rgb(245, 239, 225)');
+  await page.screenshot({path:path.join(evidence,`calibration-audio-${name}.png`)});await page.keyboard.press('Escape');await expect(panel).toHaveCount(0);
+ }
+});
 test('grounded scene matrix, 1–5 formation, orientation and native frame grounding',async({page})=>{
  await fs.mkdir(evidence,{recursive:true});await page.goto('/dev/boss-raid/scene');await ready(page);await page.getByLabel('แสดงจุดยืนและ Polygon',{exact:true}).uncheck();
  const reports=[];
@@ -34,29 +44,29 @@ test('calibration pointer drag, keyboard position, export and single renderer',a
  const download=page.waitForEvent('download');await page.getByRole('button',{name:'ส่งออก Scene Config',exact:true}).click();expect((await download).suggestedFilename()).toBe('shadow-citadel.json');
 });
 test('all real Ogg/MP3 assets decode, animation cue alignment, dedup, music and mute',async({page})=>{
- await page.goto('/dev/boss-raid/scene');await ready(page);const initial=await metrics(page);expect(initial.muted).toBe(true);expect(initial.played).toEqual([]);
+ await page.goto('/dev/boss-raid/scene');await ready(page);const initial=await metrics(page);await expect.poll(async()=>(await metrics(page)).muted).toBe(false);expect(initial.played).toEqual([]);
  const decoded=await page.evaluate(async()=>{
   const context=new AudioContext();const files=await fetch('/assets/boss-raid/audio/manifest.json').then(r=>r.json());const results=[];
   for(const[id,sound]of Object.entries(files.sounds) as [string,{sources:{url:string;mime:string}[]}][])for(const source of sound.sources){const response=await fetch(source.url);const buffer=await context.decodeAudioData(await response.arrayBuffer());const data=buffer.getChannelData(0);results.push({id,mime:source.mime,duration:buffer.duration,nonSilent:data.some(value=>Math.abs(value)>.001)});}
   await context.close();return results;
  });expect(decoded).toHaveLength(50);expect(decoded.every(d=>d.duration>0&&d.nonSilent)).toBe(true);await fs.writeFile(path.join(evidence,'browser-decode.json'),JSON.stringify({browser:'Chromium desktop emulation; not physical iOS/Android',results:decoded},null,2)+'\n');
- await page.getByRole('button',{name:'เปิดเสียงเกม',exact:true}).click();await expect(page.getByRole('button',{name:'ปิดเสียงเกม',exact:true})).toBeVisible();await expect.poll(async()=>(await metrics(page)).musicPaused).toBe(false);await page.waitForTimeout(800);
+ await page.getByRole('button',{name:'ตั้งค่าเสียง',exact:true}).click();await expect(page.getByRole('button',{name:'ปิดเสียงเกม',exact:true})).toBeVisible();await page.keyboard.press('Escape');await expect.poll(async()=>(await metrics(page)).musicPaused).toBe(false);await page.waitForTimeout(800);
  await page.getByRole('button',{name:'hero_attack',exact:true}).click();await expect.poll(async()=>{const m=await metrics(page);return m.played.some((c:{sound:string;seq:number})=>c.sound==='warrior1'&&c.seq===1);}).toBe(true);
  const played=await metrics(page),cue=played.played.find((c:{sound:string;seq:number})=>c.sound==='warrior1'&&c.seq===1);expect(cue.animation).toBe('attack_1');expect(cue.frame).toBeGreaterThanOrEqual(7);
  await page.getByRole('button',{name:'ส่ง Event เดิมซ้ำ',exact:true}).click();await page.waitForTimeout(900);expect((await metrics(page)).played.filter((c:{sound:string;seq:number})=>c.sound==='warrior1'&&c.seq===1)).toHaveLength(1);
  await page.getByLabel('เฟสบอส',{exact:true}).selectOption('3');await expect.poll(async()=>(await metrics(page)).music).toBe('raid_final_phase');
  await page.getByRole('button',{name:'boss_defeated',exact:true}).click();await expect.poll(async()=>(await metrics(page)).played.some((c:{sound:string})=>c.sound==='death')).toBe(true);await page.getByRole('button',{name:'ส่ง Event เดิมซ้ำ',exact:true}).click();await page.waitForTimeout(900);expect((await metrics(page)).played.filter((c:{sound:string})=>c.sound==='death')).toHaveLength(1);
- await page.getByRole('button',{name:'สลับทีมจำลอง',exact:true}).click();await page.getByRole('button',{name:'ปิดเสียงเกม',exact:true}).click();const muted=await metrics(page);expect(muted.muted).toBe(true);expect(muted.voices).toBe(0);expect(muted.played.some((c:{sound:string})=>c.sound==='critical'||c.sound==='spawn')).toBe(false);
+ await page.getByRole('button',{name:'สลับทีมจำลอง',exact:true}).click();await page.getByRole('button',{name:'ตั้งค่าเสียง',exact:true}).click();await page.getByRole('button',{name:'ปิดเสียงเกม',exact:true}).click();await page.keyboard.press('Escape');const muted=await metrics(page);expect(muted.muted).toBe(true);expect(muted.voices).toBe(0);expect(muted.played.some((c:{sound:string})=>c.sound==='critical'||c.sound==='spawn')).toBe(false);
  await fs.writeFile(path.join(evidence,'audio-playback.json'),JSON.stringify({decode:50,releaseCue:cue,final:muted},null,2)+'\n');
 });
 test('missing floor and audio assets degrade without crash',async({page})=>{
- await page.route('**/assets/boss-raid/scenes/**',route=>route.abort());await page.route('**/assets/boss-raid/audio/**',route=>route.abort());await page.goto('/dev/boss-raid/scene');await expect(page.getByText(/ใช้สนามสำรอง/).first()).toBeVisible();await page.getByRole('button',{name:'เปิดเสียงเกม',exact:true}).click();await page.getByRole('button',{name:'hero_attack',exact:true}).click();await expect(page.getByRole('status').filter({hasText:/เสียง|เพลง/}).first()).toBeVisible();await expect(page.locator('canvas')).toHaveCount(1);await expect(page.getByRole('button',{name:'ส่งออก Scene Config',exact:true})).toBeEnabled();
+ await page.route('**/assets/boss-raid/scenes/**',route=>route.abort());await page.route('**/assets/boss-raid/audio/**',route=>route.abort());await page.goto('/dev/boss-raid/scene');await expect(page.getByText(/ใช้สนามสำรอง/).first()).toBeVisible();await page.getByRole('button',{name:'ตั้งค่าเสียง',exact:true}).click();await page.keyboard.press('Escape');await page.getByRole('button',{name:'hero_attack',exact:true}).click();await expect(page.getByRole('status').filter({hasText:/เสียง|เพลง/}).first()).toBeVisible();await expect(page.locator('canvas')).toHaveCount(1);await expect(page.getByRole('button',{name:'ส่งออก Scene Config',exact:true})).toBeEnabled();
 });
 
 test('unsupported OPUS uses derived MP3 and Low releases Full scene textures',async({page})=>{
  await page.addInitScript(()=>{const original=HTMLMediaElement.prototype.canPlayType;HTMLMediaElement.prototype.canPlayType=function(mime){return mime.includes('opus')?'':original.call(this,mime);};});
  const requested:string[]=[];page.on('request',request=>{if(request.url().includes('/audio/'))requested.push(request.url());});
- await page.goto('/dev/boss-raid/scene');await ready(page);await page.getByRole('button',{name:'เปิดเสียงเกม',exact:true}).click();
+ await page.goto('/dev/boss-raid/scene');await ready(page);await page.getByRole('button',{name:'ตั้งค่าเสียง',exact:true}).click();await page.keyboard.press('Escape');
  await page.getByRole('button',{name:'hero_attack',exact:true}).click();await expect.poll(async()=>(await metrics(page)).played.some((cue:{sound:string})=>cue.sound==='warrior1')).toBe(true);
  expect(requested.some(url=>url.includes('/audio/fallback/')&&url.endsWith('.mp3'))).toBe(true);expect(requested.some(url=>url.endsWith('.opus'))).toBe(false);
  await page.waitForTimeout(2500);const full=await metrics(page);await page.getByLabel('คุณภาพ',{exact:true}).selectOption('low');await ready(page);await page.waitForTimeout(3500);const low=await metrics(page);

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
-import { Scene3D } from "@/components/game/scene-3d";
+import { Wallpaper } from "@/components/game/wallpaper";
 import { LoginForm } from "./login-form";
 import { getSession } from "@/lib/auth/session";
 import { getSessionLanding } from "@/lib/auth/landing";
@@ -17,10 +17,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     if (state.kind !== "signed_out") redirect(googleStatePath(state));
   }
   const params = await searchParams;
-  return <AppShell><section className="login-layout">
+  return <AppShell wallpaper="login"><Wallpaper login /><section className="login-layout">
     <div className="login-world">
       <h1>ร่วมกันตอบ<br />ทำคะแนนสูงสุดเพื่อทีม</h1>
-      <Scene3D variant="planet" />
       <p className="text-muted">เข้าสู่ระบบ แล้วเตรียมพร้อมสำหรับคำถามต่อไป</p>
     </div>
     <div className="login-card"><h2>เข้าสู่ระบบ</h2>

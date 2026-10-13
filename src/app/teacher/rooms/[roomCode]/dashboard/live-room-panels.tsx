@@ -1,4 +1,6 @@
 "use client";
+import { AudioControl } from "@/components/audio/audio-control";
+import { useBackgroundMusic } from "@/components/audio/audio-provider";
 import { RevealMoment } from "@/components/game/reveal-moment";
 import { TeamStandings } from "@/components/game/team-standings";
 import { GameRules } from "@/components/game/game-rules";
@@ -15,8 +17,6 @@ import {
   Square,
   Trophy,
   UsersRound,
-  Volume2,
-  VolumeX,
   type LucideIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -160,10 +160,9 @@ export function LiveRoomPanels({
   const [pendingCommand, setPendingCommand] = useState<TeacherCommand | null>(
     null,
   );
-  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  useBackgroundMusic(snapshot.status === "ended" ? null : AUDIO_ASSETS.background);
   const [nowMs, setNowMs] = useState(() => Date.now());
   const refreshTimerRef = useRef<number | null>(null);
-  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
   const pollIntervalMs = getTeacherPollInterval(snapshot.status);
   const remainingSeconds = getRemainingSeconds({
     endsAt: snapshot.currentQuestionEndsAt,
@@ -313,58 +312,12 @@ export function LiveRoomPanels({
     };
   }, [requestRealtimeRefresh, roomCode, snapshot.sessionId]);
 
-  function toggleSound() {
-    const backgroundAudio = backgroundAudioRef.current;
-
-    if (isSoundEnabled) {
-      backgroundAudio?.pause();
-      setIsSoundEnabled(false);
-      return;
-    }
-
-    setIsSoundEnabled(true);
-
-    if (backgroundAudio) {
-      backgroundAudio.volume = 0.14;
-      backgroundAudio.loop = true;
-      void backgroundAudio.play().catch(() => {
-        setIsSoundEnabled(false);
-      });
-    }
-  }
-
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setNowMs(Date.now());
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    if (!isSoundEnabled) {
-      return;
-    }
-
-    const backgroundAudio = backgroundAudioRef.current;
-
-    if (!backgroundAudio) {
-      return;
-    }
-
-    backgroundAudio.volume = 0.14;
-    backgroundAudio.loop = true;
-    void backgroundAudio.play().catch(() => {
-      setIsSoundEnabled(false);
-    });
-  }, [isSoundEnabled]);
-
-  useEffect(() => {
-    const backgroundAudio = backgroundAudioRef.current;
-
-    return () => {
-      backgroundAudio?.pause();
-    };
   }, []);
 
   async function runCommand(command: TeacherCommand) {
@@ -404,7 +357,6 @@ export function LiveRoomPanels({
   return (
     <>
       <RevealMoment eventKey={snapshot.status === "showing_answer" ? snapshot.sessionId + ":" + snapshot.currentQuestionIndex : null} correct={(snapshot.revealSummary?.correctCount ?? 0) > 0} title="เปิดผลคำตอบแล้ว!" detail={snapshot.revealSummary ? "ตอบถูก " + snapshot.revealSummary.correctCount + " คน · อัปเดตคะแนนและอันดับพร้อมกัน" : "ดูผลคำตอบของทุกทีม"} />
-      <audio ref={backgroundAudioRef} preload="none" src={AUDIO_ASSETS.background} />
       <RoomTabs header={<><div className="room-identity"><h1>ห้อง {snapshot.roomCode} · ครูคุมเกม</h1><p>{snapshot.activityName || snapshot.questionSetTitle}</p></div><div className="room-live-status"><span>ตอบแล้ว {snapshot.answerProgress.answeredCount}/{snapshot.answerProgress.totalParticipantCount} คน</span>{showQuestionTimer && <strong className="text-cyan">{formatRemainingTime(remainingSeconds)}</strong>}</div><a className="room-results-link" href={'/teacher/rooms/' + snapshot.roomCode + '/results'}>ดูสรุปผล</a></>} tabs={[
         {label:'คุมเกม',content:<>      <Panel className="teacher-controls">
         {snapshot.status === "lobby" && <details className="teacher-rules"><summary>กติกาห้องนี้</summary><GameRules version={snapshot.rulesVersion}/></details>}
@@ -418,18 +370,7 @@ export function LiveRoomPanels({
             </h2>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
-            <button
-              aria-label={isSoundEnabled ? "ปิดเสียงเพลง" : "เปิดเสียงเพลง"}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan transition hover:border-cyan hover:bg-cyan/20"
-              onClick={toggleSound}
-              title={isSoundEnabled ? "ปิดเสียงเพลง" : "เปิดเสียงเพลง"}
-              type="button"
-            >
-              {isSoundEnabled ? <Volume2 size={17} /> : <VolumeX size={17} />}
-              <span className="hidden sm:inline">
-                {isSoundEnabled ? "ปิดเสียง" : "เปิดเสียง"}
-              </span>
-            </button>
+            <AudioControl />
             <span
               className={`inline-flex h-11 items-center rounded-md border px-3 text-sm font-semibold ${statusBadgeClassName[snapshot.status]}`}
             >

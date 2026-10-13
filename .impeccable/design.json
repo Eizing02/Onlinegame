@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-12T18:00:28.250Z",
+  "generatedAt": "2026-10-13T04:00:46.749Z",
   "title": "Design System: KruEIonline Classic Classroom",
   "extensions": {
     "colorMeta": {
@@ -437,7 +437,14 @@
       "floorFilter": "grayscale(1) sepia(.42) brightness(1.12)",
       "backgroundFilter": "grayscale(1) sepia(.12) hue-rotate(155deg) saturate(.65) brightness(1.14)",
       "sprites": "Original sprite sources remain unchanged; selection grayscale/aura is presentation CSS.",
-      "performanceEvidence": "Source implementation only; no physical-device frame-time or whole-surface ship claim."
+      "performanceEvidence": "Source implementation only; no physical-device frame-time or whole-surface ship claim.",
+      "wallpaper": {
+        "source": "src/components/game/wallpaper.tsx and src/app/globals.css",
+        "login": "One supplied phone or PC/tablet MP4 loop, with its audio and matching WebP poster; failed video falls back to the matching poster. Artwork uses object-fit cover at original media dimensions.",
+        "join": "Device-matched original phone/tablet/PC PNG with pixel equality retained; image opacity 0.5 only. Foreground controls/text remain crisp. These images are excluded from Raid scene grading.",
+        "device": "Touch phone/tablet artwork class stays fixed for the document across rotation, keyboards and pointer changes; desktop windows adapt by width.",
+        "provenance": "public/assets/wallpaper/provenance.json, docs/wallpaper-audio/media-validation.json and registered Impeccable raster metadata."
+      }
     },
     "responsiveBehavior": [
       {
@@ -479,6 +486,33 @@
       ],
       "semantics": "Boss defeat progress is bossMaxHp minus bossHp, with team context and current boss HP text.",
       "scope": "Explicit theming of an existing native control; teacher composition is preserved."
+    },
+    "audioBehavior": {
+      "sources": [
+        "src/components/audio/audio-engine.ts",
+        "src/components/audio/audio-provider.tsx",
+        "src/components/audio/audio-control.tsx",
+        "src/features/boss-raid/audio/sound-manager.ts",
+        "src/features/boss-raid/hooks/use-raid-audio.ts"
+      ],
+      "defaults": {
+        "muted": false,
+        "master": 0.65,
+        "music": 0.22,
+        "sfx": 0.7
+      },
+      "persistence": "Mute and validated 0-1 levels use localStorage key kruei:audio:v1 across routes and reloads; unavailable storage retains in-memory/default behavior.",
+      "autoplay": "Attempt audible playback when allowed. Rejected video autoplay falls back to muted looping video; trusted pointerdown/keydown retries without waiting on or intercepting login and answer actions.",
+      "ownership": "One AppAudioEngine and one background owner per document. A new owner pauses and disconnects the previous bed; released effects and timers are cleaned up. Raid borrows the shared context without closing it.",
+      "levels": "Master controls music/video and effects. Supplied Login clip audio has a factor of four on the music bus for its quiet source; Classic and Raid music retain their source level.",
+      "visibility": "Hidden/pagehide pauses media and effects; visible/pageshow resumes subject to saved preferences and browser permission. Full Google OAuth navigation creates a new document; preferences persist, continuous audio on Google is not guaranteed.",
+      "control": {
+        "behavior": "Native popover=auto with explicit close, outside-pointer and Escape dismissal. Internal sliders stay interactive. Speaker remains available while muted, including inside Classic and Raid question dialogs. Raid omits the underlying header speaker while its question dialog is showing.",
+        "placement": "Anchor to the speaker and clamp to VisualViewport: width min(320px, viewport width minus 24px), 12px edges, maximum height viewport height minus 24px, internal overflow scrolling.",
+        "appearance": "Flat bordered cream surface without a resting shadow, brown ink/border, 12px corners, 16px inset. Heading 18px/700; labels and wine mute action 16px; tabular outputs 14px. Ranges fill the panel and have 44px minimum height; step is 0.05. Close and mute actions keep 44px targets. Focus is 3px blue ink with a 3px offset.",
+        "isolation": "Shared component-scoped heading, button, label and range selectors override legacy Raid teacher and calibration descendant rules, preserving the same typography, full-width sliders and wine/cream action."
+      },
+      "evidenceLimit": "Source plus browser captures/runtime validation. Physical-device performance, device volume and perceived loudness are not certified."
     }
   },
   "components": [
@@ -559,6 +593,13 @@
       "description": "Gold boundary and aura with a textual selection marker; original raster portrait omitted from the token preview.",
       "html": "<button class=\"ds-hero\" aria-pressed=\"true\"><strong>พ่อมด</strong><small><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"m20 6-11 11-5-5\"/></svg>คุณเลือกตัวนี้</small></button>",
       "css": ".ds-hero{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:44px;padding:15px 7px;border:2px solid var(--selection-gold);border-radius:14px;background:var(--surface);color:var(--foreground);box-shadow:0 0 18px rgba(208,160,74,.42);font-size:16px;cursor:pointer;transition:background-color .2s,border-color .2s}.ds-hero small{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}.ds-hero:hover{background:var(--panel-strong)}.ds-hero:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.ds-hero:disabled[aria-pressed=true]{opacity:1}@media(max-width:800px){.ds-hero{padding:9px 5px}}@media(prefers-reduced-motion:reduce){.ds-hero{transition:none}}"
+    },
+    {
+      "name": "Shared Audio Control",
+      "kind": "custom",
+      "description": "Source-grounded native popover/range preview at enabled defaults; production anchors to the speaker, binds outputs and mute to shared saved preferences, and remains accessible inside modal top layers.",
+      "html": "<div class=\"ds-audio\"><button type=\"button\" class=\"ds-audio-icon ds-audio-trigger\" popovertarget=\"ds-audio-panel\" aria-label=\"ตั้งค่าเสียง\" aria-controls=\"ds-audio-panel\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\"/><path d=\"M16 9a5 5 0 0 1 0 6\"/><path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\"/></svg></button><div id=\"ds-audio-panel\" class=\"ds-audio-panel\" popover=\"auto\" role=\"dialog\" aria-label=\"ตั้งค่าเสียง\"><div class=\"ds-audio-heading\"><h2>เสียงเกม</h2><button type=\"button\" class=\"ds-audio-icon\" popovertarget=\"ds-audio-panel\" popovertargetaction=\"hide\" aria-label=\"ปิดหน้าต่างเสียง\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m18 6-12 12m0-12 12 12\"/></svg></button></div><button type=\"button\" class=\"ds-audio-mute\" aria-pressed=\"false\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\"/><path d=\"m22 9-6 6m0-6 6 6\"/></svg>ปิดเสียงเกม</button><label class=\"ds-audio-level\"><span>เสียงรวม<output>65%</output></span><input type=\"range\" min=\"0\" max=\"1\" step=\"0.05\" value=\"0.65\" aria-label=\"ระดับเสียงรวม\"/></label><label class=\"ds-audio-level\"><span>เพลงและวิดีโอ<output>22%</output></span><input type=\"range\" min=\"0\" max=\"1\" step=\"0.05\" value=\"0.22\" aria-label=\"ระดับเพลงพื้นหลัง\"/></label><label class=\"ds-audio-level\"><span>เอฟเฟกต์<output>70%</output></span><input type=\"range\" min=\"0\" max=\"1\" step=\"0.05\" value=\"0.7\" aria-label=\"ระดับเสียงเอฟเฟกต์\"/></label></div></div>",
+      "css": ".ds-audio{display:inline-flex;flex:0 0 auto;font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif}.ds-audio .ds-audio-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--foreground);cursor:pointer}.ds-audio .ds-audio-trigger:hover{background:var(--panel)}.ds-audio .ds-audio-panel{box-sizing:border-box;position:fixed;inset:12px 12px auto auto;margin:0;width:min(320px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:16px;overflow:auto;overscroll-behavior:contain;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--foreground);font-size:16px;line-height:1.5;scrollbar-color:var(--border) var(--surface)}.ds-audio-panel::backdrop{background:transparent}.ds-audio-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.ds-audio .ds-audio-heading h2{margin:0;font-size:18px;font-weight:700}.ds-audio .ds-audio-mute{display:flex;align-items:center;justify-content:center;width:100%;gap:10px;min-height:44px;padding:10px 12px;background:var(--primary);color:var(--on-primary);border:0;border-radius:10px;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer}.ds-audio .ds-audio-mute:hover{background:var(--primary-dark)}.ds-audio .ds-audio-level{display:grid;gap:4px;margin-top:16px;font-size:16px}.ds-audio-level>span{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.ds-audio-level output{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}.ds-audio .ds-audio-level input{width:100%;min-width:0;min-height:44px;accent-color:var(--primary);cursor:pointer}.ds-audio :focus-visible{outline:3px solid var(--cyan);outline-offset:3px}"
     }
   ],
   "narrative": {
@@ -585,6 +626,11 @@
         "name": "The Classroom Task Rule",
         "body": "การเคลื่อนไหวต้องไม่บังช่องตอบ ปุ่มควบคุม หรือเวลาที่เหลือ",
         "section": "layout"
+      },
+      {
+        "name": "The Saved Sound Rule",
+        "body": "เสียงเปิดเป็นค่าเริ่มต้น โดยเสียงรวม (65%) เพลงและวิดีโอ (22%) และเอฟเฟกต์ (70%) ผู้ใช้ปิดเสียงหรือปรับแต่ละระดับเป็นศูนย์ได้ เก็บ mute และระดับเสียงข้ามหน้าและการโหลดใหม่ หาก storage ใช้ไม่ได้ยังใช้ค่าเริ่มต้นได้ เมื่อ browser ไม่อนุญาต audible autoplay วิดีโอยังเล่นแบบ mute และลองเปิดเสียงอีกครั้งเมื่อมี trusted pointer หรือ keyboard interaction โดยไม่รอเสียงก่อนเข้าสู่ระบบหรือส่งคำตอบ",
+        "section": "components"
       }
     ],
     "dos": [
@@ -592,13 +638,15 @@
       "**Do** ใช้ `on-primary` บนพื้นไวน์ และหมึกเข้มบนพื้นครีม",
       "**Do** แสดงข้อความสถานะพร้อมความหมายของสีและสถานะควบคุมที่เข้าถึงได้",
       "**Do** รักษาโจทย์ ช้อย รูป และคำสั่งยืนยันให้เข้าถึงได้บนพื้นที่อ่านที่เลื่อนได้",
-      "**Do** เก็บภาพและเสียงต้นฉบับ และรักษาข้อความผลเมื่อปิด motion หรือฉากโหลดไม่ได้"
+      "**Do** เก็บภาพและเสียงต้นฉบับ และรักษาข้อความผลเมื่อปิด motion หรือฉากโหลดไม่ได้",
+      "**Do** ใช้ชุดควบคุมเสียงร่วม เคารพ mute และระดับเสียงที่บันทึกไว้ และให้ผู้ใช้เปิดแผงได้ภายใน dialog",
+      "**Do** ลด opacity ของภาพ Join เท่านั้นตามค่าที่ผู้ใช้ยืนยัน โดยรักษาข้อความและปุ่มให้คมชัด"
     ],
     "donts": [
       "**Don't** ใช้ `foreground` สีเข้มเป็นตัวอักษรบนปุ่มไวน์",
       "**Don't** ย้อม sprite ตัวละครด้วยกระบวนการปรับโทนภาพฉาก หรือแทนไฟล์ภาพ/เสียงต้นฉบับเพื่อเปลี่ยนธีม",
       "**Don't** ใช้สีหรือ animation เพียงอย่างเดียวเพื่อบอกการเลือก ความถูกต้อง หรือเวลาที่เหลือ",
-      "**Don't** เปิดเสียงอัตโนมัติโดยไม่มีการกระทำเปิดเสียงของผู้ใช้",
+      "**Don't** ข้ามสถานะปิดเสียงหรือระดับเสียงที่ผู้ใช้บันทึกไว้ หรือขัดจังหวะการเข้าสู่ระบบและการตอบคำถามเพื่อรอเสียง",
       "**Don't** ใส่ตัวเลขห้องหรือคะแนนสมมติในหน้าเข้าสู่ระบบ"
     ]
   }

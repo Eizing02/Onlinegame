@@ -77,13 +77,13 @@ test('full effects ignore legacy preferences and respect system accessibility',a
   await expect(page.locator('html')).toHaveAttribute('data-effects','reduced');
   await expect(page.locator('.scene-3d canvas')).toHaveCount(0);
 });
-test('WebGL unavailable keeps a usable static scene and login form',async({page})=>{
+test('login wallpaper and authentication work without WebGL',async({page})=>{
   await page.addInitScript(()=>{
     const original=HTMLCanvasElement.prototype.getContext;
     Object.defineProperty(HTMLCanvasElement.prototype,'getContext',{value:function(this:HTMLCanvasElement,kind:string,...args:unknown[]){return kind.includes('webgl')?null:Reflect.apply(original,this,[kind,...args]);}});
   });
   await page.goto('/login');
-  await expect(page.locator('.scene-fallback')).toBeVisible();
-  await expect(page.locator('.scene-3d')).toHaveAttribute('data-renderer','fallback');
+  await expect(page.locator('.login-wallpaper video')).toBeVisible();
+  await expect(page.locator('.scene-3d')).toHaveCount(0);
   await login(page);await expect(page).toHaveURL(/teacher\/question-sets$/);
 });

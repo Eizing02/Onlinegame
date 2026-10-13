@@ -1,4 +1,6 @@
 "use client";
+import { AudioControl } from "@/components/audio/audio-control";
+import { useAppAudio, useBackgroundMusic } from "@/components/audio/audio-provider";
 import { RevealMoment } from "@/components/game/reveal-moment";
 import { TeamStandings } from "@/components/game/team-standings";
 import { GameRules } from "@/components/game/game-rules";
@@ -14,8 +16,6 @@ import {
   PartyPopper,
   Send,
   Trophy,
-  Volume2,
-  VolumeX,
   XCircle,
 } from "lucide-react";
 import { Scene3D } from "@/components/game/scene-3d";
@@ -106,7 +106,8 @@ export function PlayRoom({
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTeamUpdating, setIsTeamUpdating] = useState(false);
-  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  const { engine: audioEngine } = useAppAudio();
+  useBackgroundMusic(snapshot.status === "ended" ? null : AUDIO_ASSETS.background);
   const [isPowerPending, setIsPowerPending] = useState(false);
   const [isCaptainNoticeOpen, setIsCaptainNoticeOpen] = useState(false);
   const [closedResultSessionId, setClosedResultSessionId] = useState<
@@ -123,8 +124,6 @@ export function PlayRoom({
       ? answerDraft.selectedOptionId
       : "";
   const refreshTimerRef = useRef<number | null>(null);
-  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
-  const answerAudioRef = useRef<HTMLAudioElement | null>(null);
   const revealedAnswerKeyRef = useRef<string | null>(initialSnapshot.status === "showing_answer" && initialSnapshot.currentAnswer ? `${initialSnapshot.sessionId}:${initialSnapshot.currentQuestionIndex}:${initialSnapshot.currentAnswer.id}:${initialSnapshot.currentAnswer.isCorrect}` : null);
   const teamNameSnapshotRef = useRef(initialSnapshot.team.teamName);
   const pollIntervalMs = getStudentPollInterval(snapshot.status);
@@ -160,65 +159,7 @@ export function PlayRoom({
     setSnapshot(previous => newestSnapshot(previous, nextSnapshot));
     setNowMs(Date.now());
   }, []);
-  const playAnswerAudio = useCallback(
-    (durationMs = 2400, options: { force?: boolean } = {}) => {
-      if (!isSoundEnabled && !options.force) {
-        return;
-      }
-
-      const audio = answerAudioRef.current;
-
-      if (!audio) {
-        return;
-      }
-
-      audio.pause();
-      audio.currentTime = 0;
-      audio.volume = 0.24;
-      void audio.play().then(() => {
-        window.setTimeout(() => {
-          audio.pause();
-          audio.currentTime = 0;
-        }, durationMs);
-      }).catch(() => undefined);
-    },
-    [isSoundEnabled],
-  );
-
-  const enableSound = useCallback(
-    ({ playFeedback = false }: { playFeedback?: boolean } = {}) => {
-      const backgroundAudio = backgroundAudioRef.current;
-
-      setIsSoundEnabled(true);
-
-      if (backgroundAudio) {
-        backgroundAudio.volume = 0.18;
-        backgroundAudio.loop = true;
-        void backgroundAudio.play().catch(() => {
-          setIsSoundEnabled(false);
-        });
-      }
-
-      if (playFeedback) {
-        playAnswerAudio(1800, { force: true });
-      }
-    },
-    [playAnswerAudio],
-  );
-
-  function toggleSound() {
-    const backgroundAudio = backgroundAudioRef.current;
-    const answerAudio = answerAudioRef.current;
-
-    if (isSoundEnabled) {
-      backgroundAudio?.pause();
-      answerAudio?.pause();
-      setIsSoundEnabled(false);
-      return;
-    }
-
-    enableSound();
-  }
+  const playAnswerAudio = useCallback((durationMs = 2400) => audioEngine.playEffect(AUDIO_ASSETS.answer, durationMs), [audioEngine]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -227,35 +168,6 @@ export function PlayRoom({
 
     return () => window.clearInterval(intervalId);
   }, []);
-
-  useEffect(() => {
-    const backgroundAudio = backgroundAudioRef.current;
-    const answerAudio = answerAudioRef.current;
-
-    return () => {
-      backgroundAudio?.pause();
-      answerAudio?.pause();
-
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isSoundEnabled) {
-      return;
-    }
-
-    const backgroundAudio = backgroundAudioRef.current;
-
-    if (!backgroundAudio) {
-      return;
-    }
-
-    backgroundAudio.volume = 0.16;
-    backgroundAudio.loop = true;
-    void backgroundAudio.play().catch(() => {
-      setIsSoundEnabled(false);
-    });
-  }, [isSoundEnabled]);
 
   useEffect(() => {
     const currentAnswer = snapshot.currentAnswer;
@@ -532,13 +444,11 @@ export function PlayRoom({
 
   return (
     <>
-      <audio ref={backgroundAudioRef} preload="none" src={AUDIO_ASSETS.background} />
-      <audio ref={answerAudioRef} preload="none" src={AUDIO_ASSETS.answer} />
       <RevealMoment eventKey={snapshot.status === "showing_answer" ? snapshot.sessionId + ":" + snapshot.currentQuestionIndex : null} correct={Boolean(snapshot.currentAnswer?.isCorrect)} title={snapshot.currentAnswer?.isCorrect ? "ตอบถูก!" : "เฉลยแล้ว ลุยข้อต่อไป"} detail={snapshot.currentAnswer?.isCorrect && snapshot.contribution ? "คำตอบนี้ช่วยทีม +" + formatScore(snapshot.contribution.total) + " คะแนน" : "ดูคำตอบที่ถูก แล้วเตรียมพร้อมไปด้วยกัน"} />
       <RoomTabs defaultIndex={snapshot.status === 'ended' ? 2 : 0} resetKey={snapshot.sessionId + ':' + snapshot.currentQuestionIndex + ':' + (snapshot.status === 'lobby' ? 'lobby' : snapshot.status === 'ended' ? 'ended' : 'game')} header={<>
         <div className="room-identity"><h1>{snapshot.team.teamName}</h1><p>ห้อง {snapshot.roomCode} · {snapshot.activityName || snapshot.questionSetTitle}</p></div>
         <div className="room-live-status">{snapshot.currentQuestion && <span>ข้อ {snapshot.currentQuestion.questionNumber}/{snapshot.currentQuestion.totalQuestions} · {snapshot.currentQuestion.points} คะแนน</span>}{remainingSeconds !== null && snapshot.status === 'question_active' && <strong className={remainingSeconds <= 10 ? 'text-warning' : 'text-cyan'}><Clock size={16} />{formatRemainingTime(remainingSeconds)}</strong>}</div>
-        <button className="icon-button room-sound" onClick={toggleSound} aria-label={isSoundEnabled ? 'ปิดเสียง' : 'เปิดเสียง'} type="button">{isSoundEnabled ? <Volume2 size={19}/> : <VolumeX size={19}/>}</button>
+        <AudioControl />
       </>} tabs={[
         {label:'เล่น', content:<div className="student-play-screen">
           <div className="question-toolbar"><h2>{statusLabel[snapshot.status]}</h2>{snapshot.currentQuestion && <button type="button" onClick={()=>setQuestionExpanded(snapshot.currentQuestion!.id)}><Maximize2 size={16}/>ขยายโจทย์</button>}</div>

@@ -1,0 +1,72 @@
+{
+  "images": [
+    {
+      "device": "phone",
+      "file": "public/assets/wallpaper/phone.png",
+      "width": 941,
+      "height": 1672,
+      "originalPixelsEqual": true,
+      "note": "Origin metadata added; original supplied artwork pixels preserved."
+    },
+    {
+      "device": "tablet",
+      "file": "public/assets/wallpaper/tablet.png",
+      "width": 1448,
+      "height": 1086,
+      "originalPixelsEqual": true,
+      "note": "Origin metadata added; original supplied artwork pixels preserved."
+    },
+    {
+      "device": "pc",
+      "file": "public/assets/wallpaper/pc.png",
+      "width": 1672,
+      "height": 941,
+      "originalPixelsEqual": true,
+      "note": "Origin metadata added; original supplied artwork pixels preserved."
+    }
+  ],
+  "videos": [
+    {
+      "file": "public/assets/wallpaper/login-phone.mp4",
+      "bytes": 5143304,
+      "duration": 10.005,
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 720,
+          "height": 1280,
+          "frameRate": "24/1"
+        },
+        {
+          "type": "audio",
+          "codec": "aac",
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2
+        }
+      ]
+    },
+    {
+      "file": "public/assets/wallpaper/login-wide.mp4",
+      "bytes": 4968682,
+      "duration": 10.005,
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 1280,
+          "height": 720,
+          "frameRate": "24/1"
+        },
+        {
+          "type": "audio",
+          "codec": "aac",
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import {
   randomTeamAction,
 } from "@/app/join/actions";
 import { AppShell } from "@/components/layout/app-shell";
+import { Wallpaper } from "@/components/game/wallpaper";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Panel } from "@/components/ui/panel";
 import { requireRole } from "@/lib/auth/session";
@@ -53,7 +54,8 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
         : null;
 
   return (
-    <AppShell>
+    <AppShell wallpaper="join">
+      <Wallpaper />
       <section className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
         <div className="space-y-4">
           <h1 className="text-3xl font-semibold">เข้าร่วมเกม</h1>

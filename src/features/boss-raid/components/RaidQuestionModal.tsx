@@ -1,6 +1,7 @@
 "use client";
+import { AudioControl } from "@/components/audio/audio-control";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, Timer, VolumeX } from "lucide-react";
+import { Check, Timer } from "lucide-react";
 import { MathText } from "@/components/ui/math-text";
 import { QuestionImage } from "@/components/ui/question-image";
 import type { RaidHero, RaidQuestion } from "../types";
@@ -8,7 +9,7 @@ import { RaidStudentHud } from "./RaidStudentHud";
 import { useRaidClock } from "../hooks/use-raid-clock";
 export type QuestionState="open"|"resolving"|"presenting"|"error"|"expired";
 const LETTERS=["ก","ข","ค","ง"];
-export function RaidQuestionModal({question,total,state,warnings,visibilityEnabled,feedback,error,onSubmit,onRetry,deadline,serverNow,score,muted=true,onMute,heroes=[],ownId,partyOpen=false,onPartyToggle=()=>{},autoConfirm=true}:{question:RaidQuestion;total:number;state:QuestionState;warnings:number;visibilityEnabled:boolean;feedback:string;error:string;onSubmit:(answerText:string|null,selectedOptionId:string|null)=>void;onRetry:()=>void;deadline:string|null;serverNow:string;score:number;muted?:boolean;onMute?:()=>void;heroes?:RaidHero[];ownId?:string;partyOpen?:boolean;onPartyToggle?:()=>void;autoConfirm?:boolean}) {
+export function RaidQuestionModal({question,total,state,warnings,visibilityEnabled,feedback,error,onSubmit,onRetry,deadline,serverNow,score,heroes=[],ownId,partyOpen=false,onPartyToggle=()=>{},autoConfirm=true}:{question:RaidQuestion;total:number;state:QuestionState;warnings:number;visibilityEnabled:boolean;feedback:string;error:string;onSubmit:(answerText:string|null,selectedOptionId:string|null)=>void;onRetry:()=>void;deadline:string|null;serverNow:string;score:number;heroes?:RaidHero[];ownId?:string;partyOpen?:boolean;onPartyToggle?:()=>void;autoConfirm?:boolean}) {
  const dialog=useRef<HTMLDialogElement>(null),draft=useRef({answer:"",option:"",sent:false,end:0});
  const [answer,setAnswer]=useState(""),[option,setOption]=useState(""),[confirmation,setConfirmation]=useState<{end:number}|null>(null),[left,setLeft]=useState(5000);
  const {seconds,remaining}=useRaidClock(deadline,serverNow);
@@ -26,7 +27,7 @@ export function RaidQuestionModal({question,total,state,warnings,visibilityEnabl
   <div className="raid-question-shell">
    <div className="raid-question-hud"><RaidStudentHud heroes={heroes} ownId={ownId} deadline={deadline} serverNow={serverNow} open={partyOpen} onToggle={onPartyToggle} id="raid-question-party"/></div>
    <form className="raid-question-card" onSubmit={e=>{e.preventDefault();if(!canEdit||!valid)return;if(!confirmation&&question.questionType==="short_text"){begin();return;}send();}}>
-    <div className="raid-question-heading"><div className="raid-question-info"><h2 id="raid-question-title">ข้อ {question.displayIndex+1} / {total}</h2><p className="raid-question-points"><span>ข้อนี้ {question.points} คะแนน</span><strong>คะแนนสะสม {score.toLocaleString()}</strong></p></div>{!muted&&onMute&&<button type="button" className="raid-icon" aria-label="ปิดเสียงเกม" title="ปิดเสียงเกม" onClick={onMute}><VolumeX size={20}/></button>}</div>
+    <div className="raid-question-heading"><div className="raid-question-info"><h2 id="raid-question-title">ข้อ {question.displayIndex+1} / {total}</h2><p className="raid-question-points"><span>ข้อนี้ {question.points} คะแนน</span><strong>คะแนนสะสม {score.toLocaleString()}</strong></p></div><AudioControl/></div>
     <div className="raid-question-body" tabIndex={0} role="region" aria-label="โจทย์คำถาม"><MathText text={question.questionText}/>{question.imageUrl&&<QuestionImage src={question.imageUrl} alt={`รูปประกอบคำถามข้อ ${question.displayIndex+1}`}/>}</div>
     <div className="raid-answer-area">
      {question.questionType==="short_text"?<label className="raid-text-answer">คำตอบของคุณ<input autoFocus value={answer} maxLength={2000} disabled={!canEdit} onChange={e=>{draft.current.answer=e.target.value;draft.current.end=0;setAnswer(e.target.value);setConfirmation(null);}} placeholder="พิมพ์คำตอบ" onKeyDown={e=>{if(e.key==="Enter"&&e.nativeEvent.isComposing)e.preventDefault();}}/></label>:<fieldset className="raid-options"><legend>เลือกคำตอบหนึ่งข้อ</legend>{question.options.map((o,i)=><label key={o.id} data-selected={option===o.id}>

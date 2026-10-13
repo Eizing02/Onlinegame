@@ -1,0 +1,80 @@
+[
+  {
+    "name": "phone",
+    "width": 390,
+    "height": 844,
+    "touch": true,
+    "image": "phone",
+    "media": [
+      "http://127.0.0.1:3100/assets/wallpaper/login-phone.mp4"
+    ],
+    "errors": [],
+    "axe": [],
+    "overflow": false
+  },
+  {
+    "name": "phone-small",
+    "width": 320,
+    "height": 568,
+    "touch": true,
+    "image": "phone",
+    "media": [
+      "http://127.0.0.1:3100/assets/wallpaper/login-phone.mp4"
+    ],
+    "errors": [],
+    "axe": [],
+    "overflow": false
+  },
+  {
+    "name": "phone-landscape",
+    "width": 844,
+    "height": 390,
+    "touch": true,
+    "image": "phone",
+    "media": [
+      "http://127.0.0.1:3100/assets/wallpaper/login-phone.mp4"
+    ],
+    "errors": [],
+    "axe": [],
+    "overflow": false
+  },
+  {
+    "name": "tablet",
+    "width": 768,
+    "height": 1024,
+    "touch": true,
+    "image": "tablet",
+    "media": [
+      "http://127.0.0.1:3100/assets/wallpaper/login-wide.mp4"
+    ],
+    "errors": [],
+    "axe": [],
+    "overflow": false
+  },
+  {
+    "name": "tablet-landscape",
+    "width": 1024,
+    "height": 768,
+    "touch": true,
+    "image": "tablet",
+    "media": [
+      "http://127.0.0.1:3100/assets/wallpaper/login-wide.mp4"
+    ],
+    "errors": [],
+    "axe": [],
+    "overflow": false
+  },
+  {
+    "name": "desktop",
+    "width": 1366,
+    "height": 768,
+    "touch": false,
+    "image": "pc",
+    "media": [
+      "http://127.0.0.1:3100/assets/wallpaper/login-wide.mp4"
+    ],
+    "errors": [],
+    "axe": [],
+    "overflow": false
+  }
+]

@@ -1,5 +1,6 @@
 "use client";
 import type {RaidAudioControls} from "../hooks/use-raid-audio";
+import {AudioControl} from "@/components/audio/audio-control";
 export function RaidAudioSettings({audio}:{audio:RaidAudioControls}){
- return <div className="raid-audio-controls"><button className="raid-primary" type="button" onClick={()=>void audio.toggle()} aria-pressed={!audio.muted}>{audio.muted?'เปิดเสียงเกม':'ปิดเสียงเกม'}</button><details><summary>ระดับเสียง</summary><div className="raid-audio-volumes"><label>เสียงรวม <input aria-label="ระดับเสียงรวม" type="range" min="0" max="1" step="0.05" value={audio.master} onChange={e=>audio.setMaster(Number(e.target.value))}/></label><label>เอฟเฟกต์ <input aria-label="ระดับเสียงเอฟเฟกต์" type="range" min="0" max="1" step="0.05" value={audio.sfx} onChange={e=>audio.setSfx(Number(e.target.value))}/></label><label>เพลงพื้นหลัง <input aria-label="ระดับเพลงพื้นหลัง" type="range" min="0" max="1" step="0.05" value={audio.music} onChange={e=>audio.setMusic(Number(e.target.value))}/></label></div></details>{audio.warning&&<p className="raid-audio-warning" role="status">{audio.warning}</p>}</div>;
+ return <div className="raid-audio-controls"><AudioControl/>{audio.warning&&<p className="raid-audio-warning" role="status">{audio.warning}</p>}</div>;
 }

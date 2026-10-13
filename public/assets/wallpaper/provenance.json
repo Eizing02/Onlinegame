@@ -1,0 +1,35 @@
+{
+  "source": "User supplied wallpaper directory",
+  "images": [
+    {
+      "original": "wallpaper phone.png",
+      "output": "phone.png",
+      "derived": "phone.webp",
+      "transform": "Original PNG unchanged; WebP quality 86 for login poster only"
+    },
+    {
+      "original": "wallpaper tablet.png",
+      "output": "tablet.png",
+      "derived": "tablet.webp",
+      "transform": "Original PNG unchanged; WebP quality 86 for login poster only"
+    },
+    {
+      "original": "wallpaper pc.png",
+      "output": "pc.png",
+      "derived": "pc.webp",
+      "transform": "Original PNG unchanged; WebP quality 86 for login poster only"
+    }
+  ],
+  "videos": [
+    {
+      "original": "wallpaper phone vdo loop.mp4",
+      "output": "login-phone.mp4",
+      "transform": "H.264 CRF 24, original dimensions and frame rate, AAC 128k, faststart. Original audio retained."
+    },
+    {
+      "original": "wallpaper pc & tablet vdo loop.mp4",
+      "output": "login-wide.mp4",
+      "transform": "H.264 CRF 24, original dimensions and frame rate, AAC 128k, faststart. Original audio retained."
+    }
+  ]
+}

@@ -396,3 +396,43 @@ textarea {
 /* Approved classic palette. Semantic ink shades keep light surfaces readable. */
 :root{--cream:#F5EFE1;--parchment:#E5D3AF;--accent-soft:#AEC4D4;--on-primary:#F5EFE1;--selection-gold:#D0A04A;--background:var(--cream);--surface:var(--cream);--panel:var(--parchment);--panel-strong:#EADDC4;--foreground:#392829;--muted:#61463F;--primary:#790D16;--primary-dark:#5E0A11;--primary-blue:#25475A;--cyan:#25475A;--success:#25475A;--warning:#634417;--danger:#790D16;--border:#947754}
 html{color-scheme:light;scrollbar-color:var(--border) var(--surface)}::selection{background:var(--accent-soft);color:var(--foreground)}.app-header{background:var(--surface)}.game-button,.raid-primary{color:var(--on-primary)}.game-button{box-shadow:0 4px 12px rgba(57,40,41,.14)}.notice-error,.form-error{background:color-mix(in srgb,var(--danger) 8%,var(--surface));color:var(--danger);border-color:var(--danger)}.space-background{opacity:.16}.login-card{box-shadow:none}.text-white{color:var(--on-primary)}
+
+/* User-supplied fantasy artwork, with solid vintage surfaces for every task. */
+.wallpaper-shell > main { position: relative; isolation: isolate; }
+.page-wallpaper { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--surface); }
+.page-wallpaper > img, .page-wallpaper > video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.join-wallpaper > img { opacity: .5; }
+.wallpaper-shell-login .login-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); align-items: center; }
+.wallpaper-shell-login .login-world { align-self: start; padding-top: 20px; }
+.wallpaper-shell-login .login-world h1 { width: fit-content; padding: 16px 20px; background: color-mix(in srgb, var(--cream) 96%, transparent); border-radius: 14px; color: var(--foreground); }
+.wallpaper-shell-login .login-world > p { width: fit-content; margin-top: 12px; padding: 8px 12px; border-radius: 8px; background: var(--cream); }
+.wallpaper-shell-login .login-card { background: var(--parchment); }
+.wallpaper-shell-join main > section > div:first-child { align-self: start; padding: 24px; border-radius: 16px; background: color-mix(in srgb, var(--cream) 96%, transparent); }
+.audio-control { flex: 0 0 auto; display: inline-flex; }
+.dialog-audio { position: absolute; top: 8px; right: 60px; z-index: 1; }
+.audio-trigger { color: var(--foreground); flex-shrink: 0; }
+.audio-trigger:hover, .audio-trigger[aria-expanded="true"] { background: var(--panel); }
+.audio-panel { position: fixed; inset: auto; margin: 0; padding: 16px; overflow: auto; overscroll-behavior: contain; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--foreground); font-size: 16px; line-height: 1.5; scrollbar-color: var(--border) var(--surface); }
+.audio-panel::backdrop { background: transparent; }
+.audio-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.audio-control .audio-panel h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.audio-control .audio-panel .audio-mute { display: flex; width: 100%; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 10px 12px; background: var(--primary); color: var(--on-primary); border: 0; border-radius: 10px; font-size: 16px; font-weight: 600; }
+.audio-control .audio-panel .audio-mute:hover { background: var(--primary-dark); }
+.audio-control .audio-panel .icon-button { width: 44px; height: 44px; padding: 0; background: var(--surface); color: var(--foreground); }
+.audio-control .audio-panel .audio-level { display: grid; gap: 4px; margin-top: 16px; font-size: 16px; }
+.audio-level > span { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.audio-level output { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.audio-control .audio-panel .audio-level input { width: 100%; min-width: 0; min-height: 44px; accent-color: var(--primary); cursor: pointer; }
+.audio-status { margin-top: 12px; font-size: 14px; color: var(--muted); }
+.audio-control :focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+@media (max-width: 800px) {
+  .wallpaper-shell-login .login-layout { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+  .wallpaper-shell-login .login-world { padding: 0; align-self: stretch; }
+  .wallpaper-shell-login .login-world h1 { width: 100%; font-size: 24px; padding: 12px 16px; }
+  .wallpaper-shell-login .login-card { width: 100%; }
+  .wallpaper-shell-join main > section { padding: 24px 16px; gap: 20px; }
+  .wallpaper-shell-join main > section > div:first-child { padding: 20px; }
+}
+@media (max-width: 360px) {
+  .wallpaper-shell-login .login-world h1 { font-size: 22px; }
+}
