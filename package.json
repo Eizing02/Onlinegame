@@ -25,7 +25,7 @@
     "test:auth": "node tests/google-identity.cjs && node tests/google-services.cjs && node tests/sql-google-auth.mjs",
     "test:e2e:google": "playwright test --config=playwright.google.config.ts",
     "test:staging:auth": "node tests/staging-google-races.mjs",
-    "test:raid": "node tests/boss-raid/unit.mjs && node tests/boss-raid/sql-rules.mjs && node tests/boss-raid/sql-presentation.mjs",
+    "test:raid": "node tests/boss-raid/unit.mjs && node tests/boss-raid/sql-rules.mjs && node tests/boss-raid/sql-presentation.mjs && node tests/boss-raid/sql-feedback.mjs && node tests/boss-raid/feedback-unit.mjs",
     "test:e2e:raid": "playwright test --config=playwright.raid.config.ts",
     "test:staging:raid": "node scripts/boss-raid/staging-load.mjs"
   },

@@ -1,0 +1,69 @@
+[
+  {
+    "tag": "desktop",
+    "width": 1366,
+    "height": 768,
+    "box": {
+      "x": 1044,
+      "y": 130.796875,
+      "width": 310,
+      "height": 360
+    },
+    "audit": []
+  },
+  {
+    "tag": "phone",
+    "width": 390,
+    "height": 844,
+    "box": {
+      "x": 68,
+      "y": 171.28125,
+      "width": 310,
+      "height": 360
+    },
+    "audit": []
+  },
+  {
+    "tag": "small",
+    "width": 320,
+    "height": 568,
+    "box": {
+      "x": 12,
+      "y": 171.28125,
+      "width": 296,
+      "height": 312.390625
+    },
+    "audit": []
+  },
+  {
+    "tag": "tablet",
+    "width": 768,
+    "height": 1024,
+    "box": {
+      "x": 446,
+      "y": 177.28125,
+      "width": 310,
+      "height": 360
+    },
+    "audit": []
+  },
+  {
+    "tag": "landscape",
+    "width": 844,
+    "height": 390,
+    "box": {
+      "x": 522,
+      "y": 71,
+      "width": 310,
+      "height": 214.5
+    },
+    "audit": []
+  },
+  {
+    "tag": "touch",
+    "engine": "Chromium CDP synthesized touch",
+    "open": true,
+    "scroll": true,
+    "outsideDismiss": true
+  }
+]

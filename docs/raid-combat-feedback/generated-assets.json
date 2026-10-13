@@ -1,0 +1,110 @@
+[
+  {
+    "name": "dragon-claw",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-afba6e27-2c46-4e2c-a422-855b2519e2f9.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture, composited over existing anime-painted dragon and heroes. Create ONE isolated diagonal triple dragon-claw slash impact: three closely grouped sweeping tapered violet-white energy cuts with plum edges and a few tiny sparks. Dramatic sharp leading tips, painted luminous core, clean controlled falloff. All cuts form one cohesive centered impact, fully visible with generous transparent margin. Genuine RGBA transparent background; no black backdrop, no checkerboard, no dragon, no people, no weapons, no scenery, no text, no numbers, no watermark. This is temporary energy claw marks over a target, not a character illustration. Square composition.",
+    "path": "public/assets/boss-raid/vfx/dragon-claw.png",
+    "bytes": 354779,
+    "width": 512,
+    "height": 512,
+    "decodedBytes": 1048576,
+    "transparentFraction": 0.5305442810058594,
+    "sha256": "348b8eff8d853958a4ffd5c2b2ee671bf0da1b2039c0bd38f4d028851460cfdd"
+  },
+  {
+    "name": "warrior-slash",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-9d58f21a-d52a-4d55-85da-10bb88b5e009.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE silver and ice-blue crescent sword slash, broad flowing tapered arc with a crisp white cutting edge and a few icy silver flecks. No sword itself. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/warrior-slash.png",
+    "bytes": 204590,
+    "width": 512,
+    "height": 512,
+    "decodedBytes": 1048576,
+    "transparentFraction": 0.7370376586914062,
+    "sha256": "dcdfe26d9d163a130e251b35c48d7c6da6709c755533d23c13cac9b21d57a215"
+  },
+  {
+    "name": "mage-energy",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-6dbca56f-6cce-4dae-83c0-d7f36257efca.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE bright cyan and blue magical energy comet, brilliant compact round core with fluid blue wisps and short tapered trail extending right. The leading core faces left. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/mage-energy.png",
+    "bytes": 104943,
+    "width": 384,
+    "height": 384,
+    "decodedBytes": 589824,
+    "transparentFraction": 0.7709893120659722,
+    "sha256": "05fdf01131f29707ecaacc145394f601efb68c7d75b73e3c1d4bac8ae950a43f"
+  },
+  {
+    "name": "wizard-fire",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-e0029b4a-c131-4ca6-b4cf-ba9476c27612.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE orange and golden fireball comet, compact incandescent core with painterly orange flame tongues and a short tapered trail extending right. Leading core faces left. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/wizard-fire.png",
+    "bytes": 102017,
+    "width": 384,
+    "height": 384,
+    "decodedBytes": 589824,
+    "transparentFraction": 0.7845526801215278,
+    "sha256": "f07c1739c5bd07a643fc5d3041fa10ce937ea434dd7486a9e22e6e5fac9af4a7"
+  },
+  {
+    "name": "witch-curse",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-3ef10c71-7ba0-40be-bf13-238e10ffd430.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE emerald and pale green curse comet, small luminous green core enclosed in flowing vapor tendrils, short tapered wispy trail extending right. Leading core faces left. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/witch-curse.png",
+    "bytes": 86631,
+    "width": 384,
+    "height": 384,
+    "decodedBytes": 589824,
+    "transparentFraction": 0.8325398763020834,
+    "sha256": "cd66f10f400d414f0bcb5b6fe622bf0e3f7e804ad937dcfebd4458ae479ca120"
+  },
+  {
+    "name": "fairy-light",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-34d977e7-51fd-45b3-90d6-bbcaefade473.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE warm gold and cream starlight spell, a luminous central star with four elegant rays and a handful of tiny golden sparkles, subtle short light trail extending right. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/fairy-light.png",
+    "bytes": 102232,
+    "width": 384,
+    "height": 384,
+    "decodedBytes": 589824,
+    "transparentFraction": 0.761474609375,
+    "sha256": "bdd960655d24655e9f318b50d32a5f4cd2de7b1a5e24047115c3a30072bd4bc9"
+  },
+  {
+    "name": "dragon-flame",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-17c0c67b-23f1-4b26-96da-210755c3795a.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE dark plum and vibrant violet shadow-flame comet, brilliant violet core with irregular purple flame tongues and a short tapered trail extending left. Leading core faces right. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/dragon-flame.png",
+    "bytes": 109125,
+    "width": 384,
+    "height": 384,
+    "decodedBytes": 589824,
+    "transparentFraction": 0.7838812934027778,
+    "sha256": "c338e3ef51b2543fcea5b55495dfffa7136c208dff5fa8c1cce3c9bc08b799d2"
+  },
+  {
+    "name": "dragon-ultimate",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-96be3d63-1bed-4ba4-9dbb-74cc55184ef1.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE violet-white ultimate magic impact burst, compact dark purple orb erupting in sharp white-violet energy rays, a small ring and sparse purple sparks, all forming a single cohesive impact. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/dragon-ultimate.png",
+    "bytes": 221541,
+    "width": 384,
+    "height": 384,
+    "decodedBytes": 589824,
+    "transparentFraction": 0.4988132052951389,
+    "sha256": "5b9ea73015505f170089ca005d59d0f0bcb202d742ece32b2417a1b6d4465fef"
+  },
+  {
+    "name": "healing-light",
+    "source": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-0cd4c43e-5880-4626-929d-1a61351a726c.png",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2.5D fantasy game combat VFX texture matching anime-painted fantasy character sprites. Create ONE gentle mint-gold healing impact, a small open upward curl of luminous mint light around a cream-gold central glint, several tiny warm stars, compact and centered. Hand-painted polished fantasy VFX with controlled luminosity and distinct silhouette, readable at small game sizes. One isolated cohesive effect only, centered, fully visible with generous clear margin. Genuine RGBA transparency. No solid background, no black backdrop, no checkerboard, no characters, no weapons, no landscape, no UI, no text, no numbers, no watermark. Square composition.",
+    "path": "public/assets/boss-raid/vfx/healing-light.png",
+    "bytes": 104563,
+    "width": 384,
+    "height": 384,
+    "decodedBytes": 589824,
+    "transparentFraction": 0.7696872287326388,
+    "sha256": "0f5cbfc8d37db0316064d5ca77513a5b74ca5033480d580f5cff32d61e77ae18"
+  }
+]

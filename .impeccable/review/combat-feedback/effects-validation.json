@@ -1,0 +1,50 @@
+[
+  {
+    "seq": 1,
+    "target": "boss",
+    "amount": 100,
+    "effect": "warrior-slash"
+  },
+  {
+    "seq": 2,
+    "target": "boss",
+    "amount": 100,
+    "effect": "mage-energy"
+  },
+  {
+    "seq": 3,
+    "target": "boss",
+    "amount": 100,
+    "effect": "wizard-fire"
+  },
+  {
+    "seq": 4,
+    "target": "boss",
+    "amount": 100,
+    "effect": "witch-curse"
+  },
+  {
+    "seq": 5,
+    "target": "boss",
+    "amount": 100,
+    "effect": "fairy-light"
+  },
+  {
+    "seq": 6,
+    "target": "1",
+    "amount": 15,
+    "effect": "dragon-claw"
+  },
+  {
+    "seq": 7,
+    "target": "1",
+    "amount": 15,
+    "effect": "dragon-flame"
+  },
+  {
+    "seq": 8,
+    "target": "1",
+    "amount": 15,
+    "effect": "dragon-ultimate"
+  }
+]

@@ -39,6 +39,36 @@
 
 .raid-classic-rules{grid-column:1/-1}
 
+/* Teacher party uses the same bounded roster as the student's dialog HUD. */
+.raid-teacher-hud{display:flex;align-items:center;gap:12px;order:3;flex-shrink:0}
+.raid-teacher-room .raid-room-header{position:relative;z-index:30}
+.raid-teacher-room .raid-room-header>div:first-child{min-width:0}
+.raid-teacher-room .raid-room-header h1{white-space:normal;overflow-wrap:anywhere}
+.raid-party-toggle[aria-expanded=true] svg:last-child{transform:rotate(180deg)}
+.raid-party-list h3{overflow-wrap:anywhere}
+.raid-party-list p{font-size:14px;line-height:1.6;color:var(--muted)}
+.raid-party-list:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+@media(max-width:800px){
+ .raid-teacher-room .raid-room-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px}
+ .raid-teacher-room .raid-room-header>div:first-child{grid-column:1/-1}
+ .raid-teacher-hud{grid-column:2;grid-row:2;gap:6px;justify-content:flex-end}
+ .raid-teacher-room .raid-teacher-control{grid-column:1;grid-row:2;width:auto;justify-content:flex-start;flex-wrap:wrap}
+}
+@media(max-width:400px){
+ .raid-teacher-room .raid-room-header{grid-template-columns:1fr}
+ .raid-teacher-hud{grid-column:1;grid-row:2}
+ .raid-teacher-room .raid-teacher-control{grid-column:1;grid-row:3}
+}
+@media(max-width:800px){
+ .raid-room:not(.raid-teacher-room) .raid-room-header{position:relative;z-index:30;display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:8px}
+ .raid-room:not(.raid-teacher-room) .raid-room-header>div:first-child{grid-column:1/-1}
+ .raid-room:not(.raid-teacher-room) .raid-room-header h1{white-space:normal;overflow-wrap:anywhere}
+ .raid-room:not(.raid-teacher-room) .raid-room-header .raid-student-hud{grid-column:1;grid-row:2;position:static;justify-content:flex-start;min-width:0;margin-left:0}
+ .raid-room:not(.raid-teacher-room) .raid-room-header .raid-party{position:static}
+ .raid-room:not(.raid-teacher-room) .raid-room-header>.audio-control{grid-column:2;grid-row:2}
+ .raid-room:not(.raid-teacher-room) .raid-room-header>.raid-icon{grid-column:3;grid-row:2}
+}
+
 @media(max-width:800px){.raid-hud-detail{display:none}.raid-hero-hud>div{gap:2px}.raid-hero-hud small{white-space:nowrap}}
 
 .raid-arena progress{appearance:none;border:0;border-radius:4px;overflow:hidden;background:#947754;color:#790D16}.raid-arena progress::-webkit-progress-bar{background:#947754}.raid-arena progress::-webkit-progress-value{background:#790D16}.raid-arena progress::-moz-progress-bar{background:#790D16}.raid-hero-hud progress::-webkit-progress-value{background:#25475A}.raid-hero-hud progress::-moz-progress-bar{background:#25475A}

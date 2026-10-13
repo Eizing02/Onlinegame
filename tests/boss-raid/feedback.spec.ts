@@ -1,0 +1,50 @@
+import { test,expect,type Page } from '@playwright/test';
+import { mkdir,writeFile } from 'node:fs/promises';
+import AxeBuilder from '@axe-core/playwright';
+import { browserRequest } from '../browser-request';
+import { mockKey } from '../helpers/mock-supabase.mjs';
+const fixture='http://127.0.0.1:3111',dir='.impeccable/review/combat-feedback';
+async function login(page:Page,email:string,code?:string){
+ await page.goto('/login');await page.getByRole('button',{name:'เข้าสู่ระบบด้วย Google',exact:true}).click();await page.getByRole('link',{name:email,exact:true}).click();
+ if(code){await page.getByLabel('รหัสประจำตัวนักเรียน',{exact:true}).fill(code);await page.getByRole('button',{name:'ตรวจสอบรหัส',exact:true}).click();await page.getByRole('button',{name:'ยืนยันและเข้าเกม',exact:true}).click();await expect(page).toHaveURL(/\/join$/);}else await expect(page).toHaveURL(/\/teacher\/question-sets$/);
+}
+test('combat feedback: teacher party across devices and team changes; real answer HP loss',async({browser,page,request})=>{
+ test.setTimeout(180000);await mkdir(dir,{recursive:true});await request.post(`${fixture}/__test/reset`);await request.post(`${fixture}/__test/raid-bank`);
+ const name='นักเรียนทดสอบชื่อภาษาไทยยาวมากสำหรับตรวจรายชื่อสมาชิกในปาร์ตี้';
+ const renamed=await request.patch(`${fixture}/rest/v1/accounts?user_code=eq.01234`,{headers:{apikey:mockKey,authorization:`Bearer ${mockKey}`},data:{display_name:name}});expect(renamed.ok()).toBe(true);
+ await login(page,'piyawatpiwsiri@gmail.com');await page.goto('/teacher/rooms/new');await page.getByLabel('Boss Raid · Time Attack').check();await page.getByLabel('จำนวนทีม',{exact:true}).fill('2');await page.getByRole('button',{name:'สร้างห้อง Boss Raid',exact:true}).click();await expect(page).toHaveURL(/\/raid\/dashboard$/);const room=page.url().match(/rooms\/(\d{4})/)![1];
+ const people=[['pupil@example.com','01234'],['other@example.com','01235'],['third@example.com','01236'],['fourth@example.com','01237'],['fifth@example.com','01238']];
+ const contexts=await Promise.all(people.map(()=>browser.newContext({baseURL:'http://127.0.0.1:3110',viewport:{width:390,height:844}})));
+ try{
+  const pupils=await Promise.all(contexts.map(c=>c.newPage()));
+  for(let i=0;i<5;i++){await login(pupils[i],people[i][0],people[i][1]);await pupils[i].goto(`/join?room_code=${room}`);await pupils[i].getByRole('button',{name:/ทีม 1/}).click();await expect(pupils[i]).toHaveURL(/\/raid$/);await browserRequest(pupils[i],`/api/raid/${room}/hero`,{method:'POST',data:{heroType:['warrior','mage','wizard','witch','fairy'][i]}});}
+  const party=page.locator('#raid-teacher-party');await page.getByRole('button',{name:/สมาชิก ทีม 1/}).click();await expect(party.locator('li')).toHaveCount(5);await expect(party).toContainText(name);
+  for(const label of ['นักรบ','จอมเวท','พ่อมด','แม่มด','ภูตพิทักษ์'])await expect(party).toContainText(label);
+  const reports=[];
+  for(const [tag,width,height] of [['desktop',1366,768],['phone',390,844],['small',320,568],['tablet',768,1024],['landscape',844,390]] as [string,number,number][]){
+   await page.setViewportSize({width,height});await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:`${dir}/teacher-party-${tag}.png`,fullPage:true,animations:'disabled'});
+   const box=await party.boundingBox();expect(box!.x).toBeGreaterThanOrEqual(0);expect(box!.x+box!.width).toBeLessThanOrEqual(width);expect(box!.y+box!.height).toBeLessThanOrEqual(height);
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+   const audit=(await new AxeBuilder({page}).include('.raid-room').analyze()).violations.filter(v=>['serious','critical'].includes(v.impact??''));expect(audit).toEqual([]);reports.push({tag,width,height,box,audit});
+  }
+  await page.keyboard.press('Escape');await expect(party).toHaveCount(0);await expect(page.getByRole('button',{name:/สมาชิก ทีม 1/})).toBeFocused();await page.getByRole('button',{name:/สมาชิก ทีม 1/}).click();await page.getByRole('button',{name:'รับชมทีม',exact:true}).click();await expect(party).toHaveCount(0);
+  await page.setViewportSize({width:390,height:844});const touch=await page.context().newCDPSession(page);await touch.send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  const toggle=await page.getByRole('button',{name:/สมาชิก ทีม 1/}).boundingBox();await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:toggle!.x+toggle!.width/2,y:toggle!.y+toggle!.height/2}]});await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect(party).toBeVisible();
+  const panel=await party.boundingBox(),x=panel!.x+panel!.width/2,y=panel!.y+panel!.height-35;await party.evaluate(e=>e.scrollTop=0);await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});for(const distance of [30,80,140]){await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-distance}]});await page.waitForTimeout(20);}await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect.poll(()=>party.evaluate(e=>e.scrollTop)).toBeGreaterThan(0);
+  await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:16,y:70}]});await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect(party).toHaveCount(0);await touch.send('Emulation.setTouchEmulationEnabled',{enabled:false});await touch.detach();reports.push({tag:'touch',engine:'Chromium CDP synthesized touch',open:true,scroll:true,outsideDismiss:true});
+  await page.locator('.raid-team-overview>button').nth(1).click();await page.getByRole('button',{name:/สมาชิก ทีม 2/}).click();await expect(party).not.toContainText(name);await expect(party).toContainText('ยังไม่มีผู้เล่นในทีม');await page.setViewportSize({width:1366,height:768});await page.screenshot({path:`${dir}/teacher-party-empty.png`});
+  await page.locator('.raid-team-overview>button').first().click();await page.getByRole('button',{name:/สมาชิก ทีม 1/}).click();await expect(party.locator('li')).toHaveCount(5);await page.keyboard.press('Escape');await page.getByRole('button',{name:'เริ่ม Boss Raid',exact:true}).click();await page.getByRole('button',{name:/สมาชิก ทีม 1/}).click();await expect(party.locator('li')).toHaveCount(5);await page.keyboard.press('Escape');
+  const pupil=pupils[1];await expect(pupil.locator('.raid-question-dialog')).toBeVisible();await pupil.getByRole('button',{name:/ปาร์ตี้/}).click();await expect(pupil.locator('.raid-party-list')).toContainText(name);await pupil.screenshot({path:`${dir}/student-question-party.png`});await pupil.keyboard.press('Escape');await expect(pupil.locator('.raid-party-list')).toHaveCount(0);await expect(pupil.locator('.raid-question-dialog')).toBeVisible();
+  const s=await(await browserRequest(pupil,`/api/raid/${room}/snapshot`)).json(),q=s.question;
+  const correct=await(await request.get(`${fixture}/__test/raid-correct-option?question=${q.id}`)).json();
+  if(q.questionType==='short_text'){await pupil.getByLabel('คำตอบของคุณ').fill('wrong');await pupil.getByRole('button',{name:'ตรวจคำตอบก่อนส่ง',exact:true}).click();}else{const wrong=q.options.find((o:{id:string})=>o.id!==correct.selectedOptionId);await pupil.locator(`input[value="${wrong.id}"]`).check();}
+  const response=pupil.waitForResponse(r=>r.url().endsWith('/answer')&&r.request().method()==='POST');await pupil.getByRole('button',{name:/ยืนยันคำตอบ/}).click();const result=await(await response).json();expect(result.damageTaken).toBe(15);expect(result.presentation.events.find((e:{type:string})=>e.type==='hero_hit').damageTaken).toBe(15);
+  await expect(pupil.locator('.raid-stage')).toHaveAttribute('data-answer-playing','true');await expect(pupil.locator('.raid-combat-feedback')).toContainText('เสีย HP 15');await pupil.waitForTimeout(800);await pupil.screenshot({path:`${dir}/student-real-hit.png`});await expect(pupil.locator('.raid-question-dialog')).toBeVisible();await expect(party.locator('li')).toHaveCount(0);
+  await page.getByRole('button',{name:/สมาชิก ทีม 1/}).click();await expect(party).toContainText('HP 85');await page.screenshot({path:`${dir}/teacher-party-live.png`});await page.keyboard.press('Escape');
+  await pupil.setViewportSize({width:320,height:568});const second=await(await browserRequest(pupil,`/api/raid/${room}/snapshot`)).json(),q2=second.question;
+  const expected2=await(await request.get(`${fixture}/__test/raid-correct-option?question=${q2.id}`)).json();if(q2.questionType==='short_text'){await pupil.getByLabel('คำตอบของคุณ').fill('wrong');await pupil.getByRole('button',{name:'ตรวจคำตอบก่อนส่ง',exact:true}).click();}else{const wrong2=q2.options.find((o:{id:string})=>o.id!==expected2.selectedOptionId);await pupil.locator(`input[value="${wrong2.id}"]`).check();}
+  await pupil.getByRole('button',{name:/ยืนยันคำตอบ/}).click();await expect(pupil.locator('.raid-stage')).toHaveAttribute('data-answer-playing','true');await pupil.waitForTimeout(800);await pupil.screenshot({path:dir+'/student-real-hit-small.png'});const layout=await pupil.locator('.raid-room-header').evaluate(header=>({width:header.querySelector('h1')!.getBoundingClientRect().width,text:header.textContent,overflow:document.documentElement.scrollWidth>innerWidth}));expect(layout.width).toBeGreaterThan(260);expect(layout.text).toContain(room);expect(layout.overflow).toBe(false);await expect(pupil.locator('.raid-question-dialog')).toBeVisible();
+  await page.getByRole('button',{name:'จบเกมก่อนเวลา',exact:true}).click();await page.getByRole('button',{name:'ยืนยันจบเกมทุกทีม',exact:true}).click();await expect(page.getByRole('link',{name:'สร้างห้องใหม่',exact:true})).toBeVisible();await page.getByRole('button',{name:/สมาชิก ทีม 1/}).click();await expect(party.locator('li')).toHaveCount(5);await page.screenshot({path:`${dir}/teacher-party-ended.png`});
+  await writeFile(`${dir}/roster-validation.json`,JSON.stringify(reports,null,2));
+ }finally{await Promise.all(contexts.map(c=>c.close()));}
+});

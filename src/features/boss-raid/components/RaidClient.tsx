@@ -49,7 +49,7 @@ export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:s
   if(busy.current)return;busy.current=true;setPending(true);setState("resolving");setError("");
   try{const result=await post("answer",payload);if(!alive.current)return;
    if(!result.ok){busy.current=false;setPending(false);if(result.code==="RATE_LIMITED"){setError("ส่งคำตอบถี่เกินไป รอ 10 วินาทีแล้วกดส่งคำตอบเดิมอีกครั้ง");setState("error");return;}await refresh();setError(result.error??"คำถามหรือเวลาเปลี่ยนแล้ว ตรวจสถานะล่าสุด");setState("open");return;}
-   setFeedback(result.correct?result.noHealTarget?"ตอบถูก · ไม่มีเพื่อนที่ต้องฟื้น HP":result.healAmount?`ตอบถูก · ฟื้น HP ${result.healAmount}`:`ตอบถูก +${result.awardedPoints} คะแนน`:"ตอบผิด · ดูการต่อสู้แล้วลุยต่อ");
+   setFeedback(result.correct?result.noHealTarget?"ตอบถูก · ไม่มีเพื่อนที่ต้องฟื้น HP":result.healAmount?`ตอบถูก · ฟื้น HP ${result.healAmount}`:`ตอบถูก +${result.awardedPoints} คะแนน${result.damage?` · ดาเมจ ${result.damage}`:""}`:result.damageTaken?`ตอบผิด · เสีย HP ${result.damageTaken} · ดูการต่อสู้แล้วลุยต่อ`:"ตอบผิด · ดูการต่อสู้แล้วลุยต่อ");
    const p=result.presentation??{id:payload.idempotencyKey,durationMs:3000,availableAt:new Date(Date.parse(result.serverNow??snapshot.serverNow)+3000).toISOString(),events:[]};begin(p);await refresh();
   }catch{if(!alive.current)return;busy.current=false;setPending(false);setError("การเชื่อมต่อขาดหาย คำตอบอาจบันทึกแล้ว กดตรวจสถานะและส่งคำตอบเดิมอีกครั้ง");setState("error");}
  },[post,refresh,begin,snapshot.serverNow]);
