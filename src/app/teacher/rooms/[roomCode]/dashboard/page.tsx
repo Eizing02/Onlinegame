@@ -1,3 +1,4 @@
+import { serverClockAnchor } from "@/lib/game/server-clock";
 import { notFound, redirect } from "next/navigation";
 
 import { LiveRoomPanels } from "@/app/teacher/rooms/[roomCode]/dashboard/live-room-panels";
@@ -34,7 +35,7 @@ export default async function TeacherDashboardPage({
   return (
     <AppShell room>
       <section className="room-route teacher-room-route">
-        <LiveRoomPanels
+        <LiveRoomPanels initialNow={serverClockAnchor()}
           initialSnapshot={snapshot}
           authSessionId={teacher.sessionId}
         />

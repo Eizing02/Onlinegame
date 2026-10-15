@@ -1,3 +1,4 @@
+import { LoadingForm } from "@/components/ui/loading-form";
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
 import { StudentLinkForm } from "@/components/auth/student-link-form";
@@ -17,6 +18,6 @@ export default async function VerifyStudentPage() {
     <p>กรอกรหัสของคุณ แล้วตรวจสอบชื่อและชั้นก่อนยืนยัน</p>
     <StudentLinkForm />
     <p className="identity-footnote">สำหรับครู: ใช้บัญชี Google ที่ผู้ดูแลเพิ่มสิทธิ์ไว้ หากยังไม่มีสิทธิ์ กรุณาติดต่อผู้ดูแล</p>
-    <form action={signOutAction}><button className="identity-secondary" type="submit">ออกจากระบบเพื่อเลือกบัญชี Google อื่น</button></form>
+    <LoadingForm action={signOutAction}><button className="identity-secondary" type="submit">ออกจากระบบเพื่อเลือกบัญชี Google อื่น</button></LoadingForm>
   </section></AppShell>;
 }

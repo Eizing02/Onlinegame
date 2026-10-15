@@ -16,7 +16,7 @@ test('captain power, simultaneous reveal fireworks, contribution and refresh rec
  await login(page,'ADMIN','teacher-test-only');await page.goto('/teacher/rooms/new');await page.getByLabel('จำนวนกลุ่ม').fill('2');await page.getByLabel('จำนวนคนต่อกลุ่ม').fill('4');await page.getByRole('button',{name:'สร้างห้องเกม'}).click();await expect(page).toHaveURL(/dashboard$/);
  const room=page.url().match(/rooms\/(\d{4})/)![1], teacherApi=`/api/teacher/rooms/${room}/control`, api=`/api/play/${room}`;
  const context=await browser.newContext({baseURL:'http://127.0.0.1:3100',viewport:{width:390,height:844}}), student=await context.newPage();
- await login(student,'02074','student-test-only');await student.getByLabel('รหัสห้อง').fill(room);await student.getByRole('button',{name:'ค้นหาห้อง'}).click();await student.getByRole('button',{name:/กลุ่ม 1/}).click();await expect(student).toHaveURL(/play\//);await student.getByRole('button',{name:'เข้าใจแล้ว'}).click();
+ await login(student,'02074','student-test-only');await student.getByLabel('รหัสห้อง').fill(room);await student.getByRole('button',{name:'ค้นหาห้อง'}).click();await student.getByRole('button',{name:/กลุ่ม 1/}).click();await student.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();await expect(student).toHaveURL(/play\//);await student.getByRole('button',{name:'เข้าใจแล้ว'}).click();
  await browserRequest(page,teacherApi,{method:'POST',data:{command:'start'}});
  await expect(student.getByRole('button',{name:'ใช้พลังทีม +50%'})).toBeEnabled();
  await student.getByRole('button',{name:'ใช้พลังทีม +50%'}).click();await expect(student.locator('.play-power')).toBeVisible();

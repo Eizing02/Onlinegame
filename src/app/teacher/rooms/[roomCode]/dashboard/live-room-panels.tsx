@@ -1,4 +1,5 @@
 "use client";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { AudioControl } from "@/components/audio/audio-control";
 import { useBackgroundMusic } from "@/components/audio/audio-provider";
 import { RevealMoment } from "@/components/game/reveal-moment";
@@ -142,9 +143,11 @@ function ControlButton({
 
 export function LiveRoomPanels({
   initialSnapshot,
+  initialNow,
   authSessionId,
 }: {
   initialSnapshot: TeacherDashboardSnapshot;
+  initialNow: number;
   authSessionId: string;
 }) {
   const roomCode = initialSnapshot.roomCode;
@@ -161,7 +164,7 @@ export function LiveRoomPanels({
     null,
   );
   useBackgroundMusic(snapshot.status === "ended" ? null : AUDIO_ASSETS.background);
-  const [nowMs, setNowMs] = useState(() => Date.now());
+  const [nowMs, setNowMs] = useState(initialNow);
   const refreshTimerRef = useRef<number | null>(null);
   const pollIntervalMs = getTeacherPollInterval(snapshot.status);
   const remainingSeconds = getRemainingSeconds({
@@ -356,6 +359,7 @@ export function LiveRoomPanels({
 
   return (
     <>
+      {(pendingCommand!==null)&&<LoadingIndicator overlay label="กำลังเปลี่ยนสถานะเกม…"/>}
       <RevealMoment eventKey={snapshot.status === "showing_answer" ? snapshot.sessionId + ":" + snapshot.currentQuestionIndex : null} correct={(snapshot.revealSummary?.correctCount ?? 0) > 0} title="เปิดผลคำตอบแล้ว!" detail={snapshot.revealSummary ? "ตอบถูก " + snapshot.revealSummary.correctCount + " คน · อัปเดตคะแนนและอันดับพร้อมกัน" : "ดูผลคำตอบของทุกทีม"} />
       <RoomTabs header={<><div className="room-identity"><h1>ห้อง {snapshot.roomCode} · ครูคุมเกม</h1><p>{snapshot.activityName || snapshot.questionSetTitle}</p></div><div className="room-live-status"><span>ตอบแล้ว {snapshot.answerProgress.answeredCount}/{snapshot.answerProgress.totalParticipantCount} คน</span>{showQuestionTimer && <strong className="text-cyan">{formatRemainingTime(remainingSeconds)}</strong>}</div><a className="room-results-link" href={'/teacher/rooms/' + snapshot.roomCode + '/results'}>ดูสรุปผล</a></>} tabs={[
         {label:'คุมเกม',content:<>      <Panel className="teacher-controls">

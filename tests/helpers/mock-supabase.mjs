@@ -135,7 +135,7 @@ export async function startMockSupabase(port = 3111, raid = false) {
         if (request.headers.authorization !== `Bearer ${mockKey}`) return json(response, { message: 'Private data', code: '42501' }, 403);
         if (path.startsWith('/rest/v1/rpc/')) {
           const name = path.split('/').at(-1);
-          if (raid && ['consume_auth_limit','create_boss_raid_room','join_boss_raid','leave_boss_raid_lobby','reserve_raid_hero','start_boss_raid','finish_boss_raid','submit_boss_raid_answer','report_raid_visibility','get_private_raid_snapshot'].includes(name)) {
+          if (raid && ['consume_auth_limit','create_boss_raid_room','join_boss_raid','leave_boss_raid_lobby','reserve_raid_hero','rename_boss_raid_team','start_boss_raid','finish_boss_raid','submit_boss_raid_answer','report_raid_visibility','get_private_raid_snapshot'].includes(name)) {
             const keys=Object.keys(body);const result=await db.query(`select public.${identifier(name)}(${keys.map((key,i)=>`${identifier(key)}=>$${i+1}`).join(',')}) as r`,keys.map(key=>body[key]));
             return json(response,result.rows[0].r);
           }

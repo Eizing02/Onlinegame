@@ -99,7 +99,7 @@ test('Google student join uses the existing classroom and blocks a code change d
   await login(page); await link(page); await request.post(`${fixture}/__test/room`);
   await page.getByLabel('รหัสห้อง', { exact: true }).fill('1234');
   await page.getByRole('button', { name: 'ค้นหาห้อง', exact: true }).click();
-  await page.getByRole('button', { name: /กลุ่ม 1/ }).click();
+  await page.getByRole('button', { name: /กลุ่ม 1/ }).click();await page.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();
   await expect(page).toHaveURL(/play\/1234$/);
   await page.goto('/account');
   await page.getByText('เปลี่ยนรหัสประจำตัวนักเรียน', { exact: true }).click();
@@ -113,7 +113,7 @@ test('Google gameplay keeps teams and scoring through reload, power, reveal, nex
   await request.post(`${fixture}/__test/room?questions=2`);
   await page.getByLabel('รหัสห้อง', { exact: true }).fill('1234');
   await page.getByRole('button', { name: 'ค้นหาห้อง', exact: true }).click();
-  await page.getByRole('button', { name: /กลุ่ม 1/ }).click();
+  await page.getByRole('button', { name: /กลุ่ม 1/ }).click();await page.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();
   await expect(page).toHaveURL(/play\/1234$/);
   await page.getByRole('button', { name: 'เข้าใจแล้ว', exact: true }).click();
   const context = await browser.newContext({ baseURL: origin }); const teacher = await context.newPage();

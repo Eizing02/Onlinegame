@@ -119,3 +119,15 @@
 .raid-hero-picker button:disabled[aria-pressed=true]{opacity:1}
 
 .raid-question-dialog{top:var(--raid-dialog-top,0px);bottom:auto;height:var(--raid-dialog-height,100dvh);padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(8px,env(safe-area-inset-bottom))}
+.raid-view-panel { height: 100%; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.raid-view-panel[hidden] { display: none !important; }
+.raid-scene-loading { position: absolute; inset: 0; display: grid; place-items: center; background: #F5EFE1d9; z-index: 3; }
+.raid-team-rename { display: grid; gap: 10px; margin-block: 20px 24px; }
+.raid-team-rename label { font-weight: 600; }
+.raid-team-rename label span { display: block; margin-top: 4px; color: var(--muted); font-size: 13px; font-weight: 400; }
+.raid-team-rename > div { display: flex; gap: 12px; }
+.raid-team-rename input { flex: 1; min-width: 0; min-height: 48px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); }
+.raid-team-member strong { overflow-wrap: anywhere; }
+.raid-team-member small { display: block; color: var(--primary); font-size: 12px; }
+.raid-save-notice { color: var(--success); padding: 8px 20px; }
+@media (max-width: 500px) { .raid-team-rename > div { flex-direction: column; } }

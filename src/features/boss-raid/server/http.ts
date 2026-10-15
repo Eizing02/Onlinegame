@@ -6,6 +6,7 @@ import { raidCommand, raidError, raidMutationAllowed, raidSnapshot, raidStudentM
 
 const current = { questionId: z.uuid(), displayIndex: z.number().int().min(0).max(999) };
 const schemas = {
+ team: z.object({ teamId: z.uuid(), teamName: z.string().max(300) }).strict(),
  hero: z.object({ heroType: z.enum(["warrior", "mage", "wizard", "witch", "fairy"]) }).strict(),
  answer: z.object({ ...current, idempotencyKey: z.uuid(), answerText: z.string().max(2000).nullable().optional(), selectedOptionId: z.uuid().nullable().optional() }).strict().refine(v => Boolean(v.answerText?.trim()) !== Boolean(v.selectedOptionId), "กรุณากรอกคำตอบหรือเลือกหนึ่งตัวเลือก"),
  visibility: z.object({ ...current, eventId: z.uuid(), durationMs: z.number().int().min(0).max(86400000) }).strict(),
@@ -38,6 +39,7 @@ export function mutationHandler(kind: keyof typeof schemas) {
    const input = body.data;
    let result;
    if (kind === "control" && "command" in input) result = await raidCommand(roomCode, auth.session, input.command);
+   else if ("teamName" in input) result = await raidStudentMutation(roomCode, auth.session, "team", { p_team: input.teamId, p_name: input.teamName });
    else if ("heroType" in input) result = await raidStudentMutation(roomCode, auth.session, "hero", { p_hero: input.heroType });
    else if ("idempotencyKey" in input) result = await raidStudentMutation(roomCode, auth.session, "answer", { p_question: input.questionId, p_index: input.displayIndex, p_key: input.idempotencyKey, p_answer: input.answerText ?? null, p_option: input.selectedOptionId ?? null });
    else if ("eventId" in input) result = await raidStudentMutation(roomCode, auth.session, "visibility", { p_question: input.questionId, p_index: input.displayIndex, p_event: input.eventId, p_duration: input.durationMs });

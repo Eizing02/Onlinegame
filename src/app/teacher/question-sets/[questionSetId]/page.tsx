@@ -1,3 +1,4 @@
+import { LoadingForm } from "@/components/ui/loading-form";
 import { ArrowLeft, Clock, ListPlus, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -82,7 +83,7 @@ export default async function QuestionSetDetailPage({
                 <p className="mt-1 text-2xl font-semibold">{totalPoints}</p>
               </div>
             </div>
-            <form action={deleteQuestionSetAction}>
+            <LoadingForm action={deleteQuestionSetAction}>
               <input name="question_set_id" type="hidden" value={questionSet.id} />
               <ConfirmSubmitButton
                 className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-danger bg-danger/10 px-3 text-sm font-semibold text-danger transition hover:bg-danger/10"
@@ -91,7 +92,7 @@ export default async function QuestionSetDetailPage({
                 <Trash2 size={17} />
                 ลบชุดคำถามนี้
               </ConfirmSubmitButton>
-            </form>
+            </LoadingForm>
           </div>
         </div>
 
@@ -107,7 +108,7 @@ export default async function QuestionSetDetailPage({
         ) : null}
 
         <Panel>
-          <form className="grid gap-5" action={addQuestionAction}>
+          <LoadingForm className="grid gap-5" action={addQuestionAction}>
             <input name="question_set_id" type="hidden" value={questionSet.id} />
             <div>
               <label className="text-sm font-medium" htmlFor="question_text">
@@ -168,12 +169,12 @@ export default async function QuestionSetDetailPage({
                 เพิ่มคำถาม
               </button>
             </div>
-          </form>
+          </LoadingForm>
         </Panel>
 
-        <form id="bulk-delete-questions" action={deleteSelectedQuestionsAction}>
+        <LoadingForm id="bulk-delete-questions" action={deleteSelectedQuestionsAction}>
           <input name="question_set_id" type="hidden" value={questionSet.id} />
-        </form>
+        </LoadingForm>
 
         {questionSet.questions.length > 0 ? (
           <div className="flex flex-col justify-between gap-3 rounded-xl border border-border bg-panel/70 p-4 sm:flex-row sm:items-center">
@@ -223,7 +224,7 @@ export default async function QuestionSetDetailPage({
                     ) : null}
                   </div>
                 </div>
-                <form action={deleteQuestionAction}>
+                <LoadingForm action={deleteQuestionAction}>
                   <input
                     name="question_set_id"
                     type="hidden"
@@ -238,7 +239,7 @@ export default async function QuestionSetDetailPage({
                   >
                     <Trash2 size={18} />
                   </button>
-                </form>
+                </LoadingForm>
               </div>
               <div className="grid gap-3 border-t border-border pt-4 text-sm md:grid-cols-3">
                 <div>

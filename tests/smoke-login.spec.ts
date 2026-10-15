@@ -18,5 +18,5 @@ test("sheet login routes teachers and students by role", async ({ page }) => {
   await page.getByLabel("รหัสผ่าน").fill("student-test-only");
   await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
   await expect(page).toHaveURL(/\/join$/);
-  await expect(page.getByText("ผู้เล่น")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "เข้าร่วมเกม", exact: true })).toBeVisible();
 });

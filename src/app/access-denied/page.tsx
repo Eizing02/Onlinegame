@@ -1,3 +1,4 @@
+import { LoadingForm } from "@/components/ui/loading-form";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
@@ -15,6 +16,6 @@ export default async function AccessDeniedPage() {
   return <AppShell><section className="identity-page"><h1>ยังเข้าใช้งานหน้านี้ไม่ได้</h1>
     {state.kind === "denied" && state.identity && <p className="text-muted identity-email">{state.identity.email}</p>}
     <p className="notice-error" role="alert">{state.kind === "denied" ? authMessage(state.code) : "บัญชีนี้ไม่ได้รับสิทธิ์จัดการครู หากต้องการสิทธิ์เพิ่มเติม กรุณาติดต่อผู้ดูแล"}</p>
-    <div className="identity-actions"><Link className="identity-secondary" href="/">ตรวจสอบสิทธิ์อีกครั้ง</Link><form action={signOutAction}><button className="game-button" type="submit">ออกจากระบบ</button></form></div>
+    <div className="identity-actions"><Link className="identity-secondary" href="/">ตรวจสอบสิทธิ์อีกครั้ง</Link><LoadingForm action={signOutAction}><button className="game-button" type="submit">ออกจากระบบ</button></LoadingForm></div>
   </section></AppShell>;
 }

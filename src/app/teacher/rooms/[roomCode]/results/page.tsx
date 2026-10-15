@@ -1,3 +1,4 @@
+import { LoadingForm } from "@/components/ui/loading-form";
 import { notFound, redirect } from "next/navigation";
 
 import { deleteRoomAction } from "@/app/teacher/actions";
@@ -164,7 +165,7 @@ export default async function ResultsPage({
                 ลบข้อมูลรอบเล่นนี้ เช่น ผู้เข้าห้อง ทีม คำตอบ และ event โดยเก็บชุดคำถามไว้
               </p>
             </div>
-            <form action={deleteRoomAction}>
+            <LoadingForm action={deleteRoomAction}>
               <input name="room_code" type="hidden" value={session.roomCode} />
               <input
                 name="return_to"
@@ -177,7 +178,7 @@ export default async function ResultsPage({
               >
                 ปิดห้อง
               </ConfirmSubmitButton>
-            </form>
+            </LoadingForm>
           </Panel>
         ) : null}
       </section>

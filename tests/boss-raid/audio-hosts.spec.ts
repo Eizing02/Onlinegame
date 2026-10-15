@@ -18,7 +18,7 @@ test('teacher and student header audio panels share readable controls at both wi
   try {
     await login(pupil, 'pupil@example.com', '01234'); await expect(pupil).toHaveURL(/\/join$/);
     await pupil.getByLabel('รหัสห้อง').fill(room); await pupil.getByRole('button', { name: 'ค้นหาห้อง' }).click();
-    await pupil.getByRole('button', { name: /ทีม 1/ }).click(); await expect(pupil).toHaveURL(/\/raid$/);
+    await pupil.getByRole('button', { name: /ทีม 1/ }).click();await pupil.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click(); await expect(pupil).toHaveURL(/\/raid$/);
     for (const [host, target] of [['teacher', page], ['student-header', pupil]] as [string, Page][]) for (const [size, width, height] of [['desktop', 1366, 768], ['phone', 390, 844]] as [string, number, number][]) {
       await target.setViewportSize({ width, height }); await target.getByRole('button', { name: 'ตั้งค่าเสียง', exact: true }).click();
       const panel = target.locator('.audio-panel:popover-open'); await expect(panel).toBeVisible();

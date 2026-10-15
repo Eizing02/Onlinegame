@@ -1,4 +1,5 @@
 "use client";
+import { LoadingForm } from "@/components/ui/loading-form";
 import { useRef, useState } from "react";
 import { Check, LoaderCircle, Pencil } from "lucide-react";
 import { authMessage } from "@/lib/auth/auth-messages";
@@ -19,7 +20,7 @@ export function StudentLinkForm({ changing = false, sessionId }: { changing?: bo
     inFlight.current = true; setPending(true); setError("");
     try {
       const response = await fetch(`/api/auth/student/${operation}`, {
-        method: "POST", headers: { "Content-Type": "application/json", ...(sessionId ? { "x-client-session": sessionId } : {}) },
+        method: "POST", signal: AbortSignal.timeout(15000), headers: { "Content-Type": "application/json", ...(sessionId ? { "x-client-session": sessionId } : {}) },
         body: JSON.stringify({ studentCode: operation === "lookup" ? normalized : preview?.userCode }),
       });
       const result = await response.json();
@@ -31,7 +32,7 @@ export function StudentLinkForm({ changing = false, sessionId }: { changing?: bo
     finally { inFlight.current = false; setPending(false); }
   }
   function edit() { setPreview(null); setError(""); requestAnimationFrame(() => input.current?.focus()); }
-  return <form className="identity-form" aria-busy={pending} onSubmit={event => { event.preventDefault(); void request(preview ? (changing ? "change-code" : "claim") : "lookup"); }}>
+  return <LoadingForm busy={pending} loadingLabel="กำลังตรวจสอบบัญชี…" className="identity-form" aria-busy={pending} onSubmit={event => { event.preventDefault(); void request(preview ? (changing ? "change-code" : "claim") : "lookup"); }}>
     {!preview ? <div><label htmlFor="student-code">{changing ? "รหัสนักเรียนใหม่" : "รหัสประจำตัวนักเรียน"}</label>
       <input ref={input} id="student-code" name="studentCode" type="text" inputMode="numeric" autoComplete="off" maxLength={5} value={code} onChange={event => setCode(normalizeStudentCode(event.target.value))} placeholder="เช่น 01234" required aria-invalid={!!error} aria-describedby={`student-code-help${error ? " student-link-error" : ""}`} />
       <p id="student-code-help" className="text-muted">ตัวเลข 5 หลัก รวมเลข 0 ด้านหน้า</p>
@@ -46,5 +47,5 @@ export function StudentLinkForm({ changing = false, sessionId }: { changing?: bo
       <button type="submit" className="game-button" disabled={pending}>{pending ? <LoaderCircle size={18} className="loading-spin" aria-hidden="true" /> : <Check size={18} aria-hidden="true" />}{pending ? "กำลังตรวจสอบ…" : preview ? (changing ? "ยืนยันเปลี่ยนรหัส" : "ยืนยันและเข้าเกม") : "ตรวจสอบรหัส"}</button>
       {preview && <button type="button" className="identity-secondary" disabled={pending} onClick={edit}><Pencil size={16} aria-hidden="true" />แก้ไขรหัส</button>}
     </div>
-  </form>;
+  </LoadingForm>;
 }

@@ -6,6 +6,7 @@ import type { AppSession } from "@/types/auth";
 import type { RaidAnswerResult, RaidSnapshot } from "../types";
 
 const messages: Record<string, string> = {
+ CAPTAIN_ONLY: "เฉพาะหัวหน้าทีมเท่านั้นที่เปลี่ยนชื่อได้", INVALID_TEAM_NAME: "ชื่อทีมต้องยาว 2–30 ตัวอักษร",
  PRESENTATION_PENDING: "กำลังแสดงผลการต่อสู้ รอจบแล้วทำข้อต่อไป",
  ACCESS_DENIED: "บัญชีนี้ไม่มีสิทธิ์เข้าห้องนี้", ROOM_NOT_FOUND: "ไม่พบห้อง Boss Raid นี้", ACTIVE_ROOM: "มีห้องที่ยังไม่จบอยู่แล้ว",
  TEAM_FULL: "ทีมนี้เต็มแล้ว กรุณาเลือกทีมอื่น", HERO_TAKEN: "เพื่อนเลือกฮีโร่นี้แล้ว กรุณาเลือกตัวอื่น", LOBBY_CLOSED: "เกมเริ่มแล้ว ไม่สามารถเปลี่ยนฮีโร่หรือทีมได้",
@@ -17,8 +18,8 @@ export function raidError(code?: string) { return messages[code ?? ""] ?? "ท�
 
 // Reuse migration 008's atomic, shared limiter without modifying Auth or its key space.
 // Limits allow fast independent answers and retries; rooms do not multiply a user's budget.
-export async function raidMutationAllowed(session: AppSession, kind: "hero" | "answer" | "visibility" | "control") {
- const limits = { answer: 60, hero: 30, visibility: 20, control: 10 };
+export async function raidMutationAllowed(session: AppSession, kind: "hero" | "answer" | "visibility" | "control" | "team") {
+ const limits = { answer: 60, hero: 30, visibility: 20, control: 10, team: 10 };
  return rpc<boolean>("consume_auth_limit", { p_key: `raid:${session.userCode}:${kind}`, p_limit: limits[kind], p_seconds: 10 });
 }
 
@@ -32,7 +33,7 @@ async function rpc<T>(name: string, args: Record<string, unknown>): Promise<T> {
  if (error) {
   // Never expose SQL, service credentials or frozen question content to the browser.
   if (error.message.includes("RAID_INVALID_QUESTION_SET")) throw new Error("ชุดคำถามต้องมีคะแนนรวมมากกว่า 0 และตัวเลือกที่ถูกต้องครบทุกข้อ");
-  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009 และ 010 หรือลองอีกครั้ง");
+  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009–012 หรือลองอีกครั้ง");
  }
  return data as T;
 }
@@ -65,8 +66,8 @@ export async function raidCommand(roomCode: string, session: AppSession, command
  if (!snapshot) return { ok: false, code: "ACCESS_DENIED" };
  return rpc<RaidAnswerResult>("finish_boss_raid", { p_session: snapshot.sessionId, p_teacher: session.userCode });
 }
-export async function raidStudentMutation(roomCode: string, session: AppSession, kind: "hero" | "answer" | "visibility", input: Record<string, unknown>) {
- const names = { hero: "reserve_raid_hero", answer: "submit_boss_raid_answer", visibility: "report_raid_visibility" };
+export async function raidStudentMutation(roomCode: string, session: AppSession, kind: "hero" | "answer" | "visibility" | "team", input: Record<string, unknown>) {
+ const names = { hero: "reserve_raid_hero", answer: "submit_boss_raid_answer", visibility: "report_raid_visibility", team: "rename_boss_raid_team" };
  const result = await rpc<RaidAnswerResult>(names[kind], { p_room: roomCode, p_student: session.userCode, ...input });
  // Reconcile expiry after the answer transaction releases its team lock.
  if (result.code === "RAID_EXPIRED") await raidSnapshot(roomCode, session);

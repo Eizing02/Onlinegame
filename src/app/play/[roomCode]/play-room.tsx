@@ -1,4 +1,5 @@
 "use client";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { AudioControl } from "@/components/audio/audio-control";
 import { useAppAudio, useBackgroundMusic } from "@/components/audio/audio-provider";
 import { RevealMoment } from "@/components/game/reveal-moment";
@@ -91,9 +92,11 @@ function getStudentPollInterval(status: StudentPlaySnapshot["status"]) {
 
 export function PlayRoom({
   initialSnapshot,
+  initialNow,
   authSessionId,
 }: {
   initialSnapshot: StudentPlaySnapshot;
+  initialNow: number;
   authSessionId: string;
 }) {
   const [snapshot, setSnapshot] = useState(initialSnapshot);
@@ -114,7 +117,7 @@ export function PlayRoom({
     string | null
   >(null);
   const [questionExpanded, setQuestionExpanded] = useState<string | null>(null);
-  const [nowMs, setNowMs] = useState(() => Date.now());
+  const [nowMs, setNowMs] = useState(initialNow);
   const answerText =
     answerDraft.questionIndex === snapshot.currentQuestionIndex
       ? answerDraft.text
@@ -444,6 +447,7 @@ export function PlayRoom({
 
   return (
     <>
+      {(isSubmitting||isTeamUpdating||isPowerPending)&&<LoadingIndicator overlay label="กำลังบันทึก…"/>}
       <RevealMoment eventKey={snapshot.status === "showing_answer" ? snapshot.sessionId + ":" + snapshot.currentQuestionIndex : null} correct={Boolean(snapshot.currentAnswer?.isCorrect)} title={snapshot.currentAnswer?.isCorrect ? "ตอบถูก!" : "เฉลยแล้ว ลุยข้อต่อไป"} detail={snapshot.currentAnswer?.isCorrect && snapshot.contribution ? "คำตอบนี้ช่วยทีม +" + formatScore(snapshot.contribution.total) + " คะแนน" : "ดูคำตอบที่ถูก แล้วเตรียมพร้อมไปด้วยกัน"} />
       <RoomTabs defaultIndex={snapshot.status === 'ended' ? 2 : 0} resetKey={snapshot.sessionId + ':' + snapshot.currentQuestionIndex + ':' + (snapshot.status === 'lobby' ? 'lobby' : snapshot.status === 'ended' ? 'ended' : 'game')} header={<>
         <div className="room-identity"><h1>{snapshot.team.teamName}</h1><p>ห้อง {snapshot.roomCode} · {snapshot.activityName || snapshot.questionSetTitle}</p></div>

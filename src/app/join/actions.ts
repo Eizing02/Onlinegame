@@ -58,28 +58,6 @@ export async function chooseTeamAction(formData: FormData) {
   redirect(`/play/${result.roomCode}`);
 }
 
-export async function randomTeamAction(formData: FormData) {
-  const student = await requireRole("student");
-  const roomCode = normalizeRoomCode(getFormString(formData, "room_code"));
-
-  if (!isValidRoomCode(roomCode)) {
-    encodedRedirect("/join", "error", "รหัสห้องไม่ถูกต้อง");
-  }
-
-  const result = await joinLocalGameSession({
-    roomCode,
-    studentCode: student.userCode,
-    displayName: student.displayName,
-    authUserId: student.authUserId,
-  });
-
-  if (!result.ok) {
-    encodedRedirect(`/join?room_code=${roomCode}`, "error", result.reason);
-  }
-
-  redirect(`/play/${result.roomCode}`);
-}
-
 export async function leaveTeamAction(formData: FormData) {
   const student = await requireRole("student");
   const roomCode = normalizeRoomCode(getFormString(formData, "room_code"));

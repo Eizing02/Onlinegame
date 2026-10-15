@@ -35,7 +35,7 @@ test('audit classroom routes, responsive states, ownership and stale answers',as
   const studentContext=await browser.newContext({baseURL:'http://127.0.0.1:3100'});const student=await studentContext.newPage();student.on('pageerror',e=>errors.push(e.message));
   await login(student,'02074','student-test-only');await expect(student).toHaveURL(/join$/);await pair(student,'join');
   await student.getByLabel('รหัสห้อง').fill(room);await student.getByRole('button',{name:'ค้นหาห้อง'}).click();await pair(student,'team-selection');
-  await student.getByRole('button',{name:/กลุ่ม 1/}).click();await expect(student).toHaveURL(/play\//);await student.getByRole('button',{name:'เข้าใจแล้ว'}).click();await pair(student,'student-lobby');
+  await student.getByRole('button',{name:/กลุ่ม 1/}).click();await student.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();await expect(student).toHaveURL(/play\//);await student.getByRole('button',{name:'เข้าใจแล้ว'}).click();await pair(student,'student-lobby');
   await page.reload();await pair(page,'teacher-lobby');await inspect(page,'teacher-small',320,740);
   const api=`/api/teacher/rooms/${room}`;
   expect((await browserRequest(student, `${api}/control`,{method:'POST',data:{command:'start'}})).status()).toBe(401);

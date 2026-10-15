@@ -1,3 +1,4 @@
+import { serverClockAnchor } from "@/lib/game/server-clock";
 import { notFound, redirect } from "next/navigation";
 
 import { PlayRoom } from "@/app/play/[roomCode]/play-room";
@@ -36,7 +37,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
   return (
     <AppShell room>
       <section className="room-route student-room-route">
-        <PlayRoom initialSnapshot={result.snapshot} authSessionId={student.sessionId} />
+        <PlayRoom initialNow={serverClockAnchor()} initialSnapshot={result.snapshot} authSessionId={student.sessionId} />
       </section>
     </AppShell>
   );

@@ -94,7 +94,7 @@ test("student selects a team and appears on teacher dashboard", async ({
   await page.getByLabel("รหัสห้อง").fill(roomCode);
   await page.getByRole("button", { name: "ค้นหาห้อง" }).click();
   await expect(page).toHaveURL(new RegExp(`/join\\?room_code=${roomCode}$`));
-  await page.getByRole("button", { name: /กลุ่ม 1/ }).click();
+  await page.getByRole("button", { name: /กลุ่ม 1/ }).click();await page.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();
   await expect(page).toHaveURL(new RegExp(`/play/${roomCode}$`));
   await expect(page.getByRole("heading", {name:"กลุ่ม 1",exact:true})).toBeVisible();
   await expect(page.getByText("รอครูเริ่มเกม", { exact: true })).toBeVisible();

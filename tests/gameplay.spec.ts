@@ -90,8 +90,9 @@ async function joinTeam({
   await page.getByLabel("รหัสห้อง").fill(roomCode);
   await page.getByRole("button", { name: "ค้นหาห้อง" }).click();
   await expect(page.getByText("Gameplay flow")).toBeVisible();
-  await expect(page.getByText("จำนวนทีม")).toBeVisible();
+  await expect(page.locator(".join-room-summary").getByText(/2 ทีม/)).toBeVisible();
   await page.getByRole("button", { name: teamName }).click();
+  await page.getByRole("button", { name: /^ยืนยันเข้าทีม/ }).click();
   await expect(page).toHaveURL(new RegExp(`/play/${roomCode}$`));
 
   return { context, page };

@@ -1,0 +1,56 @@
+{
+  "geometry": [
+    {
+      "name": "join-desktop",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "height": 900,
+      "scrollHeight": 900,
+      "buttonBottom": 873,
+      "buttonHeight": 48,
+      "gridScrollable": true
+    },
+    {
+      "name": "join-phone",
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 844,
+      "scrollHeight": 844,
+      "buttonBottom": 820,
+      "buttonHeight": 48,
+      "gridScrollable": true
+    },
+    {
+      "name": "join-small",
+      "width": 320,
+      "scrollWidth": 320,
+      "height": 640,
+      "scrollHeight": 640,
+      "buttonBottom": 616,
+      "buttonHeight": 48,
+      "gridScrollable": true
+    },
+    {
+      "name": "join-tablet",
+      "width": 768,
+      "scrollWidth": 768,
+      "height": 1024,
+      "scrollHeight": 1024,
+      "buttonBottom": 1000,
+      "buttonHeight": 48,
+      "gridScrollable": true
+    },
+    {
+      "name": "join-landscape",
+      "width": 844,
+      "scrollWidth": 844,
+      "height": 390,
+      "scrollHeight": 390,
+      "buttonBottom": 382,
+      "buttonHeight": 48,
+      "gridScrollable": true
+    }
+  ],
+  "axe": [],
+  "errors": []
+}

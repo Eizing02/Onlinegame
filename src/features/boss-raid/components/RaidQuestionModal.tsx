@@ -1,4 +1,5 @@
 "use client";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { AudioControl } from "@/components/audio/audio-control";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Timer } from "lucide-react";
@@ -9,7 +10,7 @@ import { RaidStudentHud } from "./RaidStudentHud";
 import { useRaidClock } from "../hooks/use-raid-clock";
 export type QuestionState="open"|"resolving"|"presenting"|"error"|"expired";
 const LETTERS=["ก","ข","ค","ง"];
-export function RaidQuestionModal({question,total,state,warnings,visibilityEnabled,feedback,error,onSubmit,onRetry,deadline,serverNow,score,heroes=[],ownId,partyOpen=false,onPartyToggle=()=>{},autoConfirm=true}:{question:RaidQuestion;total:number;state:QuestionState;warnings:number;visibilityEnabled:boolean;feedback:string;error:string;onSubmit:(answerText:string|null,selectedOptionId:string|null)=>void;onRetry:()=>void;deadline:string|null;serverNow:string;score:number;heroes?:RaidHero[];ownId?:string;partyOpen?:boolean;onPartyToggle?:()=>void;autoConfirm?:boolean}) {
+export function RaidQuestionModal({question,total,state,warnings,visibilityEnabled,feedback,error,onSubmit,onRetry,deadline,serverNow,score,heroes=[],ownId,partyOpen=false,onPartyToggle=()=>{},autoConfirm=true,syncing=false}:{question:RaidQuestion;total:number;state:QuestionState;warnings:number;visibilityEnabled:boolean;feedback:string;error:string;onSubmit:(answerText:string|null,selectedOptionId:string|null)=>void;onRetry:()=>void;deadline:string|null;serverNow:string;score:number;heroes?:RaidHero[];ownId?:string;partyOpen?:boolean;onPartyToggle?:()=>void;autoConfirm?:boolean;syncing?:boolean}) {
  const dialog=useRef<HTMLDialogElement>(null),draft=useRef({answer:"",option:"",sent:false,end:0});
  const [answer,setAnswer]=useState(""),[option,setOption]=useState(""),[confirmation,setConfirmation]=useState<{end:number}|null>(null),[left,setLeft]=useState(5000);
  const {seconds,remaining}=useRaidClock(deadline,serverNow);
@@ -24,6 +25,7 @@ export function RaidQuestionModal({question,total,state,warnings,visibilityEnabl
  const clear=()=>{draft.current.option="";draft.current.end=0;setOption("");setConfirmation(null);};
  const letter=LETTERS[question.options.findIndex(o=>o.id===option)]??"";
  return <dialog ref={dialog} className="raid-question-dialog" data-state={state} aria-labelledby="raid-question-title" onCancel={e=>{e.preventDefault();if(partyOpen)onPartyToggle();}}>
+  {(state==="resolving"||syncing)&&<LoadingIndicator overlay label="กำลังบันทึกคำตอบ…"/>}
   <div className="raid-question-shell">
    <div className="raid-question-hud"><RaidStudentHud heroes={heroes} ownId={ownId} deadline={deadline} serverNow={serverNow} open={partyOpen} onToggle={onPartyToggle} id="raid-question-party"/></div>
    <form className="raid-question-card" onSubmit={e=>{e.preventDefault();if(!canEdit||!valid)return;if(!confirmation&&question.questionType==="short_text"){begin();return;}send();}}>

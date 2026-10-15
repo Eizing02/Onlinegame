@@ -1,3 +1,4 @@
+import { LoadingForm } from "@/components/ui/loading-form";
 import { BookOpenCheck, ListPlus, Plus } from "lucide-react";
 import { requireRole } from "@/lib/auth/session";
 
@@ -45,7 +46,7 @@ export default async function QuestionSetsPage({
         ) : null}
 
         <Panel>
-          <form className="grid gap-4 md:grid-cols-[1fr_1fr_auto]" action={createQuestionSetAction}>
+          <LoadingForm className="grid gap-4 md:grid-cols-[1fr_1fr_auto]" action={createQuestionSetAction}>
             <div>
               <label className="text-sm font-medium" htmlFor="title">
                 ชื่อชุดคำถาม
@@ -76,7 +77,7 @@ export default async function QuestionSetsPage({
                 สร้างชุดคำถาม
               </button>
             </div>
-          </form>
+          </LoadingForm>
         </Panel>
 
         <div className="grid gap-4 md:grid-cols-2">

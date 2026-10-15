@@ -17,7 +17,7 @@ test('combat feedback: teacher party across devices and team changes; real answe
  const contexts=await Promise.all(people.map(()=>browser.newContext({baseURL:'http://127.0.0.1:3110',viewport:{width:390,height:844}})));
  try{
   const pupils=await Promise.all(contexts.map(c=>c.newPage()));
-  for(let i=0;i<5;i++){await login(pupils[i],people[i][0],people[i][1]);await pupils[i].goto(`/join?room_code=${room}`);await pupils[i].getByRole('button',{name:/ทีม 1/}).click();await expect(pupils[i]).toHaveURL(/\/raid$/);await browserRequest(pupils[i],`/api/raid/${room}/hero`,{method:'POST',data:{heroType:['warrior','mage','wizard','witch','fairy'][i]}});}
+  for(let i=0;i<5;i++){await login(pupils[i],people[i][0],people[i][1]);await pupils[i].goto(`/join?room_code=${room}`);await pupils[i].getByRole('button',{name:/ทีม 1/}).click();await pupils[i].getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();await expect(pupils[i]).toHaveURL(/\/raid$/);await browserRequest(pupils[i],`/api/raid/${room}/hero`,{method:'POST',data:{heroType:['warrior','mage','wizard','witch','fairy'][i]}});}
   const party=page.locator('#raid-teacher-party');await page.getByRole('button',{name:/สมาชิก ทีม 1/}).click();await expect(party.locator('li')).toHaveCount(5);await expect(party).toContainText(name);
   for(const label of ['นักรบ','จอมเวท','พ่อมด','แม่มด','ภูตพิทักษ์'])await expect(party).toContainText(label);
   const reports=[];

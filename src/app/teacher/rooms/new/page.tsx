@@ -1,3 +1,4 @@
+import { LoadingForm } from "@/components/ui/loading-form";
 import { RaidRoomForm } from "@/features/boss-raid/components/RaidRoomForm";
 import { raidAvailable } from "@/features/boss-raid/server/raid-service";
 import "@/features/boss-raid/raid.css";
@@ -74,7 +75,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
               <ButtonLink href={`/teacher/rooms/${activeRoom.roomCode}/dashboard`}>
                 กลับไปห้องเดิม
               </ButtonLink>
-              <form action={deleteRoomAction}>
+              <LoadingForm action={deleteRoomAction}>
                 <input name="room_code" type="hidden" value={activeRoom.roomCode} />
                 <input name="return_to" type="hidden" value="/teacher/rooms/new" />
                 <ConfirmSubmitButton
@@ -83,7 +84,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
                 >
                   ปิดห้องนี้
                 </ConfirmSubmitButton>
-              </form>
+              </LoadingForm>
             </div>
           </Panel>
         ) : null}
