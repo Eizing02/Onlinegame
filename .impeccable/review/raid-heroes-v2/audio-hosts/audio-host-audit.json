@@ -1,0 +1,50 @@
+[
+  {
+    "host": "teacher",
+    "size": "desktop",
+    "styles": {
+      "font": "16px",
+      "range": 286,
+      "label": 286,
+      "background": "rgb(121, 13, 22)",
+      "color": "rgb(245, 239, 225)"
+    },
+    "violations": []
+  },
+  {
+    "host": "teacher",
+    "size": "phone",
+    "styles": {
+      "font": "16px",
+      "range": 286,
+      "label": 286,
+      "background": "rgb(121, 13, 22)",
+      "color": "rgb(245, 239, 225)"
+    },
+    "violations": []
+  },
+  {
+    "host": "student-header",
+    "size": "desktop",
+    "styles": {
+      "font": "16px",
+      "range": 286,
+      "label": 286,
+      "background": "rgb(121, 13, 22)",
+      "color": "rgb(245, 239, 225)"
+    },
+    "violations": []
+  },
+  {
+    "host": "student-header",
+    "size": "phone",
+    "styles": {
+      "font": "16px",
+      "range": 286,
+      "label": 286,
+      "background": "rgb(121, 13, 22)",
+      "color": "rgb(245, 239, 225)"
+    },
+    "violations": []
+  }
+]

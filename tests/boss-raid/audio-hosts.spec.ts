@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
-const fixture = 'http://127.0.0.1:3111', dir = '.impeccable/review/wallpaper-audio';
+const fixture = 'http://127.0.0.1:3111', dir = process.env.RAID_AUDIO_EVIDENCE_DIR ?? '.impeccable/review/wallpaper-audio';
 async function login(page: Page, email: string, code?: string) {
   await page.goto('/login'); await page.getByRole('button', { name: 'เข้าสู่ระบบด้วย Google', exact: true }).click();
   await page.getByRole('link', { name: email, exact: true }).click();

@@ -1,0 +1,444 @@
+{
+  "muted": false,
+  "voices": 0,
+  "decodedBytes": 11243520,
+  "cacheEntries": 14,
+  "failures": [],
+  "music": "raid_final_phase",
+  "dropped": [
+    {
+      "sound": "button",
+      "reason": "epoch"
+    },
+    {
+      "sound": "button",
+      "reason": "epoch"
+    },
+    {
+      "sound": "button",
+      "reason": "epoch"
+    },
+    {
+      "sound": "button",
+      "reason": "epoch"
+    }
+  ],
+  "musicPaused": false,
+  "musicReadyState": 4,
+  "played": [
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:84"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:100"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:120"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:148"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:163"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:180"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:205"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:230"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:258"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:282"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:307"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:357"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:386"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:420"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:425"
+    },
+    {
+      "sound": "claw",
+      "seq": 1,
+      "cueId": "boss:claw",
+      "animation": "attack_1",
+      "frame": 8
+    },
+    {
+      "sound": "hit",
+      "seq": 1,
+      "cueId": "0:hit",
+      "animation": "attack_1",
+      "frame": 8
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:448"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:475"
+    },
+    {
+      "sound": "heal",
+      "seq": 2,
+      "cueId": "0:heal",
+      "animation": "heal",
+      "frame": 0
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:506"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:512"
+    },
+    {
+      "sound": "fire",
+      "seq": 3,
+      "cueId": "boss:fire",
+      "animation": "breath",
+      "frame": 8
+    },
+    {
+      "sound": "hit",
+      "seq": 3,
+      "cueId": "0:hit",
+      "animation": "breath",
+      "frame": 8
+    },
+    {
+      "sound": "shake",
+      "seq": 3,
+      "cueId": "boss:shake",
+      "animation": "breath",
+      "frame": 8
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:535"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:569"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:579"
+    },
+    {
+      "sound": "ultimate",
+      "seq": 4,
+      "cueId": "boss:ultimate",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 4,
+      "cueId": "0:hit",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "shake",
+      "seq": 4,
+      "cueId": "boss:shake",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:600"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:634"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:740"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:834"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:861"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:884"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:893"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:909"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:924"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:937"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:951"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:965"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:979"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:993"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1012"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1028"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1047"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1061"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1081"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1084"
+    },
+    {
+      "sound": "hit",
+      "seq": 1,
+      "cueId": "0:hit",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "warrior2",
+      "seq": 1,
+      "cueId": "boss:warrior2",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1098"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1117"
+    },
+    {
+      "sound": "heal",
+      "seq": 2,
+      "cueId": "0:heal",
+      "animation": "heal",
+      "frame": 0
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1136"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1140"
+    },
+    {
+      "sound": "wizard2",
+      "seq": 3,
+      "cueId": "boss:wizard2",
+      "animation": "breath",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 3,
+      "cueId": "0:hit",
+      "animation": "breath",
+      "frame": 7
+    },
+    {
+      "sound": "shake",
+      "seq": 3,
+      "cueId": "boss:shake",
+      "animation": "breath",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1157"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1181"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1185"
+    },
+    {
+      "sound": "ultimate",
+      "seq": 4,
+      "cueId": "boss:ultimate",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 4,
+      "cueId": "0:hit",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "shake",
+      "seq": 4,
+      "cueId": "boss:shake",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1205"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1232"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1336"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:1424"
+    }
+  ],
+  "render": {
+    "bossType": "stone_titan",
+    "scene": {
+      "decodedBytes": 18872040,
+      "sheets": 3,
+      "activeReferences": 3
+    },
+    "sprites": {
+      "decodedBytes": 35086912,
+      "sheets": 6,
+      "activeReferences": 6
+    },
+    "actorCount": 6,
+    "particles": 0,
+    "sparks": 0,
+    "feedback": {
+      "textures": 9,
+      "active": 0,
+      "shown": []
+    },
+    "frameP50Ms": 28.299999952316284,
+    "frameP95Ms": 71.5
+  }
+}

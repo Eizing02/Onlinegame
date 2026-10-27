@@ -1,0 +1,238 @@
+{
+  "muted": false,
+  "voices": 0,
+  "decodedBytes": 11120640,
+  "cacheEntries": 14,
+  "failures": [],
+  "music": "raid_final_phase",
+  "dropped": [
+    {
+      "sound": "button",
+      "reason": "epoch"
+    },
+    {
+      "sound": "button",
+      "reason": "epoch"
+    }
+  ],
+  "musicPaused": false,
+  "musicReadyState": 4,
+  "played": [
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:84"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:100"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:120"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:148"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:163"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:180"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:205"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:230"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:258"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:282"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:307"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:357"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:386"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:420"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:425"
+    },
+    {
+      "sound": "claw",
+      "seq": 1,
+      "cueId": "boss:claw",
+      "animation": "attack_1",
+      "frame": 8
+    },
+    {
+      "sound": "hit",
+      "seq": 1,
+      "cueId": "0:hit",
+      "animation": "attack_1",
+      "frame": 8
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:448"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:475"
+    },
+    {
+      "sound": "heal",
+      "seq": 2,
+      "cueId": "0:heal",
+      "animation": "heal",
+      "frame": 0
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:506"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:512"
+    },
+    {
+      "sound": "fire",
+      "seq": 3,
+      "cueId": "boss:fire",
+      "animation": "breath",
+      "frame": 8
+    },
+    {
+      "sound": "hit",
+      "seq": 3,
+      "cueId": "0:hit",
+      "animation": "breath",
+      "frame": 8
+    },
+    {
+      "sound": "shake",
+      "seq": 3,
+      "cueId": "boss:shake",
+      "animation": "breath",
+      "frame": 8
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:535"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:569"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:579"
+    },
+    {
+      "sound": "ultimate",
+      "seq": 4,
+      "cueId": "boss:ultimate",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 4,
+      "cueId": "0:hit",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "shake",
+      "seq": 4,
+      "cueId": "boss:shake",
+      "animation": "ultimate",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:600"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:634"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:740"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:834"
+    }
+  ],
+  "render": {
+    "bossType": "shadow_dragon",
+    "scene": {
+      "decodedBytes": 18872040,
+      "sheets": 3,
+      "activeReferences": 3
+    },
+    "sprites": {
+      "decodedBytes": 28520128,
+      "sheets": 6,
+      "activeReferences": 6
+    },
+    "actorCount": 6,
+    "particles": 0,
+    "sparks": 0,
+    "feedback": {
+      "textures": 9,
+      "active": 0,
+      "shown": []
+    },
+    "frameP50Ms": 27.700000047683716,
+    "frameP95Ms": 69.09999990463257
+  }
+}

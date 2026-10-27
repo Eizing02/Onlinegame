@@ -1,3 +1,4 @@
+import { HERO_DEFINITIONS } from "../assets/hero-definitions";
 import type { HeroType } from "../assets/manifest";
 export type UV = {u:number;v:number};
 export type Slot = {foot:UV;scaleMultiplier:number;facing:"left"|"right";visualHeight:number};
@@ -31,7 +32,7 @@ export function profileForStage(width:number,height:number,profiles?:Record<"wid
 }
 export function depthScale(p:UV,profile:Profile){const d=profile.floorDepth;return d.backScale+(d.frontScale-d.backScale)*clamp((p.v-d.backV)/(d.frontV-d.backV),0,1);}
 export function assignHeroSlots(heroes:{id:string;heroType:HeroType|null}[]) {
- const preferred:Record<HeroType,number>={warrior:0,mage:1,wizard:2,witch:3,fairy:4};const occupied=new Set<number>(),result=new Map<string,number>();
+ const preferred=Object.fromEntries(Object.entries(HERO_DEFINITIONS).map(([id,value])=>[id,value.slot])) as Record<HeroType,number>;const occupied=new Set<number>(),result=new Map<string,number>();
  for(const h of [...heroes].sort((a,b)=>(a.heroType?preferred[a.heroType]:5)-(b.heroType?preferred[b.heroType]:5)||a.id.localeCompare(b.id))){const wish=h.heroType?preferred[h.heroType]:0;const index=!occupied.has(wish)?wish:[0,2,1,3,4].find(i=>!occupied.has(i));if(index!==undefined){occupied.add(index);result.set(h.id,index);}}
  return result;
 }

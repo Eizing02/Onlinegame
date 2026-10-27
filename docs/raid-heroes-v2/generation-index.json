@@ -1,0 +1,435 @@
+[
+  {
+    "id": "ranger-master",
+    "key": "ranger-master-result",
+    "kind": "master",
+    "hero": "ranger",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-master.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-24d50986-13ae-4c7f-acdd-8518317f62e2.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-master.png"
+  },
+  {
+    "id": "ninja-master",
+    "key": "ninja-master-result",
+    "kind": "master",
+    "hero": "ninja",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-master.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-d9152638-1db2-4870-a075-2315fa64b9fb.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-master.png"
+  },
+  {
+    "id": "monk-master",
+    "key": "monk-master-result",
+    "kind": "master",
+    "hero": "monk",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-master.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-3a32aed0-c896-4fb6-a5c1-365be5a07898.png",
+    "source": "docs/raid-heroes-v2/sources/monk-master.png"
+  },
+  {
+    "id": "engineer-master",
+    "key": "engineer-master-result",
+    "kind": "master",
+    "hero": "engineer",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-master.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-0ea781d1-5e8f-431d-aacd-1c0c4c8fcaeb.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-master.png"
+  },
+  {
+    "id": "bard-master",
+    "key": "bard-master-result",
+    "kind": "master",
+    "hero": "bard",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-master.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-7b977ef3-3c27-4de4-889c-4f40f228bcee.png",
+    "source": "docs/raid-heroes-v2/sources/bard-master.png"
+  },
+  {
+    "id": "ranger-wind-arrow",
+    "key": "ranger-wind-arrow-result",
+    "kind": "vfx",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-wind-arrow.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-d11ae167-b3bf-49b9-9c3c-55c7c78fb4ac.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-wind-arrow.png"
+  },
+  {
+    "id": "ranger-storm",
+    "key": "ranger-storm-result",
+    "kind": "vfx",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-storm.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-1c3542d6-a5c7-4f63-859d-10996951cd1e.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-storm.png"
+  },
+  {
+    "id": "ranger-idle",
+    "key": "ranger-idle-result",
+    "kind": "sheet",
+    "hero": "ranger",
+    "clip": "idle",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-idle.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-6425dbf4-6353-4c6b-830d-35aecb90781d.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-idle.png"
+  },
+  {
+    "id": "ranger-attack_1",
+    "key": "ranger-attack_1-result",
+    "kind": "sheet",
+    "hero": "ranger",
+    "clip": "attack_1",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-attack_1.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-96407eb8-c51b-47b5-b458-f3e112c8d8f3.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-attack_1.png"
+  },
+  {
+    "id": "ranger-attack_2",
+    "key": "ranger-attack_2-result",
+    "kind": "sheet",
+    "hero": "ranger",
+    "clip": "attack_2",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-attack_2.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-7542cc82-8881-45e0-b1ad-efb0bfa89977.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-attack_2.png"
+  },
+  {
+    "id": "ranger-hit",
+    "key": "ranger-hit-result",
+    "kind": "sheet",
+    "hero": "ranger",
+    "clip": "hit",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-hit.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-489c3c1f-daa3-412a-b2f5-06a1d19241a7.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-hit.png"
+  },
+  {
+    "id": "ranger-victory",
+    "key": "ranger-victory-result",
+    "kind": "sheet",
+    "hero": "ranger",
+    "clip": "victory",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-victory.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-8732f688-f9a7-4f8c-9bd2-79b9326e5e19.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-victory.png"
+  },
+  {
+    "id": "ranger-defeat",
+    "key": "ranger-defeat-result",
+    "kind": "sheet",
+    "hero": "ranger",
+    "clip": "defeat",
+    "promptFile": "docs/raid-heroes-v2/prompts/ranger-defeat.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-86887e01-fa88-42cc-a467-88355b56a7b2.png",
+    "source": "docs/raid-heroes-v2/sources/ranger-defeat.png"
+  },
+  {
+    "id": "ninja-idle",
+    "key": "ninja-idle-result",
+    "kind": "sheet",
+    "hero": "ninja",
+    "clip": "idle",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-idle.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-4e666827-fc96-4d82-a38a-9ec220d3b970.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-idle.png"
+  },
+  {
+    "id": "ninja-attack_1",
+    "key": "ninja-attack_1-result",
+    "kind": "sheet",
+    "hero": "ninja",
+    "clip": "attack_1",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-attack_1.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-0921e864-7e92-4182-bc8a-831fa4646472.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-attack_1.png"
+  },
+  {
+    "id": "ninja-attack_2",
+    "key": "ninja-attack_2-result",
+    "kind": "sheet",
+    "hero": "ninja",
+    "clip": "attack_2",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-attack_2.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-58919659-e562-4608-9aaa-83fb5097fedf.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-attack_2.png"
+  },
+  {
+    "id": "ninja-hit",
+    "key": "ninja-hit-result",
+    "kind": "sheet",
+    "hero": "ninja",
+    "clip": "hit",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-hit.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-31701382-0485-40c9-b7a6-456ba0d4c460.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-hit.png"
+  },
+  {
+    "id": "ninja-victory",
+    "key": "ninja-victory-result",
+    "kind": "sheet",
+    "hero": "ninja",
+    "clip": "victory",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-victory.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-6e475b9b-5b46-4ba9-9e81-af52834bb388.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-victory.png"
+  },
+  {
+    "id": "ninja-defeat",
+    "key": "ninja-defeat-result",
+    "kind": "sheet",
+    "hero": "ninja",
+    "clip": "defeat",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-defeat.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-2b5b63ca-6e5f-4714-b489-9e5606f3ecb7.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-defeat.png"
+  },
+  {
+    "id": "ninja-shadow-cut",
+    "key": "ninja-shadow-cut-result",
+    "kind": "vfx",
+    "hero": "ninja",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-shadow-cut.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-5a5bfdfe-7566-4ffb-a9b4-a9e87a68ca28.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-shadow-cut.png"
+  },
+  {
+    "id": "ninja-moon-star",
+    "key": "ninja-moon-star-result",
+    "kind": "vfx",
+    "hero": "ninja",
+    "promptFile": "docs/raid-heroes-v2/prompts/ninja-moon-star.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-bd75cad3-8716-456a-8f8c-92d17140e88f.png",
+    "source": "docs/raid-heroes-v2/sources/ninja-moon-star.png"
+  },
+  {
+    "id": "monk-idle",
+    "key": "monk-idle-result",
+    "kind": "sheet",
+    "hero": "monk",
+    "clip": "idle",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-idle.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-8da40ba4-8a3e-450f-9a64-c019f4eea578.png",
+    "source": "docs/raid-heroes-v2/sources/monk-idle.png"
+  },
+  {
+    "id": "monk-attack_1",
+    "key": "monk-attack_1-result",
+    "kind": "sheet",
+    "hero": "monk",
+    "clip": "attack_1",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-attack_1.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-873520af-8718-402f-9dde-01eb74e066ec.png",
+    "source": "docs/raid-heroes-v2/sources/monk-attack_1.png"
+  },
+  {
+    "id": "monk-attack_2",
+    "key": "monk-attack_2-result",
+    "kind": "sheet",
+    "hero": "monk",
+    "clip": "attack_2",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-attack_2.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-2c1b4240-a8a9-496f-a6e2-20f09a115358.png",
+    "source": "docs/raid-heroes-v2/sources/monk-attack_2.png"
+  },
+  {
+    "id": "monk-hit",
+    "key": "monk-hit-result",
+    "kind": "sheet",
+    "hero": "monk",
+    "clip": "hit",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-hit.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-21d371fb-fc88-452c-8a0c-4a98e8e0810b.png",
+    "source": "docs/raid-heroes-v2/sources/monk-hit.png"
+  },
+  {
+    "id": "monk-victory",
+    "key": "monk-victory-result",
+    "kind": "sheet",
+    "hero": "monk",
+    "clip": "victory",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-victory.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-9ea58c6f-33a3-4462-ac64-ec0b24edd396.png",
+    "source": "docs/raid-heroes-v2/sources/monk-victory.png"
+  },
+  {
+    "id": "monk-defeat",
+    "key": "monk-defeat-result",
+    "kind": "sheet",
+    "hero": "monk",
+    "clip": "defeat",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-defeat.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-0a3cce9b-43ba-4ae8-9a51-4ff50de673f2.png",
+    "source": "docs/raid-heroes-v2/sources/monk-defeat.png"
+  },
+  {
+    "id": "monk-dawn-fist",
+    "key": "monk-dawn-fist-result",
+    "kind": "vfx",
+    "hero": "monk",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-dawn-fist.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-cb738efa-3503-41d8-b136-03fdde83ef13.png",
+    "source": "docs/raid-heroes-v2/sources/monk-dawn-fist.png"
+  },
+  {
+    "id": "monk-sun-kick",
+    "key": "monk-sun-kick-result",
+    "kind": "vfx",
+    "hero": "monk",
+    "promptFile": "docs/raid-heroes-v2/prompts/monk-sun-kick.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-da9b15ac-5abe-47c4-9f8a-a48adfda8d39.png",
+    "source": "docs/raid-heroes-v2/sources/monk-sun-kick.png"
+  },
+  {
+    "id": "engineer-idle",
+    "key": "engineer-idle-result",
+    "kind": "sheet",
+    "hero": "engineer",
+    "clip": "idle",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-idle.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-a4d9fc5d-d78d-47da-b885-3da5c175dda4.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-idle.png"
+  },
+  {
+    "id": "engineer-attack_1",
+    "key": "engineer-attack_1-result",
+    "kind": "sheet",
+    "hero": "engineer",
+    "clip": "attack_1",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-attack_1.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-9bd2a754-00f2-4b47-a511-3e8cca6d164f.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-attack_1.png"
+  },
+  {
+    "id": "engineer-attack_2",
+    "key": "engineer-attack_2-result",
+    "kind": "sheet",
+    "hero": "engineer",
+    "clip": "attack_2",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-attack_2.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-ac97f2bc-d188-47f8-967a-bf5337b2133e.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-attack_2.png"
+  },
+  {
+    "id": "engineer-hit",
+    "key": "engineer-hit-result",
+    "kind": "sheet",
+    "hero": "engineer",
+    "clip": "hit",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-hit.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-386c34ff-2396-4daf-84f5-f59ce89bd912.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-hit.png"
+  },
+  {
+    "id": "engineer-victory",
+    "key": "engineer-victory-result",
+    "kind": "sheet",
+    "hero": "engineer",
+    "clip": "victory",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-victory.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-b4160c99-4b7f-420f-a80c-63249fcfd96f.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-victory.png"
+  },
+  {
+    "id": "engineer-defeat",
+    "key": "engineer-defeat-result",
+    "kind": "sheet",
+    "hero": "engineer",
+    "clip": "defeat",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-defeat.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-3f8fce62-b63b-45f6-b041-b93b74c90cf2.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-defeat.png"
+  },
+  {
+    "id": "engineer-gear-shot",
+    "key": "engineer-gear-shot-result",
+    "kind": "vfx",
+    "hero": "engineer",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-gear-shot.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-5feec31d-085a-4b02-8a48-164fce39bf8a.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-gear-shot.png"
+  },
+  {
+    "id": "engineer-core-blast",
+    "key": "engineer-core-blast-result",
+    "kind": "vfx",
+    "hero": "engineer",
+    "promptFile": "docs/raid-heroes-v2/prompts/engineer-core-blast.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-55629c08-c841-4352-b55b-9fe4ca442f18.png",
+    "source": "docs/raid-heroes-v2/sources/engineer-core-blast.png"
+  },
+  {
+    "id": "bard-idle",
+    "key": "bard-idle-result",
+    "kind": "sheet",
+    "hero": "bard",
+    "clip": "idle",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-idle.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-03b49c53-2d77-43f5-90ab-29bbd506e410.png",
+    "source": "docs/raid-heroes-v2/sources/bard-idle.png"
+  },
+  {
+    "id": "bard-attack_1",
+    "key": "bard-attack_1-result",
+    "kind": "sheet",
+    "hero": "bard",
+    "clip": "attack_1",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-attack_1.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-bcb1cec6-45c2-4cad-a248-aa4f6a14795a.png",
+    "source": "docs/raid-heroes-v2/sources/bard-attack_1.png"
+  },
+  {
+    "id": "bard-attack_2",
+    "key": "bard-attack_2-result",
+    "kind": "sheet",
+    "hero": "bard",
+    "clip": "attack_2",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-attack_2.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-bcb3ea22-6006-4abd-85ae-12ddfdf96912.png",
+    "source": "docs/raid-heroes-v2/sources/bard-attack_2.png"
+  },
+  {
+    "id": "bard-hit",
+    "key": "bard-hit-result",
+    "kind": "sheet",
+    "hero": "bard",
+    "clip": "hit",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-hit.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-ac705ac6-96d6-4baa-8227-fbd5fc5232e4.png",
+    "source": "docs/raid-heroes-v2/sources/bard-hit.png"
+  },
+  {
+    "id": "bard-victory",
+    "key": "bard-victory-result",
+    "kind": "sheet",
+    "hero": "bard",
+    "clip": "victory",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-victory.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-8fc74671-106e-4f22-9157-cb650b379147.png",
+    "source": "docs/raid-heroes-v2/sources/bard-victory.png"
+  },
+  {
+    "id": "bard-defeat",
+    "key": "bard-defeat-result",
+    "kind": "sheet",
+    "hero": "bard",
+    "clip": "defeat",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-defeat.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-7de51c0b-94b1-440a-ab3e-698ac110276d.png",
+    "source": "docs/raid-heroes-v2/sources/bard-defeat.png"
+  },
+  {
+    "id": "bard-lyre-wave",
+    "key": "bard-lyre-wave-result",
+    "kind": "vfx",
+    "hero": "bard",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-lyre-wave.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-748b6a7b-ed3d-46d4-8563-4dc2b73bb2c7.png",
+    "source": "docs/raid-heroes-v2/sources/bard-lyre-wave.png"
+  },
+  {
+    "id": "bard-star-song",
+    "key": "bard-star-song-result",
+    "kind": "vfx",
+    "hero": "bard",
+    "promptFile": "docs/raid-heroes-v2/prompts/bard-star-song.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-2279b0ba-1b44-4273-8726-0502edf3374a.png",
+    "source": "docs/raid-heroes-v2/sources/bard-star-song.png"
+  }
+]

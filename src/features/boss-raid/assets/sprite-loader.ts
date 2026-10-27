@@ -1,5 +1,6 @@
 import { Texture, Rectangle } from "pixi.js";
 import { spriteClip, type BossClip, type HeroClip, type HeroType } from "./manifest";
+import type { BossType } from './boss-definitions';
 
 type Entry = { base: Texture; frames: Texture[]; bytes: number; refs: number; touched: number };
 export class SpriteLoader {
@@ -8,8 +9,8 @@ export class SpriteLoader {
   private running = 0;
   private waiters: (() => void)[] = [];
   private destroyed = false;
-  async acquire(actor: "boss" | HeroType, animation: BossClip | HeroClip) {
-    const config = spriteClip(actor, animation);
+  async acquire(actor: "boss" | HeroType, animation: BossClip | HeroClip, bossType:BossType='shadow_dragon') {
+    const config = spriteClip(actor, animation,bossType);
     let entry = this.entries.get(config.path);
     if (!entry) {
       let loading = this.pending.get(config.path);

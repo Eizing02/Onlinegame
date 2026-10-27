@@ -1,0 +1,74 @@
+[
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\สื่อการสอนต่างๆ\\online game\\Onlinegame-main\\src\\features\\boss-raid\\raid.css",
+    "line": 9,
+    "snippet": "font-size: 9px is off the DESIGN.md type ramp",
+    "advisory": true,
+    "ignoreValue": "9px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\สื่อการสอนต่างๆ\\online game\\Onlinegame-main\\src\\features\\boss-raid\\raid.css",
+    "line": 34,
+    "snippet": "font-size: 21px is off the DESIGN.md type ramp",
+    "advisory": true,
+    "ignoreValue": "21px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\สื่อการสอนต่างๆ\\online game\\Onlinegame-main\\src\\features\\boss-raid\\raid.css",
+    "line": 93,
+    "snippet": "font-size: 9px is off the DESIGN.md type ramp",
+    "advisory": true,
+    "ignoreValue": "9px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\สื่อการสอนต่างๆ\\online game\\Onlinegame-main\\src\\features\\boss-raid\\raid.css",
+    "line": 96,
+    "snippet": "font-size: 23px is off the DESIGN.md type ramp",
+    "advisory": true,
+    "ignoreValue": "23px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\สื่อการสอนต่างๆ\\online game\\Onlinegame-main\\src\\app\\dev\\boss-raid\\assets\\preview.tsx",
+    "line": 16,
+    "snippet": "Undocumented color #26304c is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#26304c"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\สื่อการสอนต่างๆ\\online game\\Onlinegame-main\\src\\app\\dev\\boss-raid\\assets\\preview.tsx",
+    "line": 16,
+    "snippet": "Undocumented color #43516c is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#43516c"
+  }
+]

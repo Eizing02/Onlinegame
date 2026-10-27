@@ -1,0 +1,306 @@
+[
+  {
+    "id": "stone-titan-master",
+    "boss": "stone_titan",
+    "kind": "master",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-master.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-ba303dc5-c6ec-4aab-b107-daf7de7ad151.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-master.png"
+  },
+  {
+    "id": "crystal-scorpion-master",
+    "boss": "crystal_scorpion",
+    "kind": "master",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-master.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-9252c585-5f9c-46d3-89cf-7dc570abe0ad.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-master.png"
+  },
+  {
+    "id": "titan-stone-fist",
+    "boss": "stone_titan",
+    "kind": "vfx",
+    "promptFile": "docs/raid-boss-roster/prompts/titan-stone-fist.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-2466fa21-5cfd-4896-9769-b317859eecac.png",
+    "source": "docs/raid-boss-roster/sources/titan-stone-fist.png"
+  },
+  {
+    "id": "titan-rune-wave",
+    "boss": "stone_titan",
+    "kind": "vfx",
+    "promptFile": "docs/raid-boss-roster/prompts/titan-rune-wave.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-d98ba6a7-116d-4854-b12b-adb3a1fd699e.png",
+    "source": "docs/raid-boss-roster/sources/titan-rune-wave.png"
+  },
+  {
+    "id": "titan-earth-burst",
+    "boss": "stone_titan",
+    "kind": "vfx",
+    "promptFile": "docs/raid-boss-roster/prompts/titan-earth-burst.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-23c0e331-e1f5-4a5e-b0bc-efeb82c4f158.png",
+    "source": "docs/raid-boss-roster/sources/titan-earth-burst.png"
+  },
+  {
+    "id": "scorpion-crystal-claw",
+    "boss": "crystal_scorpion",
+    "kind": "vfx",
+    "promptFile": "docs/raid-boss-roster/prompts/scorpion-crystal-claw.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-1caae223-928a-4b5a-b2ab-f20e1160673c.png",
+    "source": "docs/raid-boss-roster/sources/scorpion-crystal-claw.png"
+  },
+  {
+    "id": "scorpion-stinger-bolt",
+    "boss": "crystal_scorpion",
+    "kind": "vfx",
+    "promptFile": "docs/raid-boss-roster/prompts/scorpion-stinger-bolt.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-5cf8af0a-ed3e-4aba-b2c0-812b43a2cefd.png",
+    "source": "docs/raid-boss-roster/sources/scorpion-stinger-bolt.png"
+  },
+  {
+    "id": "scorpion-crystal-storm",
+    "boss": "crystal_scorpion",
+    "kind": "vfx",
+    "promptFile": "docs/raid-boss-roster/prompts/scorpion-crystal-storm.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-94c34720-b2df-4212-b5f8-6fef4d0bdf7e.png",
+    "source": "docs/raid-boss-roster/sources/scorpion-crystal-storm.png"
+  },
+  {
+    "id": "stone-titan-idle",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "idle",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-idle.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-c5edeac3-1b84-4158-a76b-98ac63569607.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-idle.png"
+  },
+  {
+    "id": "stone-titan-ready",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "ready",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-ready.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-a4c6746d-4b33-4079-90a3-4d200105f006.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-ready.png"
+  },
+  {
+    "id": "stone-titan-attack_1",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "attack_1",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-attack_1.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-a0245a95-e724-4908-8be8-4f6753a3a1c8.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-attack_1.png"
+  },
+  {
+    "id": "stone-titan-attack_2",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "attack_2",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-attack_2.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-dbb1773d-97f8-441b-8968-8b6937e2696e.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-attack_2.png"
+  },
+  {
+    "id": "stone-titan-dodge",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "dodge",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-dodge.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-7f176764-9eb1-404b-bcd7-f136aa2efc0b.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-dodge.png"
+  },
+  {
+    "id": "stone-titan-hit",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "hit",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-hit.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-1b53f992-a58a-45d5-9311-37d2706bdb77.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-hit.png"
+  },
+  {
+    "id": "stone-titan-death",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "death",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-death.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-7640961c-77a4-4f7f-9d2a-985dc48da6f5.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-death.png"
+  },
+  {
+    "id": "stone-titan-run",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "run",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-run.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-76419a03-d602-4134-b9d3-48bb0592c0fe.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-run.png"
+  },
+  {
+    "id": "stone-titan-breath",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "breath",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-breath.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-ff8400ff-29a0-47f1-baff-16c80e058304.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-breath.png"
+  },
+  {
+    "id": "stone-titan-shield",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "shield",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-shield.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-02d8e826-d91c-4e9c-bb33-e9baa0d7580d.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-shield.png"
+  },
+  {
+    "id": "stone-titan-ultimate",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "ultimate",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-ultimate.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-e0d7dfe3-d1ab-413d-9350-9390800733cb.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-ultimate.png"
+  },
+  {
+    "id": "stone-titan-victory_roar",
+    "boss": "stone_titan",
+    "slug": "stone-titan",
+    "kind": "sheet",
+    "clip": "victory_roar",
+    "promptFile": "docs/raid-boss-roster/prompts/stone-titan-victory_roar.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-ef0c7186-d711-40fa-af2d-f34dc1f6da8f.png",
+    "source": "docs/raid-boss-roster/sources/stone-titan-victory_roar.png"
+  },
+  {
+    "id": "crystal-scorpion-idle",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "idle",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-idle.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-ed5bf870-0c0e-457a-92d8-83f876208acd.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-idle.png"
+  },
+  {
+    "id": "crystal-scorpion-ready",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "ready",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-ready.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-5301514e-1893-40e9-8392-9f59a94b2ba2.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-ready.png"
+  },
+  {
+    "id": "crystal-scorpion-attack_1",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "attack_1",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-attack_1.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-c5820127-4d14-4a5e-bd42-e03ebcf9be5b.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-attack_1.png"
+  },
+  {
+    "id": "crystal-scorpion-attack_2",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "attack_2",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-attack_2.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-49aa7c1e-dc7e-4ecb-92f6-6566713c73f7.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-attack_2.png"
+  },
+  {
+    "id": "crystal-scorpion-dodge",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "dodge",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-dodge.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-384912eb-23a7-4648-8b8c-a2879fb802e5.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-dodge.png"
+  },
+  {
+    "id": "crystal-scorpion-hit",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "hit",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-hit.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-3cb96d3f-8c1c-4ae8-a3c4-622ac81a0001.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-hit.png"
+  },
+  {
+    "id": "crystal-scorpion-death",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "death",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-death.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-7078b053-2c03-4133-bb05-1d1f84ec7799.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-death.png"
+  },
+  {
+    "id": "crystal-scorpion-run",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "run",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-run.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-5b6e5308-9f89-4205-864f-f9d132bb22d3.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-run.png"
+  },
+  {
+    "id": "crystal-scorpion-breath",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "breath",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-breath.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-fcd1e4ac-3ca3-4a02-876c-dde8dcc563ef.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-breath.png"
+  },
+  {
+    "id": "crystal-scorpion-shield",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "shield",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-shield.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-ed462bea-2fb9-408e-a1b2-ae2760020b7c.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-shield.png"
+  },
+  {
+    "id": "crystal-scorpion-ultimate",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "ultimate",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-ultimate.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-17b10143-dcb9-498c-a85d-b60e3ae9a8ac.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-ultimate.png"
+  },
+  {
+    "id": "crystal-scorpion-victory_roar",
+    "boss": "crystal_scorpion",
+    "slug": "crystal-scorpion",
+    "kind": "sheet",
+    "clip": "victory_roar",
+    "promptFile": "docs/raid-boss-roster/prompts/crystal-scorpion-victory_roar.txt",
+    "generatedPath": "C:\\Users\\piyaw\\.codex\\generated_images\\01a0851a-8dff-7691-a4c9-3f1a5097f08e\\exec-9836f6a2-bf22-4da2-9395-4dac4fafcd1d.png",
+    "source": "docs/raid-boss-roster/sources/crystal-scorpion-victory_roar.png"
+  }
+]

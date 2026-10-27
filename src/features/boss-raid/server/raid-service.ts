@@ -1,12 +1,12 @@
 import "server-only";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
-import { raidEnabled } from "./config";
+import { raidEnabled, bossRosterReady } from "./config";
 import { raidStandings } from "../rules/ranking";
 import type { AppSession } from "@/types/auth";
 import type { RaidAnswerResult, RaidSnapshot } from "../types";
 
 const messages: Record<string, string> = {
- CAPTAIN_ONLY: "เฉพาะหัวหน้าทีมเท่านั้นที่เปลี่ยนชื่อได้", INVALID_TEAM_NAME: "ชื่อทีมต้องยาว 2–30 ตัวอักษร",
+ INVALID_HERO: "ฮีโร่นี้ใช้กับห้องนี้ไม่ได้ กรุณาเลือกจากรายการที่แสดง", CAPTAIN_ONLY: "เฉพาะหัวหน้าทีมเท่านั้นที่เปลี่ยนชื่อได้", INVALID_TEAM_NAME: "ชื่อทีมต้องยาว 2–30 ตัวอักษร",
  PRESENTATION_PENDING: "กำลังแสดงผลการต่อสู้ รอจบแล้วทำข้อต่อไป",
  ACCESS_DENIED: "บัญชีนี้ไม่มีสิทธิ์เข้าห้องนี้", ROOM_NOT_FOUND: "ไม่พบห้อง Boss Raid นี้", ACTIVE_ROOM: "มีห้องที่ยังไม่จบอยู่แล้ว",
  TEAM_FULL: "ทีมนี้เต็มแล้ว กรุณาเลือกทีมอื่น", HERO_TAKEN: "เพื่อนเลือกฮีโร่นี้แล้ว กรุณาเลือกตัวอื่น", LOBBY_CLOSED: "เกมเริ่มแล้ว ไม่สามารถเปลี่ยนฮีโร่หรือทีมได้",
@@ -33,13 +33,13 @@ async function rpc<T>(name: string, args: Record<string, unknown>): Promise<T> {
  if (error) {
   // Never expose SQL, service credentials or frozen question content to the browser.
   if (error.message.includes("RAID_INVALID_QUESTION_SET")) throw new Error("ชุดคำถามต้องมีคะแนนรวมมากกว่า 0 และตัวเลือกที่ถูกต้องครบทุกข้อ");
-  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009–012 หรือลองอีกครั้ง");
+  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009–014 หรือลองอีกครั้ง");
  }
  return data as T;
 }
 export async function createRaid(teacher: AppSession, settings: { questionSetId: string; activityName: string; teamCount: number; maxMembersPerTeam: number; durationSeconds: number; visibilityEnabled: boolean }) {
  if (!await raidAvailable()) throw new Error("ยังไม่ได้เปิดใช้งาน Boss Raid หรือติดตั้ง migration 009");
- const result = await rpc<{ ok: boolean; code?: string; roomCode: string }>("create_boss_raid_room", { p_teacher: teacher.userCode, p_set: settings.questionSetId, p_activity: settings.activityName, p_teams: settings.teamCount, p_members: settings.maxMembersPerTeam, p_duration: settings.durationSeconds, p_visibility: settings.visibilityEnabled });
+ const result = await rpc<{ ok: boolean; code?: string; roomCode: string }>("create_boss_raid_room", { p_teacher: teacher.userCode, p_set: settings.questionSetId, p_activity: settings.activityName, p_teams: settings.teamCount, p_members: settings.maxMembersPerTeam, p_duration: settings.durationSeconds, p_visibility: settings.visibilityEnabled, p_boss_catalog_version:bossRosterReady()?2:1 });
  if (!result.ok) throw new Error(raidError(result.code));
  return result;
 }

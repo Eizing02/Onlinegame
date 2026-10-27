@@ -6,6 +6,8 @@
     "raid:assets:import": "node scripts/boss-raid/import-assets.mjs",
     "raid:assets:validate": "node scripts/boss-raid/validate-assets.mjs",
     "raid:assets:provenance": "node scripts/boss-raid/stamp-provenance.mjs",
+    "raid:heroes:prepare": "node scripts/boss-raid/prepare-generated-heroes.mjs",
+    "test:raid:assets": "node tests/boss-raid/hero-assets.mjs && node tests/boss-raid/boss-assets.mjs",
     "raid:scenes:import": "node scripts/boss-raid/import-scenes.mjs",
     "raid:scenes:validate": "node scripts/boss-raid/validate-scenes.mjs",
     "raid:scenes:config": "node scripts/boss-raid/import-scene-config.mjs",
@@ -25,9 +27,10 @@
     "test:auth": "node tests/google-identity.cjs && node tests/google-services.cjs && node tests/sql-google-auth.mjs",
     "test:e2e:google": "playwright test --config=playwright.google.config.ts",
     "test:staging:auth": "node tests/staging-google-races.mjs",
-    "test:raid": "node tests/boss-raid/unit.mjs && node tests/boss-raid/sql-rules.mjs && node tests/boss-raid/sql-presentation.mjs && node tests/boss-raid/sql-feedback.mjs && node tests/boss-raid/feedback-unit.mjs && node tests/boss-raid/sql-lobby.mjs",
+    "test:raid": "node tests/boss-raid/unit.mjs && node tests/boss-raid/sql-rules.mjs && node tests/boss-raid/sql-presentation.mjs && node tests/boss-raid/sql-feedback.mjs && node tests/boss-raid/feedback-unit.mjs && node tests/boss-raid/sql-lobby.mjs && node tests/boss-raid/sql-heroes.mjs && node tests/boss-raid/sql-boss-catalog.mjs",
     "test:e2e:raid": "playwright test --config=playwright.raid.config.ts",
-    "test:staging:raid": "node scripts/boss-raid/staging-load.mjs"
+    "test:staging:raid": "node scripts/boss-raid/staging-load.mjs",
+    "raid:bosses:prepare": "node scripts/boss-raid/prepare-generated-bosses.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

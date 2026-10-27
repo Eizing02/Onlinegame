@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { ChevronDown, Users } from "lucide-react";
-import { HERO_NAMES, spriteClip } from "../assets/manifest";
+import { HERO_NAMES } from "../assets/manifest";
+import { HeroPortrait } from "./HeroPortrait";
 import type { RaidHero } from "../types";
 
 export function RaidPartyRoster({ heroes, ownId, teamName, loading = false, open, onToggle, id }: {
@@ -42,7 +43,7 @@ export function RaidPartyRoster({ heroes, ownId, teamName, loading = false, open
       <h3>{teamName ? `สมาชิก ${teamName}` : "สมาชิกในทีม"}</h3>
       {loading ? <p role="status">กำลังโหลดสมาชิกทีมที่เลือก…</p> : <>
         <ul>{heroes.map(hero => <li key={hero.id} data-own={hero.id === ownId}>
-          {hero.heroType && <span className="raid-party-portrait" style={{ backgroundImage: `url(${spriteClip(hero.heroType, "idle").path})` }} aria-hidden="true" />}
+          {hero.heroType && <HeroPortrait hero={hero.heroType} className="raid-party-portrait"/>}
           <div><strong>{hero.displayName}{hero.id === ownId && <small> · คุณ</small>}</strong>
             <span>{hero.heroType ? HERO_NAMES[hero.heroType] : "ยังไม่เลือกตัวละคร"} · HP {hero.hp}</span>
           </div>

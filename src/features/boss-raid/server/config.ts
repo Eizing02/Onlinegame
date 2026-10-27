@@ -9,3 +9,5 @@ export async function roomIsRaid(roomCode: string) {
  if (error && !["42703", "PGRST204"].includes(error.code)) throw error;
  return data?.game_mode === "boss_raid";
 }
+
+export function bossRosterReady(){return readiness.ready&&["stone_titan","crystal_scorpion"].every(boss=>Object.keys(readiness.files).length>0&&readiness.files.filter(f=>f.key.startsWith(boss+"/")&&f.status==="PASS").length===12);}

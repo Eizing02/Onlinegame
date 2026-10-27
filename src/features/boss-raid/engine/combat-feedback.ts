@@ -1,18 +1,20 @@
 import { Container, ImageSource, Sprite, Text, Texture } from "pixi.js";
 import type { HeroType, BossClip } from "../assets/manifest";
+import { HERO_DEFINITIONS, type HeroEffectId } from "../assets/hero-definitions";
+import { BOSS_DEFINITIONS, bossAttackEffect, type BossEffectId, type BossType } from '../assets/boss-definitions';
 import type { RaidEvent } from "../types";
 
 export const HERO_EFFECTS: Record<HeroType, EffectId> = {
   warrior: "warrior-slash", mage: "mage-energy", wizard: "wizard-fire",
   witch: "witch-curse", fairy: "fairy-light",
+  ranger: "ranger-wind-arrow", ninja: "ninja-shadow-cut", monk: "monk-dawn-fist", engineer: "engineer-gear-shot", bard: "bard-lyre-wave",
 };
-export type EffectId = "dragon-claw" | "dragon-flame" | "dragon-ultimate" | "warrior-slash" |
-  "mage-energy" | "wizard-fire" | "witch-curse" | "fairy-light" | "healing-light";
+export type EffectId = BossEffectId | HeroEffectId | "healing-light";
 export type FeedbackAnchor = { x: number; y: number; height: number };
 type Float = { node: Container; getAnchor: () => FeedbackAnchor; age: number; duration: number; number: boolean; offset: number; size: number; rotation: number };
 
-export function bossEffect(clip: BossClip): EffectId {
-  return clip === "ultimate" ? "dragon-ultimate" : clip === "breath" ? "dragon-flame" : "dragon-claw";
+export function bossEffect(clip: BossClip,bossType:BossType='shadow_dragon'): EffectId {
+  return bossAttackEffect(bossType,clip);
 }
 
 /** Reads only confirmed event values. Legacy hero-hit events never produce guessed numbers. */
@@ -34,8 +36,8 @@ export class CombatFeedback {
   constructor(private root: Container, private scale: () => number, private font: string,
     private reduced: boolean, private enabled: boolean) {}
 
-  preload(heroes: HeroType[]) {
-    return Promise.all([...new Set<EffectId>([...heroes.map(h => HERO_EFFECTS[h]), "dragon-claw", "dragon-flame", "dragon-ultimate", "healing-light"])].map(id => this.load(id)));
+  preload(heroes: HeroType[],bossType:BossType='shadow_dragon') {
+    return Promise.all([...new Set<EffectId>([...heroes.flatMap(h => Object.values(HERO_DEFINITIONS[h].attacks).map(a => a.effect)), ...Object.values(BOSS_DEFINITIONS[bossType].effects), "healing-light"])].map(id => this.load(id)));
   }
 
   private load(id: EffectId): Promise<void> {

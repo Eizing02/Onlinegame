@@ -1,0 +1,11 @@
+# Three-boss expansion quality bar
+
+Ordinary code-led extension inside the established vintage classroom game. Inherits `.impeccable/raid-vintage-direction.md` and historical `.impeccable/questions/roll.json` through `.impeccable/surfaces/raid-boss-roster.md`. No new identity, direction roll, decision comp, or comp-led build state applies. Preserve PRODUCT.md, DESIGN.md and design.json; inherited serialization/font drift is outside this task.
+
+The approved scope is two unmistakable new opponents beside the original dragon: sand/amber rune stone titan and plum/mist crystal scorpion. Two native masters, 24 actual 16-frame animation sheets and six native effects must ship with alpha, isolated padded frames and exact prompt provenance. Every boss remains a logical boss target, placed left against up to five heroes; grounded native animation, actual damage numbers, readable identity and coherent phase effects matter more than new interface chrome.
+
+The server independently assigns a boss once per team at room creation, with duplicates allowed. No reroll on start, retry, rename, reconnect, or migration reapply. Existing rooms remain dragon. Same score, damage, healing, HP formula, deadline, phase thresholds, five-second confirmation and three-second presentation for all bosses. Ten heroes, Classic, Google Login, RBAC, old data and current audio preferences remain intact.
+
+Operate surfaces retain existing room navigation, complete student question dialog, teacher party roster and bounded scrolling. Reuse the name/HP HUD; teacher team buttons and result rows add the same boss identity, CSV appends a boss column after existing columns. Verify five target viewports: desktop 1366x768, tablet 768x1024, phone 390x844, small phone 320x568, short landscape 844x390. Arena images are explicitly cropped target evidence; teacher/student captures are full viewport. Check switching, empty teams, all phases, all clips, loading/failure fallback, actual answer pacing and reconnect.
+
+Browser evidence is headless Chromium on this Windows computer, not physical school/mobile hardware. PGlite proves isolated transaction semantics, not production multi-connection load. No production SQL, deployment or Git push is authorized for this expansion.

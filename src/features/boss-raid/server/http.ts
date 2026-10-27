@@ -4,10 +4,12 @@ import { z } from "zod";
 import { authorizeApi } from "@/lib/auth/api-session";
 import { raidCommand, raidError, raidMutationAllowed, raidSnapshot, raidStudentMutation } from "./raid-service";
 
+import { HERO_TYPES } from "../assets/manifest";
+
 const current = { questionId: z.uuid(), displayIndex: z.number().int().min(0).max(999) };
 const schemas = {
  team: z.object({ teamId: z.uuid(), teamName: z.string().max(300) }).strict(),
- hero: z.object({ heroType: z.enum(["warrior", "mage", "wizard", "witch", "fairy"]) }).strict(),
+ hero: z.object({ heroType: z.enum(HERO_TYPES) }).strict(),
  answer: z.object({ ...current, idempotencyKey: z.uuid(), answerText: z.string().max(2000).nullable().optional(), selectedOptionId: z.uuid().nullable().optional() }).strict().refine(v => Boolean(v.answerText?.trim()) !== Boolean(v.selectedOptionId), "กรุณากรอกคำตอบหรือเลือกหนึ่งตัวเลือก"),
  visibility: z.object({ ...current, eventId: z.uuid(), durationMs: z.number().int().min(0).max(86400000) }).strict(),
  control: z.object({ command: z.enum(["start", "end"]) }).strict(),

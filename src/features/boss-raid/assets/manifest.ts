@@ -1,6 +1,10 @@
 import catalog from "./catalog.json";
+import { bossSpritePath, type BossType } from './boss-definitions';
 
-export const HERO_TYPES = ["warrior", "mage", "wizard", "witch", "fairy"] as const;
+export const HERO_TYPES = ["warrior", "mage", "wizard", "witch", "fairy", "ranger", "ninja", "monk", "engineer", "bard"] as const;
+export const LEGACY_HERO_TYPES = HERO_TYPES.slice(0, 5);
+export function isHeroType(value: string): value is HeroType { return (HERO_TYPES as readonly string[]).includes(value); }
+export const heroPortrait = (hero: HeroType) => `/assets/boss-raid/portraits/${hero}.png`;
 export type HeroType = typeof HERO_TYPES[number];
 export type HeroClip = "idle" | "attack_1" | "attack_2" | "hit" | "victory" | "defeat";
 export type BossClip = keyof typeof catalog.bossClips;
@@ -11,12 +15,13 @@ export type SpriteClip = {
 };
 export const HERO_NAMES: Record<HeroType, string> = {
   warrior: "นักรบ", mage: "จอมเวท", wizard: "พ่อมด", witch: "แม่มด", fairy: "ภูตพิทักษ์",
+  ranger: "นักธนูสายลม", ninja: "นินจาเงาจันทร์", monk: "นักสู้หมัดอรุณ", engineer: "หุ่นกลทองแดง", bard: "นักดนตรีดวงดาว",
 };
-export function spriteClip(actor: "boss" | HeroType, animation: BossClip | HeroClip): SpriteClip {
+export function spriteClip(actor: "boss" | HeroType, animation: BossClip | HeroClip, bossType:BossType='shadow_dragon'): SpriteClip {
   const file = actor === "boss" ? catalog.bossClips[animation as BossClip] : animation;
   if (!file) throw new Error("RAID_UNKNOWN_CLIP");
   return {
-    path: `/assets/boss-raid/${actor === "boss" ? "boss" : `heroes/${actor}`}/${file}.png`,
+    path: actor==='boss'?bossSpritePath(bossType,animation as BossClip):`/assets/boss-raid/heroes/${actor}/${file}.png`,
     frameCols: 4, frameRows: 4, totalFrames: 16,
     fps: animation === "idle" ? 8 : animation === "death" || animation === "defeat" ? 10 : 13,
     loop: animation === "idle", anchorX: 0.5, anchorY: 0.9,

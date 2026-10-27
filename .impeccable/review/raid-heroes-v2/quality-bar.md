@@ -1,0 +1,11 @@
+# Five-hero expansion quality bar
+
+Approved code-led local extension of the existing vintage classroom game, inheriting `.impeccable/raid-vintage-direction.md`. No new direction roll, visual world, decision comp or comp-led build state. The user approved five distinct heroes, generated art and attacks, existing sound reuse, equal scoring and damage, and an Impeccable quality review. Direction contract: `.impeccable/surfaces/raid-hero-expansion.md`.
+
+Ranger, ninja, martial artist, copper automaton and lyre bard must have unmistakably different silhouettes, all six native animation clips and two generated attack VFX each. Native alpha, exact runtime 4x4 grids, isolated frames, readable impact and actual server damage matter. No duplicated filler, extra gameplay damage or abilities. Preserve the original five heroes, five team slots, duplicates in v2, old room catalogs, Classic, Google Auth/RBAC, five-second confirmation and three-second combat beat while the shared deadline runs.
+
+Hero selection is Operate: ten lightweight static portraits, desktop 5x2, phone/short landscape two independent pages of five, gold selection and grayscale alternatives, visible selected name/attack names. Controls remain usable within one room viewport with bounded internal scrolling for small/short screens. Check required desktop 1366x768, tablet 768x1024, phone 390x844, small phone 320x568, landscape 844x390, selected state, keyboard navigation, synthesized touch, loading/fallback and teacher party parity.
+
+Combat is Experience within the incumbent layout: boss left, up to five heroes right, coherent native actions and generated impact overlays with server-authoritative floating numbers. The contact sheets show real frames 0/7/15 in six rows (idle/attack1/attack2/hit/victory/defeat), composited for QA only. Source generator rows were uneven; the production packer isolates native silhouettes and packs with a shared scale before calibrating feet. It does not invent poses or chroma-key white paint.
+
+Browser evidence is headless Chromium on this Windows host, not physical mobile or school GPU performance. PGlite is isolated and cannot prove real multi-connection PostgreSQL locking. No production SQL, deployment or push is authorized for this task.

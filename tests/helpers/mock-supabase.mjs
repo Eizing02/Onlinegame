@@ -53,6 +53,11 @@ export async function startMockSupabase(port = 3111, raid = false) {
         return json(response,{selectedOptionId:row?.id??null,answerText:'5'});
       }
       if (raid && path === '/__test/raid-legacy') { await db.query('update boss_raid_sessions set rules_version=1 where session_id=$1',[url.searchParams.get('session')]); return json(response,{ok:true}); }
+      // Loopback fixture only: deterministic coverage after separately checking
+      // the real create RPC's random assignments. No route exists in the app.
+      if (raid && path === '/__test/raid-boss-roster') {
+        await db.query("update boss_raid_team_states s set boss_type=(array['stone_titan','crystal_scorpion','shadow_dragon'])[1+(t.team_number-1)%3] from teams t where t.id=s.team_id and s.session_id=$1",[url.searchParams.get('session')]);return json(response,{ok:true});
+      }
       if (raid && path === '/__test/raid-phase-three') {
         await db.query('update boss_raid_team_states set phase=3 where session_id=$1',[url.searchParams.get('session')]);return json(response,{ok:true});
       }

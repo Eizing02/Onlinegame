@@ -1,0 +1,459 @@
+{
+  "muted": false,
+  "voices": 3,
+  "decodedBytes": 11335680,
+  "cacheEntries": 14,
+  "failures": [],
+  "music": "raid_battle",
+  "dropped": [],
+  "musicPaused": false,
+  "musicReadyState": 4,
+  "played": [
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:49"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:53"
+    },
+    {
+      "sound": "mage1",
+      "seq": 1,
+      "cueId": "0:mage1",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 1,
+      "cueId": "boss:hit",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:67"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:85"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:89"
+    },
+    {
+      "sound": "fairy1",
+      "seq": 2,
+      "cueId": "0:fairy1",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 2,
+      "cueId": "boss:hit",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:107"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:129"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:146"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:164"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:176"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:179"
+    },
+    {
+      "sound": "warrior1",
+      "seq": 3,
+      "cueId": "1:warrior1",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 3,
+      "cueId": "boss:hit",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:194"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:214"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:219"
+    },
+    {
+      "sound": "witch2",
+      "seq": 4,
+      "cueId": "1:witch2",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 4,
+      "cueId": "boss:hit",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:235"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:259"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:272"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:287"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:305"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:310"
+    },
+    {
+      "sound": "warrior2",
+      "seq": 5,
+      "cueId": "2:warrior2",
+      "animation": "attack_1",
+      "frame": 8
+    },
+    {
+      "sound": "hit",
+      "seq": 5,
+      "cueId": "boss:hit",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:326"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:345"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:347"
+    },
+    {
+      "sound": "hit",
+      "seq": 6,
+      "cueId": "2:hit",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:361"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:382"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:400"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:414"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:427"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:434"
+    },
+    {
+      "sound": "warrior2",
+      "seq": 7,
+      "cueId": "3:warrior2",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 7,
+      "cueId": "boss:hit",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:450"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:473"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:480"
+    },
+    {
+      "sound": "wizard2",
+      "seq": 8,
+      "cueId": "3:wizard2",
+      "animation": "attack_2",
+      "frame": 8
+    },
+    {
+      "sound": "hit",
+      "seq": 8,
+      "cueId": "boss:hit",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:499"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:521"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:539"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:553"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:567"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:572"
+    },
+    {
+      "sound": "fairy1",
+      "seq": 9,
+      "cueId": "4:fairy1",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 9,
+      "cueId": "boss:hit",
+      "animation": "attack_1",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:591"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:608"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:613"
+    },
+    {
+      "sound": "fairy2",
+      "seq": 10,
+      "cueId": "4:fairy2",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "hit",
+      "seq": 10,
+      "cueId": "boss:hit",
+      "animation": "attack_2",
+      "frame": 7
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:630"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:653"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:669"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:683"
+    },
+    {
+      "sound": "button",
+      "seq": 0,
+      "cueId": "button:696"
+    }
+  ],
+  "render": {
+    "scene": {
+      "decodedBytes": 18872040,
+      "sheets": 3,
+      "activeReferences": 3
+    },
+    "sprites": {
+      "decodedBytes": 48745600,
+      "sheets": 8,
+      "activeReferences": 6
+    },
+    "actorCount": 6,
+    "particles": 0,
+    "sparks": 0,
+    "feedback": {
+      "textures": 14,
+      "active": 0,
+      "shown": [
+        {
+          "seq": 1,
+          "target": "boss",
+          "amount": 100,
+          "effect": "ranger-wind-arrow"
+        },
+        {
+          "seq": 2,
+          "target": "boss",
+          "amount": 100,
+          "effect": "ranger-storm"
+        },
+        {
+          "seq": 3,
+          "target": "boss",
+          "amount": 100,
+          "effect": "ninja-shadow-cut"
+        },
+        {
+          "seq": 4,
+          "target": "boss",
+          "amount": 100,
+          "effect": "ninja-moon-star"
+        },
+        {
+          "seq": 5,
+          "target": "boss",
+          "amount": 100,
+          "effect": "monk-dawn-fist"
+        },
+        {
+          "seq": 6,
+          "target": "boss",
+          "amount": 100,
+          "effect": "monk-sun-kick"
+        },
+        {
+          "seq": 7,
+          "target": "boss",
+          "amount": 100,
+          "effect": "engineer-gear-shot"
+        },
+        {
+          "seq": 8,
+          "target": "boss",
+          "amount": 100,
+          "effect": "engineer-core-blast"
+        },
+        {
+          "seq": 9,
+          "target": "boss",
+          "amount": 100,
+          "effect": "bard-lyre-wave"
+        },
+        {
+          "seq": 10,
+          "target": "boss",
+          "amount": 100,
+          "effect": "bard-star-song"
+        }
+      ]
+    },
+    "frameP50Ms": 89,
+    "frameP95Ms": 120.89999985694885
+  }
+}

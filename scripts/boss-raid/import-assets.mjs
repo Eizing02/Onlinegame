@@ -11,7 +11,7 @@ const mapping = mappingArg ? JSON.parse(await readFile(mappingArg.slice(10),'utf
 const directories = await readdir(source, {withFileTypes:true});
 const targetRoot = path.resolve('public/assets/boss-raid');
 const report=[];
-for (const asset of assetFiles()) {
+for (const asset of assetFiles().filter(asset=>!asset.generated&&!["ranger","ninja","monk","engineer","bard"].includes(asset.sourceFolder))) {
   const folder=directories.find(dir=>dir.isDirectory()&&normalizeName(dir.name)===normalizeName(asset.sourceFolder??'boss'));
   if (!folder) throw new Error(`Missing source directory: ${asset.key}`);
   const candidates=await readdir(path.join(source,folder.name));

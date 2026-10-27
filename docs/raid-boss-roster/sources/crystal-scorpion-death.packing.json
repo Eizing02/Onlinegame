@@ -1,0 +1,167 @@
+{
+  "cellSize": 384,
+  "padding": 24,
+  "scale": 0.9105691056910569,
+  "frames": [
+    {
+      "frame": 0,
+      "sourceBounds": {
+        "minX": 0,
+        "minY": 19,
+        "maxX": 323,
+        "maxY": 365
+      },
+      "bodyPixels": 40755
+    },
+    {
+      "frame": 1,
+      "sourceBounds": {
+        "minX": 323,
+        "minY": 17,
+        "maxX": 640,
+        "maxY": 371
+      },
+      "bodyPixels": 40683
+    },
+    {
+      "frame": 2,
+      "sourceBounds": {
+        "minX": 638,
+        "minY": 31,
+        "maxX": 943,
+        "maxY": 377
+      },
+      "bodyPixels": 40742
+    },
+    {
+      "frame": 3,
+      "sourceBounds": {
+        "minX": 942,
+        "minY": 35,
+        "maxX": 1253,
+        "maxY": 379
+      },
+      "bodyPixels": 39655
+    },
+    {
+      "frame": 4,
+      "sourceBounds": {
+        "minX": 0,
+        "minY": 365,
+        "maxX": 341,
+        "maxY": 710
+      },
+      "bodyPixels": 40932
+    },
+    {
+      "frame": 5,
+      "sourceBounds": {
+        "minX": 322,
+        "minY": 371,
+        "maxX": 666,
+        "maxY": 717
+      },
+      "bodyPixels": 38945
+    },
+    {
+      "frame": 6,
+      "sourceBounds": {
+        "minX": 638,
+        "minY": 377,
+        "maxX": 972,
+        "maxY": 728
+      },
+      "bodyPixels": 37287
+    },
+    {
+      "frame": 7,
+      "sourceBounds": {
+        "minX": 946,
+        "minY": 381,
+        "maxX": 1253,
+        "maxY": 733
+      },
+      "bodyPixels": 35033
+    },
+    {
+      "frame": 8,
+      "sourceBounds": {
+        "minX": 0,
+        "minY": 710,
+        "maxX": 359,
+        "maxY": 1028
+      },
+      "bodyPixels": 35174
+    },
+    {
+      "frame": 9,
+      "sourceBounds": {
+        "minX": 312,
+        "minY": 718,
+        "maxX": 680,
+        "maxY": 1027
+      },
+      "bodyPixels": 34284
+    },
+    {
+      "frame": 10,
+      "sourceBounds": {
+        "minX": 620,
+        "minY": 729,
+        "maxX": 978,
+        "maxY": 1028
+      },
+      "bodyPixels": 31416
+    },
+    {
+      "frame": 11,
+      "sourceBounds": {
+        "minX": 947,
+        "minY": 734,
+        "maxX": 1253,
+        "maxY": 1028
+      },
+      "bodyPixels": 29281
+    },
+    {
+      "frame": 12,
+      "sourceBounds": {
+        "minX": 0,
+        "minY": 1030,
+        "maxX": 327,
+        "maxY": 1239
+      },
+      "bodyPixels": 27726
+    },
+    {
+      "frame": 13,
+      "sourceBounds": {
+        "minX": 308,
+        "minY": 1028,
+        "maxX": 630,
+        "maxY": 1253
+      },
+      "bodyPixels": 28518
+    },
+    {
+      "frame": 14,
+      "sourceBounds": {
+        "minX": 631,
+        "minY": 1030,
+        "maxX": 945,
+        "maxY": 1253
+      },
+      "bodyPixels": 28541
+    },
+    {
+      "frame": 15,
+      "sourceBounds": {
+        "minX": 944,
+        "minY": 1029,
+        "maxX": 1253,
+        "maxY": 1253
+      },
+      "bodyPixels": 27081
+    }
+  ]
+}

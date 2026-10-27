@@ -21,7 +21,7 @@ export const fixtureUsers = [
   [ids.third, 'third@example.com', 'google'],
   [ids.emailOnly, 'email@example.com', 'email'],
 ];
-export async function createGoogleDatabase({ applyAuthMigration = true, applyRaidMigration = false } = {}) {
+export async function createGoogleDatabase({ applyAuthMigration = true, applyRaidMigration = false, applyHeroCatalogMigration = true, applyBossCatalogMigration = applyHeroCatalogMigration } = {}) {
   const db = new PGlite();
   await db.exec(`create role anon; create role authenticated; create role service_role;
     create publication supabase_realtime;
@@ -29,7 +29,7 @@ export async function createGoogleDatabase({ applyAuthMigration = true, applyRai
     create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,raw_app_meta_data jsonb,raw_user_meta_data jsonb);
     create table auth.identities(id uuid primary key default gen_random_uuid(),user_id uuid references auth.users(id),provider text,identity_data jsonb);`);
   for (const file of (await readdir('supabase/migrations')).filter(name => name.endsWith('.sql')).sort()) {
-    if (file.startsWith('008') || file.startsWith('009') || file.startsWith('010') || file.startsWith('011') || file.startsWith('012')) continue;
+    if (file.startsWith('008') || file.startsWith('009') || file.startsWith('010') || file.startsWith('011') || file.startsWith('012') || file.startsWith('013') || file.startsWith('014')) continue;
     let sql = await readFile(`supabase/migrations/${file}`, 'utf8');
     sql = sql.replace('create extension if not exists pgcrypto;', '');
     if (file.startsWith('005')) sql = sql.split('insert into storage.buckets')[0];
@@ -52,6 +52,8 @@ export async function createGoogleDatabase({ applyAuthMigration = true, applyRai
     await db.exec(await readFile('supabase/migrations/010_raid_pacing_and_duplicate_heroes.sql', 'utf8'));
     await db.exec(await readFile('supabase/migrations/011_raid_combat_feedback.sql', 'utf8'));
     await db.exec(await readFile('supabase/migrations/012_raid_lobby_and_choice_order.sql', 'utf8'));
+    if (applyHeroCatalogMigration) await db.exec(await readFile('supabase/migrations/013_raid_hero_catalog_v2.sql', 'utf8'));
+    if (applyBossCatalogMigration) await db.exec(await readFile('supabase/migrations/014_raid_team_boss_catalog.sql', 'utf8'));
   }
   return db;
 }

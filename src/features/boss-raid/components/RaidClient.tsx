@@ -1,4 +1,5 @@
 "use client";
+import { useBossWarmup } from "../hooks/use-boss-warmup";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { RaidTeamPanel } from "./RaidTeamPanel";
@@ -28,7 +29,8 @@ export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:s
  const [heroPreview,setHeroPreview]=useState<HeroType|null>(null);
  const [pending,setPending]=useState(false),[error,setError]=useState(""),[feedback,setFeedback]=useState(""),[partyOpen,setPartyOpen]=useState(false);
  const busy=useRef(false),submitted=useRef<Submission|null>(null),scene=useRef<CombatScene|null>(null),active=useRef<RaidPresentation|null>(null),seen=useRef(new Set<string>()),timer=useRef<ReturnType<typeof setTimeout>|null>(null),alive=useRef(true),settled=useRef(false);
- const audio=useRaidAudio(snapshot.team?.events??[],snapshot.team?.id,{sourceTeamId:snapshot.team?.id,eventSeq:snapshot.team?.eventSeq,status:snapshot.status,phase:snapshot.team?.phase,deadline:snapshot.deadline,serverNow:snapshot.serverNow,heroes:snapshot.team?.heroes});
+ const audio=useRaidAudio(snapshot.team?.events??[],snapshot.team?.id,{sourceTeamId:snapshot.team?.id,eventSeq:snapshot.team?.eventSeq,status:snapshot.status,phase:snapshot.team?.phase,deadline:snapshot.deadline,serverNow:snapshot.serverNow,heroes:snapshot.team?.heroes,bossType:snapshot.team?.bossType});
+ useBossWarmup(snapshot.team?.bossType,snapshot.status==="lobby");
  const {seconds}=useRaidClock(snapshot.deadline,snapshot.serverNow,snapshot.status==="ended");
  const [effectsEnabled,setEffectsEnabled]=useState(true),[settings,setSettings]=useState(false),[reduced,setReduced]=useState(false),[quality,setQuality]=useState<"full"|"low">("full");
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;if(timer.current)clearTimeout(timer.current);};},[]);
@@ -72,8 +74,8 @@ export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:s
   <nav className="raid-tabs" aria-label="เมนูห้อง Boss Raid">{tabs.map(t=><button key={t.id} aria-current={tab===t.id?"page":undefined} disabled={state==="presenting"&&snapshot.status!=="ended"} onClick={()=>setTab(t.id)}><t.icon size={18} aria-hidden="true"/>{t.label}</button>)}</nav>
   <div ref={panelRef} className="raid-room-content" tabIndex={0} role="region" aria-label="พื้นที่เกมและผล" {...(state==="presenting"?{}:swipe)}>
    <section className="raid-view-panel" hidden={snapshot.status==="ended"||tab!=="battle"&&state!=="presenting"}>
-   {snapshot.status==="lobby"?<HeroSelectLobby own={snapshot.own?{...snapshot.own,heroType:heroPreview??snapshot.own.heroType}:null} heroes={snapshot.team?.heroes??[]} pending={pending} choose={choose} allowDuplicates={(snapshot.rulesVersion??1)>=2}/>:<>
-    {snapshot.team&&<RaidArena heroes={snapshot.team.heroes} bossHp={snapshot.team.bossHp} bossMaxHp={snapshot.team.bossMaxHp} events={events} reduced={reduced} quality={quality} effectsEnabled={effectsEnabled} onCue={audio.cue} onScene={onScene}/>}
+   {snapshot.status==="lobby"?<HeroSelectLobby own={snapshot.own?{...snapshot.own,heroType:heroPreview??snapshot.own.heroType}:null} heroes={snapshot.team?.heroes??[]} pending={pending} choose={choose} allowDuplicates={(snapshot.rulesVersion??1)>=2} availableHeroes={snapshot.availableHeroes}/>:<>
+    {snapshot.team&&<RaidArena bossType={snapshot.team.bossType} heroes={snapshot.team.heroes} bossHp={snapshot.team.bossHp} bossMaxHp={snapshot.team.bossMaxHp} events={events} reduced={reduced} quality={quality} effectsEnabled={effectsEnabled} onCue={audio.cue} onScene={onScene}/>}
     {state==="presenting"&&<div className="raid-combat-feedback" role="status" aria-live="polite"><strong>{feedback}</strong><span>กำลังต่อสู้ · โจทย์ถัดไปจะขึ้นเมื่อจบ</span></div>}
     <p className="raid-progress-copy" role="status">{!snapshot.own?.eligible?"คุณเข้าหลังเริ่มเกม รับชมทีมได้ คะแนนและจำนวนสมาชิกที่ล็อกไว้จะไม่เปลี่ยน":snapshot.own.finished?`ตอบครบ ${snapshot.questionCount} ข้อแล้ว รับชมทีมและอันดับต่อได้`:snapshot.own.hp===0?"HP 0 · ตอบถูกเพื่อฟื้นเพื่อนหนึ่งคน +10 HP (ทีมคนเดียวฟื้นตัวเอง)":"ตอบถูกเพื่อโจมตีบอส · ดูการต่อสู้ก่อนลุยข้อถัดไป"}</p>
    </>}

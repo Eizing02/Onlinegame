@@ -1,0 +1,56 @@
+ M package.json
+ M public/assets/boss-raid/readiness.json
+ M scripts/boss-raid/calibrate-sprite-grounding.mjs
+ M scripts/boss-raid/import-assets.mjs
+ M src/app/dev/boss-raid/scene/scene-calibration.tsx
+ M src/features/boss-raid/assets/catalog.json
+ M src/features/boss-raid/assets/manifest.ts
+ M src/features/boss-raid/assets/sprite-loader.ts
+ M src/features/boss-raid/assets/visual-metadata.json
+ M src/features/boss-raid/audio/cues.ts
+ M src/features/boss-raid/components/HeroSelectLobby.tsx
+ M src/features/boss-raid/components/RaidClient.tsx
+ M src/features/boss-raid/components/RaidPartyRoster.tsx
+ M src/features/boss-raid/engine/combat-feedback.ts
+ M src/features/boss-raid/engine/combat-scene.ts
+ M src/features/boss-raid/hooks/use-raid-tabs.ts
+ M src/features/boss-raid/raid.css
+ M src/features/boss-raid/scenes/geometry.ts
+ M src/features/boss-raid/scenes/registry.ts
+ M src/features/boss-raid/server/http.ts
+ M src/features/boss-raid/server/raid-service.ts
+ M src/features/boss-raid/types.ts
+ M tests/boss-raid/audio-hosts.spec.ts
+ M tests/boss-raid/feedback-unit.mjs
+ M tests/boss-raid/gameplay.spec.ts
+ M tests/boss-raid/presentation-unit.mjs
+ M tests/helpers/google-database.mjs
+?? docs/raid-heroes-v2/
+?? public/assets/boss-raid/heroes/bard/
+?? public/assets/boss-raid/heroes/engineer/
+?? public/assets/boss-raid/heroes/monk/
+?? public/assets/boss-raid/heroes/ninja/
+?? public/assets/boss-raid/heroes/ranger/
+?? public/assets/boss-raid/portraits/
+?? public/assets/boss-raid/vfx/bard-lyre-wave.png
+?? public/assets/boss-raid/vfx/bard-star-song.png
+?? public/assets/boss-raid/vfx/engineer-core-blast.png
+?? public/assets/boss-raid/vfx/engineer-gear-shot.png
+?? public/assets/boss-raid/vfx/monk-dawn-fist.png
+?? public/assets/boss-raid/vfx/monk-sun-kick.png
+?? public/assets/boss-raid/vfx/ninja-moon-star.png
+?? public/assets/boss-raid/vfx/ninja-shadow-cut.png
+?? public/assets/boss-raid/vfx/ranger-storm.png
+?? public/assets/boss-raid/vfx/ranger-wind-arrow.png
+?? scripts/boss-raid/pack-generated-atlas.mjs
+?? scripts/boss-raid/prepare-generated-heroes.mjs
+?? scripts/boss-raid/review-generated-heroes.mjs
+?? scripts/boss-raid/verify-hero-catalog.sql
+?? src/features/boss-raid/assets/boss-definitions.ts
+?? src/features/boss-raid/assets/hero-definitions.ts
+?? src/features/boss-raid/components/HeroPortrait.tsx
+?? supabase/migrations/013_raid_hero_catalog_v2.sql
+?? tests/boss-raid/hero-assets.mjs
+?? tests/boss-raid/heroes.spec.ts
+?? tests/boss-raid/scene-audio/heroes.spec.ts
+?? tests/boss-raid/sql-heroes.mjs

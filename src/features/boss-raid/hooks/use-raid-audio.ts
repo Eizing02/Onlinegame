@@ -2,14 +2,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RaidEvent, RaidHero, RaidStatus } from "../types";
 import { RaidSoundManager } from "../audio/sound-manager";
-import { heroSound, type AudioCue, type SoundId } from "../audio/cues";
+import { bossSound, heroSound, type AudioCue, type SoundId } from "../audio/cues";
 import { useAppAudio } from "@/components/audio/audio-provider";
-type Options={sourceTeamId?:string;eventSeq?:number;status?:RaidStatus;phase?:number;deadline?:string|null;serverNow?:string;heroes?:RaidHero[]};
+import type { BossType } from "../assets/boss-definitions";
+type Options={bossType?:BossType;sourceTeamId?:string;eventSeq?:number;status?:RaidStatus;phase?:number;deadline?:string|null;serverNow?:string;heroes?:RaidHero[]};
 export function useRaidAudio(events:RaidEvent[],teamId?:string,options:Options={}){
  const {engine,muted,master,sfx,music,ready}=useAppAudio();
  const manager=useRef<RaidSoundManager|null>(null);const activeTeam=useRef<string|null>(null);const highest=useRef(0);const [warning,setWarning]=useState('');
  useEffect(()=>{const audio=new RaidSoundManager(setWarning,engine);manager.current=audio;return()=>{audio.destroy();manager.current=null;};},[engine]);
- useEffect(()=>{const audio=manager.current;if(!audio)return;if(muted){void audio.setMuted(true);return;}if(!ready)return;void audio.unlock().then(unlocked=>{if(!unlocked)return;const ids:SoundId[]=['hit','heal','death','victory','countdown'];for(const h of options.heroes??[])if(h.heroType)for(const clip of ['attack_1','attack_2'] as const){const sound=heroSound(h.heroType,clip);if(sound)ids.push(sound);}void audio.prepare([...new Set(ids)]);});},[muted,ready,options.heroes]);
+ useEffect(()=>{const audio=manager.current;if(!audio)return;if(muted){void audio.setMuted(true);return;}if(!ready)return;void audio.unlock().then(unlocked=>{if(!unlocked)return;const ids:SoundId[]=['hit','heal','death','victory','countdown'];for(const h of options.heroes??[])if(h.heroType)for(const clip of ['attack_1','attack_2'] as const){const sound=heroSound(h.heroType,clip);if(sound)ids.push(sound);}for(const clip of ['attack_1','attack_2','breath','shield','ultimate','death','victory_roar'] as const){const sound=bossSound(clip,options.bossType);if(sound)ids.push(sound);}void audio.prepare([...new Set(ids)]);});},[muted,ready,options.heroes,options.bossType]);
  useEffect(()=>{highest.current=Math.max(options.eventSeq??0,...events.map(e=>e.seq),0);},[events,options.eventSeq]);
  useEffect(()=>{const audio=manager.current;if(!audio)return;if(options.sourceTeamId&&options.sourceTeamId!==teamId){activeTeam.current=null;audio.pause(highest.current);return;}if(activeTeam.current!==teamId){activeTeam.current=teamId??'';audio.setTeam(teamId??'',options.eventSeq??Math.max(...events.map(e=>e.seq),0));audio.resume();}},[teamId,options.sourceTeamId,options.eventSeq,events]);
  useEffect(()=>{manager.current?.setVolumes(master,sfx,music);},[master,sfx,music]);

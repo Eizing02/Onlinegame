@@ -1,6 +1,6 @@
 {
   "ready": true,
-  "sheets": 42,
+  "sheets": 96,
   "files": [
     {
       "key": "boss/idle",
@@ -72,6 +72,150 @@
       "key": "boss/victory_roar",
       "width": 976,
       "height": 832,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/idle",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/ready",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/attack_1",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/attack_2",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/dodge",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/hit",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/death",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/run",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/breath",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/shield",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/ultimate",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "stone_titan/victory_roar",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/idle",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/ready",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/attack_1",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/attack_2",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/dodge",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/hit",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/death",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/run",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/breath",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/shield",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/ultimate",
+      "width": 1536,
+      "height": 1536,
+      "status": "PASS"
+    },
+    {
+      "key": "crystal_scorpion/victory_roar",
+      "width": 1536,
+      "height": 1536,
       "status": "PASS"
     },
     {
@@ -252,6 +396,186 @@
       "key": "fairy/defeat",
       "width": 1164,
       "height": 1244,
+      "status": "PASS"
+    },
+    {
+      "key": "ranger/idle",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ranger/attack_1",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ranger/attack_2",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ranger/hit",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ranger/victory",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ranger/defeat",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ninja/idle",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ninja/attack_1",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ninja/attack_2",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ninja/hit",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ninja/victory",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "ninja/defeat",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "monk/idle",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "monk/attack_1",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "monk/attack_2",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "monk/hit",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "monk/victory",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "monk/defeat",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "engineer/idle",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "engineer/attack_1",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "engineer/attack_2",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "engineer/hit",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "engineer/victory",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "engineer/defeat",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "bard/idle",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "bard/attack_1",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "bard/attack_2",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "bard/hit",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "bard/victory",
+      "width": 1280,
+      "height": 1280,
+      "status": "PASS"
+    },
+    {
+      "key": "bard/defeat",
+      "width": 1280,
+      "height": 1280,
       "status": "PASS"
     }
   ]
