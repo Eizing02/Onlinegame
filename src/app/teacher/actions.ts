@@ -1,5 +1,6 @@
 "use server";
 
+import { createHash, randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -11,9 +12,13 @@ import {
   deleteLocalQuestions,
   deleteLocalQuestionSet,
   getLocalQuestionSet,
+  updateLocalQuestion,
   type CreateQuestionOptionInput,
   type QuestionType,
 } from "@/lib/data/question-bank";
+import { QuestionImageStorageError } from "@/lib/data/supabase-question-bank";
+import { QuestionImageError } from "@/lib/image/read-question-image";
+import { QUESTION_IMAGE_TYPE_MESSAGE } from "@/lib/image/question-image-policy";
 import {
   createLocalGameSession,
   deleteLocalGameSession,
@@ -49,25 +54,6 @@ function getSafeTeacherReturnPath(formData: FormData, fallbackPath: string) {
   return fallbackPath;
 }
 
-function isFormFile(value: FormDataEntryValue | null): value is File {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "size" in value &&
-    "type" in value &&
-    "arrayBuffer" in value &&
-    typeof value.arrayBuffer === "function" &&
-    typeof value.size === "number" &&
-    value.size > 0
-  );
-}
-
-function getFormImageFile(formData: FormData, key: string) {
-  const value = formData.get(key);
-
-  return isFormFile(value) ? value : null;
-}
-
 function getQuestionType(value: string): QuestionType {
   if (value === "true_false" || value === "multiple_choice") {
     return value;
@@ -77,19 +63,20 @@ function getQuestionType(value: string): QuestionType {
 }
 
 function needsQuestionTypeMigration(error: unknown) {
-  const message =
-    error instanceof Error
-      ? error.message
-      : typeof error === "object" && error !== null && "message" in error
-        ? String(error.message)
-        : "";
+  if (typeof error !== "object" || error === null || !("code" in error) || !("message" in error)) return false;
+  return ["42703", "42P01", "PGRST204", "PGRST205"].includes(String(error.code)) &&
+    /question_type|question_options|image_path|selected_option_id/i.test(String(error.message));
+}
 
-  return (
-    message.includes("question_type") ||
-    message.includes("question_options") ||
-    message.includes("image_path") ||
-    message.includes("selected_option_id")
-  );
+type AddQuestionResult =
+  | { ok: true }
+  | { ok: false; message: string; field?: "image" };
+
+function questionDraftId(teacherCode: string, questionSetId: string, draft: string) {
+  if (!/^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i.test(draft)) return undefined;
+  // Scope retry keys to this teacher and set before using them as a primary key.
+  const hash = createHash("sha256").update(JSON.stringify([teacherCode, questionSetId, draft])).digest("hex");
+  return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-8${hash.slice(13, 16)}-8${hash.slice(17, 20)}-${hash.slice(20, 32)}`;
 }
 
 export async function createQuestionSetAction(formData: FormData) {
@@ -111,23 +98,22 @@ export async function createQuestionSetAction(formData: FormData) {
   redirect(`/teacher/question-sets/${questionSet.id}`);
 }
 
-export async function addQuestionAction(formData: FormData) {
+export async function addQuestionAction(formData: FormData): Promise<AddQuestionResult> {
   const session = await requireRole("teacher");
   const questionSetId = getFormString(formData, "question_set_id");
   const questionText = getFormString(formData, "question_text");
   const questionType = getQuestionType(getFormString(formData, "question_type"));
   const shortTextAnswer = getFormString(formData, "correct_answer");
   const trueFalseAnswer = getFormString(formData, "true_false_answer");
-  const correctOptionIndex = Number(getFormString(formData, "correct_option_index"));
-  const imageFile = getFormImageFile(formData, "image_file");
+  const selectedOption = getFormString(formData, "correct_option_index");
+  const correctOptionIndex = selectedOption ? Number(selectedOption) : -1;
+  const imageEntry = formData.get("image_file");
   const points = Number(getFormString(formData, "points") || "10");
   const timeLimitSeconds = Number(
     getFormString(formData, "time_limit_seconds") || "60",
   );
-  const redirectPath = `/teacher/question-sets/${questionSetId}`;
-
   if (!questionSetId || !questionText) {
-    encodedRedirect(redirectPath, "error", "กรุณากรอกคำถามและคำตอบให้ครบ");
+    return { ok: false, message: "กรุณากรอกคำถามและคำตอบให้ครบ" };
   }
 
   if (
@@ -138,29 +124,26 @@ export async function addQuestionAction(formData: FormData) {
     timeLimitSeconds < 5 ||
     timeLimitSeconds > 600
   ) {
-    encodedRedirect(
-      redirectPath,
-      "error",
-      "คะแนนหรือเวลาตอบไม่ถูกต้อง",
-    );
+    return { ok: false, message: "คะแนนหรือเวลาตอบไม่ถูกต้อง" };
   }
 
-  if (imageFile && !imageFile.type.startsWith("image/")) {
-    encodedRedirect(redirectPath, "error", "ไฟล์แนบต้องเป็นรูปภาพเท่านั้น");
+  if (typeof imageEntry === "string") {
+    return { ok: false, field: "image", message: QUESTION_IMAGE_TYPE_MESSAGE };
   }
+  const imageFile = imageEntry?.size === 0 && !imageEntry.name ? null : imageEntry;
 
   let correctAnswer = shortTextAnswer;
   let options: CreateQuestionOptionInput[] = [];
 
   if (questionType === "short_text") {
     if (!correctAnswer) {
-      encodedRedirect(redirectPath, "error", "กรุณากรอกคำตอบที่ถูก");
+      return { ok: false, message: "กรุณากรอกคำตอบที่ถูก" };
     }
   }
 
   if (questionType === "true_false") {
     if (trueFalseAnswer !== "true" && trueFalseAnswer !== "false") {
-      encodedRedirect(redirectPath, "error", "กรุณาเลือกคำตอบถูก/ผิด");
+      return { ok: false, message: "กรุณาเลือกคำตอบถูก/ผิด" };
     }
 
     options = [
@@ -189,11 +172,7 @@ export async function addQuestionAction(formData: FormData) {
       correctOptionIndex < 0 ||
       correctOptionIndex > 3
     ) {
-      encodedRedirect(
-        redirectPath,
-        "error",
-        "กรุณากรอกตัวเลือก 4 ข้อและเลือกคำตอบที่ถูก",
-      );
+      return { ok: false, message: "กรุณากรอกตัวเลือก 4 ข้อและเลือกคำตอบที่ถูก" };
     }
 
     options = optionTexts.map((optionText, index) => ({
@@ -204,10 +183,9 @@ export async function addQuestionAction(formData: FormData) {
     correctAnswer = optionTexts[correctOptionIndex] ?? "";
   }
 
-  let question = null;
-
   try {
-    question = await addLocalQuestion(session.userCode, questionSetId, {
+    const question = await addLocalQuestion(session.userCode, questionSetId, {
+      id: questionDraftId(session.userCode, questionSetId, getFormString(formData, "draft_id")),
       questionText,
       correctAnswer,
       questionType,
@@ -216,24 +194,147 @@ export async function addQuestionAction(formData: FormData) {
       points,
       timeLimitSeconds,
     });
+    if (!question) return { ok: false, message: "ไม่พบชุดคำถามนี้ หรือคุณไม่มีสิทธิ์เพิ่มคำถาม" };
   } catch (error) {
+    if (error instanceof QuestionImageError) {
+      return { ok: false, field: "image", message: error.message };
+    }
+    const reference = randomUUID().slice(0, 8);
+    console.error("Question save failed", { reference, questionSetId, error });
+    if (error instanceof QuestionImageStorageError) {
+      return { ok: false, field: "image", message: `อัปโหลดรูปไม่สำเร็จ ลองบันทึกอีกครั้ง (อ้างอิง ${reference})` };
+    }
     if (needsQuestionTypeMigration(error)) {
-      encodedRedirect(
-        redirectPath,
-        "error",
-        "กรุณารัน SQL migration 005_question_types_and_images.sql ก่อนใช้คำถามแบบใหม่หรือรูปประกอบ",
-      );
+      return { ok: false, message: `ฐานข้อมูลยังไม่รองรับคำถามประเภทนี้หรือรูปประกอบ กรุณาแจ้งผู้ดูแลให้ตรวจ migration 005 (อ้างอิง ${reference})` };
+    }
+    return { ok: false, message: `บันทึกคำถามไม่สำเร็จ ลองอีกครั้ง (อ้างอิง ${reference})` };
+  }
+
+  revalidatePath(`/teacher/question-sets/${questionSetId}`);
+  revalidatePath("/teacher/question-sets");
+  return { ok: true };
+}
+
+export async function updateQuestionAction(formData: FormData): Promise<AddQuestionResult> {
+  const session = await requireRole("teacher");
+  const questionSetId = getFormString(formData, "question_set_id");
+  const questionId = getFormString(formData, "question_id");
+  const questionText = getFormString(formData, "question_text");
+  const questionType = getQuestionType(getFormString(formData, "question_type"));
+  const shortTextAnswer = getFormString(formData, "correct_answer");
+  const trueFalseAnswer = getFormString(formData, "true_false_answer");
+  const selectedOption = getFormString(formData, "correct_option_index");
+  const correctOptionIndex = selectedOption ? Number(selectedOption) : -1;
+  const imageEntry = formData.get("image_file");
+  const removeImage = getFormString(formData, "remove_image") === "true";
+  const points = Number(getFormString(formData, "points") || "10");
+  const timeLimitSeconds = Number(
+    getFormString(formData, "time_limit_seconds") || "60",
+  );
+
+  if (!questionSetId || !questionId || !questionText) {
+    return { ok: false, message: "กรุณากรอกคำถามและคำตอบให้ครบ" };
+  }
+
+  if (
+    !Number.isInteger(points) ||
+    points < 0 ||
+    points > 1000 ||
+    !Number.isInteger(timeLimitSeconds) ||
+    timeLimitSeconds < 5 ||
+    timeLimitSeconds > 600
+  ) {
+    return { ok: false, message: "คะแนนหรือเวลาตอบไม่ถูกต้อง" };
+  }
+
+  if (typeof imageEntry === "string") {
+    return { ok: false, field: "image", message: QUESTION_IMAGE_TYPE_MESSAGE };
+  }
+  const imageFile = imageEntry?.size === 0 && !imageEntry.name ? null : imageEntry;
+
+  let correctAnswer = shortTextAnswer;
+  let options: CreateQuestionOptionInput[] = [];
+
+  if (questionType === "short_text") {
+    if (!correctAnswer) {
+      return { ok: false, message: "กรุณากรอกคำตอบที่ถูก" };
+    }
+  }
+
+  if (questionType === "true_false") {
+    if (trueFalseAnswer !== "true" && trueFalseAnswer !== "false") {
+      return { ok: false, message: "กรุณาเลือกคำตอบถูก/ผิด" };
     }
 
-    throw error;
+    options = [
+      {
+        optionText: "ถูก",
+        isCorrect: trueFalseAnswer === "true",
+        orderIndex: 0,
+      },
+      {
+        optionText: "ผิด",
+        isCorrect: trueFalseAnswer === "false",
+        orderIndex: 1,
+      },
+    ];
+    correctAnswer = trueFalseAnswer === "true" ? "ถูก" : "ผิด";
   }
 
-  if (!question) {
-    encodedRedirect("/teacher/question-sets", "error", "ไม่พบชุดคำถามนี้");
+  if (questionType === "multiple_choice") {
+    const optionTexts = Array.from({ length: 4 }, (_, index) =>
+      getFormString(formData, `option_${index}`),
+    );
+
+    if (
+      optionTexts.some((optionText) => !optionText) ||
+      !Number.isInteger(correctOptionIndex) ||
+      correctOptionIndex < 0 ||
+      correctOptionIndex > 3
+    ) {
+      return { ok: false, message: "กรุณากรอกตัวเลือก 4 ข้อและเลือกคำตอบที่ถูก" };
+    }
+
+    options = optionTexts.map((optionText, index) => ({
+      optionText,
+      isCorrect: index === correctOptionIndex,
+      orderIndex: index,
+    }));
+    correctAnswer = optionTexts[correctOptionIndex] ?? "";
   }
 
-  revalidatePath(redirectPath);
-  encodedRedirect(redirectPath, "notice", "เพิ่มคำถามแล้ว");
+  try {
+    const updated = await updateLocalQuestion(session.userCode, questionSetId, questionId, {
+      questionText,
+      correctAnswer,
+      questionType,
+      options,
+      imageFile,
+      removeImage,
+      points,
+      timeLimitSeconds,
+    });
+    if (!updated) {
+      return { ok: false, message: "ไม่พบคำถามนี้ หรือคุณไม่มีสิทธิ์แก้ไข" };
+    }
+  } catch (error) {
+    if (error instanceof QuestionImageError) {
+      return { ok: false, field: "image", message: error.message };
+    }
+    const reference = randomUUID().slice(0, 8);
+    console.error("Question update failed", { reference, questionSetId, questionId, error });
+    if (error instanceof QuestionImageStorageError) {
+      return { ok: false, field: "image", message: `อัปโหลดรูปไม่สำเร็จ ลองบันทึกอีกครั้ง (อ้างอิง ${reference})` };
+    }
+    if (needsQuestionTypeMigration(error)) {
+      return { ok: false, message: `ฐานข้อมูลยังไม่รองรับคำถามประเภทนี้หรือรูปประกอบ กรุณาแจ้งผู้ดูแลให้ตรวจ migration 005 (อ้างอิง ${reference})` };
+    }
+    return { ok: false, message: `บันทึกการแก้ไขไม่สำเร็จ ลองอีกครั้ง (อ้างอิง ${reference})` };
+  }
+
+  revalidatePath(`/teacher/question-sets/${questionSetId}`);
+  revalidatePath("/teacher/question-sets");
+  return { ok: true };
 }
 
 export async function deleteQuestionAction(formData: FormData) {

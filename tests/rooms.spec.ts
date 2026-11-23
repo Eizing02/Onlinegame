@@ -51,18 +51,19 @@ test("teacher creates a room with a 4 digit code", async ({ page }) => {
 
   await page.goto("http://127.0.0.1:3100/teacher/rooms/new");
   await page.getByLabel("ชื่อกิจกรรม").fill("กิจกรรมท้ายคาบ");
-  await page.getByLabel("จำนวนกลุ่ม").fill("3");
-  await page.getByLabel("จำนวนคนต่อกลุ่ม").fill("6");
+  await page.getByLabel("จำนวนทีม").fill("3");
+  await page.getByLabel("จำนวนคนต่อทีม").fill("6");
   await page.getByRole("button", { name: "สร้างห้องเกม" }).click();
   await expect(page).toHaveURL(/\/teacher\/rooms\/\d{4}\/dashboard$/);
 
   const roomCode = page.url().match(/\/teacher\/rooms\/(\d{4})\/dashboard$/)?.[1];
   expect(roomCode).toBeTruthy();
   await expect(page.getByRole("heading", { name: setTitle })).toBeVisible();
+  await expect(page.getByText(roomCode as string, { exact: true }).first()).toBeVisible();
   await page.getByRole("tab", { name: "ผู้เล่น", exact: true }).click();
-  await expect(page.getByText(roomCode as string, { exact: true })).toBeVisible();
+  await expect(page.getByLabel("รายชื่อผู้เล่นและทีม").getByText(roomCode as string, { exact: true })).toBeVisible();
   await expect(page.getByText("กลุ่ม 3").first()).toBeVisible();
-  await expect(page.getByText("ให้นักเรียนกรอกเลข 4 หลักนี้")).toBeVisible();
+  await expect(page.getByLabel("รายชื่อผู้เล่นและทีม").getByText("ให้นักเรียนกรอกเลข 4 หลักนี้")).toBeVisible();
 
   await page.goto("http://127.0.0.1:3100/teacher/rooms/new");
   await expect(page.getByText(`มีห้อง ${roomCode} ที่ยังไม่จบอยู่`)).toBeVisible();

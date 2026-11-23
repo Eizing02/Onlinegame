@@ -8,16 +8,25 @@ const questionBankPath = path.join(
   "tmp", "e2e-data",
   "question-sets.json",
 );
+const gameSessionsPath = path.join(
+  process.cwd(),
+  "tmp", "e2e-data",
+  "game-sessions.json",
+);
 
 let originalQuestionBank = "[]\n";
+let originalGameSessions = "[]\n";
 
 test.beforeEach(async () => {
   originalQuestionBank = await readFile(questionBankPath, "utf8");
+  originalGameSessions = await readFile(gameSessionsPath, "utf8");
   await writeFile(questionBankPath, "[]\n", "utf8");
+  await writeFile(gameSessionsPath, "[]\n", "utf8");
 });
 
 test.afterEach(async () => {
   await writeFile(questionBankPath, originalQuestionBank, "utf8");
+  await writeFile(gameSessionsPath, originalGameSessions, "utf8");
 });
 
 test("teacher creates a question set and adds a question", async ({ page }) => {

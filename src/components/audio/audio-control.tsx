@@ -17,8 +17,14 @@ export function AudioControl() {
     const bounds = anchor.getBoundingClientRect(), panelWidth = Math.min(320, width - 24);
     element.style.width = `${panelWidth}px`;
     element.style.maxHeight = `${height - 24}px`;
-    element.style.left = `${Math.max(left + 12, Math.min(bounds.right - panelWidth, left + width - panelWidth - 12))}px`;
-    element.style.top = `${Math.max(top + 12, Math.min(bounds.bottom + 8, top + height - element.offsetHeight - 12))}px`;
+    const panelHeight = element.offsetHeight || 280;
+    const spaceBelow = top + height - bounds.bottom - 12;
+    const openAbove = spaceBelow < panelHeight + 8 && bounds.top - top > spaceBelow;
+    const desiredTop = openAbove ? bounds.top - panelHeight - 8 : bounds.bottom + 8;
+    const alignLeft = bounds.left + panelWidth <= left + width - 12 && bounds.left - left < width / 2;
+    const desiredLeft = alignLeft ? bounds.left : bounds.right - panelWidth;
+    element.style.left = `${Math.max(left + 12, Math.min(desiredLeft, left + width - panelWidth - 12))}px`;
+    element.style.top = `${Math.max(top + 12, Math.min(desiredTop, top + height - panelHeight - 12))}px`;
   };
   const close = () => panel.current?.hidePopover();
   useEffect(() => {

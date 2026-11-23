@@ -10,6 +10,7 @@ export function HeroSelectLobby({own,heroes,pending,choose,allowDuplicates=true,
  const touch=useRef<{x:number;y:number}|null>(null);
  const groups=Array.from({length:Math.ceil(availableHeroes.length/5)},(_,i)=>availableHeroes.slice(i*5,i*5+5));
  const currentPage=Math.min(page,Math.max(0,groups.length-1));
+ const readyCount=heroes.filter(h=>Boolean(h.heroType)).length;
  return <section className="raid-lobby raid-expanded-lobby"><div className="raid-hero-intro"><h2>เลือกฮีโร่ของคุณ</h2><p>{allowDuplicates?"เลือกซ้ำกันได้":"ห้องกติกาเดิมใช้ฮีโร่ไม่ซ้ำกัน"} · ทุกตัวใช้คะแนนและดาเมจเท่ากัน</p></div>
   {groups.length>1&&<nav className="raid-hero-pagination" aria-label="หน้าตัวละคร"><button type="button" aria-label="ตัวละครหน้าก่อน" disabled={currentPage===0||pending} onClick={()=>setPage(currentPage-1)}><ChevronLeft size={20}/></button><span role="status">ตัวละคร {currentPage*5+1}–{Math.min((currentPage+1)*5,availableHeroes.length)} / {availableHeroes.length}</span><button type="button" aria-label="ตัวละครหน้าถัดไป" disabled={currentPage===groups.length-1||pending} onClick={()=>setPage(currentPage+1)}><ChevronRight size={20}/></button></nav>}
   <div className="raid-hero-pages" data-no-room-swipe tabIndex={0} role="region" aria-label="รายชื่อตัวละคร เลื่อนภายในได้" onKeyDown={e=>{if(groups.length<2||!["ArrowLeft","ArrowRight","Home","End"].includes(e.key)||pending)return;e.preventDefault();setPage(e.key==="Home"?0:e.key==="End"?groups.length-1:Math.max(0,Math.min(groups.length-1,currentPage+(e.key==="ArrowRight"?1:-1))));e.currentTarget.focus();}} onTouchStart={e=>{if(e.touches.length!==1){touch.current=null;return;}touch.current={x:e.touches[0].clientX,y:e.touches[0].clientY};}} onTouchCancel={()=>{touch.current=null;}} onTouchEnd={e=>{const start=touch.current;touch.current=null;if(!start||!e.changedTouches[0]||pending)return;const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){e.preventDefault();setPage(Math.max(0,Math.min(groups.length-1,currentPage+(dx<0?1:-1))));}}}>
@@ -20,6 +21,6 @@ export function HeroSelectLobby({own,heroes,pending,choose,allowDuplicates=true,
     </button>;
    })}</div>)}
   </div>
-  <div className="raid-hero-selection-summary" role="status" aria-live="polite"><strong>{pending?"กำลังบันทึกฮีโร่…":own?.heroType?`เลือก: ${HERO_NAMES[own.heroType]}`:"เลือกตัวละครที่ชอบได้เลย"}</strong><p>{own?.heroType?`${HERO_DEFINITIONS[own.heroType].attacks.attack_1.name} · ${HERO_DEFINITIONS[own.heroType].attacks.attack_2.name}`:"ถ้ายังไม่เลือก ระบบจะจัดให้เมื่อเริ่มเกม"}</p><small>รอครูเริ่มเกม · ทุกคนได้เวลารวมเท่ากัน</small></div>
+  <div className="raid-hero-selection-summary" role="status" aria-live="polite"><strong>{pending?"กำลังบันทึกฮีโร่…":own?.heroType?`เลือก: ${HERO_NAMES[own.heroType]}`:"เลือกตัวละครที่ชอบได้เลย"}</strong><p>{own?.heroType?`${HERO_DEFINITIONS[own.heroType].attacks.attack_1.name} · ${HERO_DEFINITIONS[own.heroType].attacks.attack_2.name}`:"ถ้ายังไม่เลือก ระบบจะจัดให้เมื่อเริ่มเกม"}</p><small>พร้อมรบแล้ว {readyCount}/{Math.max(1,heroes.length)} คนในทีม · รอครูเริ่มเกม</small></div>
  </section>;
 }

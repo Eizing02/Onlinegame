@@ -16,6 +16,7 @@ type NewRoomPageProps = {
     error?: string;
     notice?: string;
     active_room?: string;
+    set?: string;
   }>;
 };
 
@@ -62,7 +63,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
         {activeRoom ? (
           <Panel className="flex flex-col justify-between gap-4 border-warning bg-warning/10 sm:flex-row sm:items-center">
             <div>
-              <p className="text-sm font-medium text-muted">ห้องที่ยัง active</p>
+              <p className="text-sm font-medium text-muted">ห้องที่กำลังเปิดอยู่</p>
               <h2 className="mt-1 text-2xl font-semibold">
                 {activeRoom.roomCode}
               </h2>
@@ -79,7 +80,7 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
                 <input name="room_code" type="hidden" value={activeRoom.roomCode} />
                 <input name="return_to" type="hidden" value="/teacher/rooms/new" />
                 <ConfirmSubmitButton
-                  className="inline-flex h-11 w-full items-center justify-center rounded-md border border-danger bg-danger/10 px-4 text-sm font-semibold text-danger transition hover:bg-danger/10 sm:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center rounded-md border border-danger bg-danger/10 px-4 text-sm font-semibold text-danger transition hover:bg-danger/15 sm:w-auto"
                   message={`ปิดห้อง ${activeRoom.roomCode} และลบข้อมูลรอบเล่นทั้งหมด? หลังปิดห้องจะดูสรุปย้อนหลังไม่ได้`}
                 >
                   ปิดห้องนี้
@@ -90,7 +91,12 @@ export default async function NewRoomPage({ searchParams }: NewRoomPageProps) {
         ) : null}
 
         <Panel>
-          <RaidRoomForm sets={questionSets} canCreate={canCreateRoom} raidAvailable={await raidAvailable()}/>
+          <RaidRoomForm
+            sets={questionSets}
+            canCreate={canCreateRoom}
+            raidAvailable={await raidAvailable()}
+            initialSetId={params.set}
+          />
         </Panel>
       </section>
     </AppShell>

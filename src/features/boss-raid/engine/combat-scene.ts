@@ -2,6 +2,8 @@ import { BOSS_DEFINITIONS, type BossType } from "../assets/boss-definitions";
 import { heroAttack, type AttackStyle } from "../assets/hero-definitions";
 import { GAME_PALETTE } from "@/lib/theme/palette";
 import { Application, AnimatedSprite, Container, Graphics, Sprite, Texture, type Ticker } from "pixi.js";
+import { AnimatedRaidFx } from "./animated-raid-fx";
+import { bossImpactLook, effectsForScene, HEAL_LOOK, HERO_IMPACT, type AnimatedFxId } from "../assets/animated-fx";
 import { CombatFeedback, bossEffect, type EffectId } from "./combat-feedback";
 import { SpriteLoader } from "../assets/sprite-loader";
 import type { BossClip, HeroClip, HeroType } from "../assets/manifest";
@@ -24,8 +26,9 @@ export type SceneOptions={sceneId?:string;compactViewport?:boolean;definition?:S
 
 export class CombatScene {
  private app=new Application();private loader=new SpriteLoader();private layers:SceneLayers;private cameraRoot=new Container();private shadows=new Container();private actorLayer=new Container();private vfx=new Container();private actors=new Map<string,Actor>();private queue=new AttackEventQueue();private effects:ScreenEffectManager;private feedback:CombatFeedback;
+ private animatedFx = new AnimatedRaidFx();
  private observer?:ResizeObserver;private disposed=false;private elapsed=0;private time=0;private bossDead=false;private lastUltimateAt=-Infinity;private resizeFrame=0;private profileGeneration=0;private highestSeq=0;private profileName:"wide"|"phone"="wide";private profile:Profile|null=null;private camera:Camera={scale:1,x:0,y:0,imageWidth:1,imageHeight:1};private definition?:SceneDefinition;private options:SceneOptions;private onCue:CueSink=()=>{};
- private particles:{graphic:Graphics|Sprite;from:Actor;to:Actor;remaining:number;mode:AttackStyle["mode"];baseScale:{x:number;y:number};impact?:()=>void}[]=[];private sparks:{graphic:Graphics;vx:number;vy:number;remaining:number}[]=[];
+ private particles:{graphic:Graphics|Sprite;from:Actor;to:Actor;remaining:number;mode:AttackStyle["mode"];baseScale:{x:number;y:number};animation?:AnimatedFxId;seek?:(progress:number)=>void;impact?:()=>void}[]=[];private sparks:{graphic:Graphics;vx:number;vy:number;remaining:number}[]=[];
  private loadedKey='';
  private frameTimes:number[]=[];
  private captureNext=false;private captureTimer:ReturnType<typeof setTimeout>|null=null;
@@ -42,12 +45,16 @@ export class CombatScene {
  async init(heroes:RaidHero[],bossHp:number){
   await this.app.init({width:Math.max(1,this.host.clientWidth),height:Math.max(1,this.host.clientHeight),backgroundAlpha:0,antialias:false,resolution:Math.min(devicePixelRatio,this.quality==='low'?1:1.5),autoDensity:true,preference:'webgl',powerPreference:'low-power'});
   if(this.disposed){this.app.destroy(true,{children:true});return;}
-  this.app.canvas.setAttribute('aria-hidden','true');this.host.prepend(this.app.canvas);this.app.stage.addChild(this.cameraRoot);this.cameraRoot.addChild(this.layers.root,this.shadows,this.actorLayer,this.vfx);this.app.ticker.maxFPS=this.quality==='low'?30:60;
+  this.app.canvas.setAttribute('aria-hidden','true');this.host.prepend(this.app.canvas);this.app.stage.addChild(this.cameraRoot);this.cameraRoot.addChild(this.layers.root,this.shadows,this.animatedFx.ground,this.actorLayer,this.animatedFx.above,this.vfx);this.app.ticker.maxFPS=this.quality==='low'?30:60;
   this.addActor('boss','boss',bossHp,0);const slots=assignHeroSlots(heroes.filter(h=>h.eligible&&h.heroType));
   for(const h of heroes)if(h.eligible&&h.heroType){this.addActor(h.id,h.heroType,h.hp,slots.get(h.id)??0);if(h.hp===0)this.knockedOut.add(h.id);}
   void this.feedback.preload(heroes.flatMap(h=>h.heroType?[h.heroType]:[]),this.bossType);
   await this.selectProfile();this.resize();
   await Promise.all([...this.actors].map(([id,a])=>this.clip(id,a.hp===0?id==='boss'?'death':'defeat':'idle',a.hp===0)));
+  if (this.effectsEnabled && !this.reduced && !this.disposed) {
+   const roster = heroes.flatMap(hero => hero.eligible && hero.heroType ? [hero.heroType] : []);
+   void this.animatedFx.preload(effectsForScene(roster, this.bossType));
+  }
   this.bossDead=bossHp===0;this.observer=new ResizeObserver(()=>{cancelAnimationFrame(this.resizeFrame);this.resizeFrame=requestAnimationFrame(()=>{this.resize();void this.selectProfile();});});this.observer.observe(this.host);const roster=this.host.parentElement?.querySelector(".raid-hero-hud");if(roster)this.observer.observe(roster);
   this.app.ticker.add(this.tick);document.addEventListener('visibilitychange',this.visibility);this.visibility();this.publishPlacement();
  }
@@ -82,14 +89,14 @@ export class CombatScene {
  private bossAttackClip(event:RaidEvent):BossClip{const ultimate=!this.bossDead&&event.phase>=3&&performance.now()-this.lastUltimateAt>=4000;if(ultimate)this.lastUltimateAt=performance.now();return ultimate?'ultimate':event.phase>=3?'attack_2':event.phase===2?event.seq%2?'breath':'attack_2':'attack_1';}
  private present(event:RaidEvent){
   if(event.type==='boss_defeated'&&!this.bossDead){this.bossDead=true;void this.clip('boss','death',false,undefined,()=>this.cue(event,'death','boss','death',0));this.effects.play('victory');this.fireworks();let first=true;for(const[id,a]of this.actors)if(id!=='boss'&&a.hp>0){const play=first;first=false;void this.clip(id,'victory',false,undefined,play?()=>this.cue(event,'victory','boss','victory',0,200):undefined);}}
-  else if(event.type==='hero_attack'&&event.actorId){const a=this.actors.get(event.actorId);if(!a)return;const animation=event.seq%2?'attack_1':'attack_2',style=heroAttack(a.type as HeroType,animation);void this.clip(event.actorId,animation,false,(frame)=>{const sound=heroSound(a.type as HeroType,animation);if(sound)this.cue(event,sound,event.actorId!,animation,frame);const impact=()=>{if(this.disposed||this.answerActive)return;if(event.damage>0){this.impactFeedback(event,'boss',style.effect);this.cue(event,'hit','boss',animation,7);if(!this.bossDead&&!this.bossStrike)void this.clip('boss','hit');this.effects.play('white');}};if(style.mode==='melee')impact();else this.projectile(a,this.actors.get('boss'),style.color,impact,style.effect,style.mode);},()=>{if(style.mode==='melee'&&!this.reduced){a.movement=0;a.movementDuration=a.type==='warrior'?700:1100;}});}
+  else if(event.type==='hero_attack'&&event.actorId){const a=this.actors.get(event.actorId);if(!a)return;const animation=event.seq%2?'attack_1':'attack_2',style=heroAttack(a.type as HeroType,animation);void this.clip(event.actorId,animation,false,(frame)=>{const sound=heroSound(a.type as HeroType,animation);if(sound)this.cue(event,sound,event.actorId!,animation,frame);const impact=()=>{if(this.disposed||this.answerActive)return;if(event.damage>0){this.impactFeedback(event,'boss',style.effect,animation);this.cue(event,'hit','boss',animation,7);if(!this.bossDead&&!this.bossStrike)void this.clip('boss','hit');this.effects.play('white');}};if(style.mode==='melee')impact();else this.projectile(a,this.actors.get('boss'),style.color,impact,style.effect,style.mode,a.type==='wizard'&&animation==='attack_1'?'fireball':undefined);},()=>{if(style.mode==='melee'&&!this.reduced){a.movement=0;a.movementDuration=a.type==='warrior'?700:1100;}});}
   else if(event.type==='hero_hit'){
    const animation=this.bossStrike?.animation??this.bossAttackClip(event),ultimate=animation==='ultimate';
    const impact=(frame:number)=>{if(this.disposed||this.answerActive)return;const sound=bossSound(animation,this.bossType);if(sound)this.cue(event,sound,'boss',animation,frame);
-    const hit=()=>{if(this.disposed||this.answerActive)return;if(event.targetId){const a=this.actors.get(event.targetId);if(a){this.impactFeedback(event,event.targetId,bossEffect(animation,this.bossType));void this.clip(event.targetId,event.heroHp===0?'defeat':'hit');if(event.heroHp===0){if(!this.knockedOut.has(event.targetId))this.cue(event,'defeat',event.targetId,animation,frame);this.knockedOut.add(event.targetId);}else this.cue(event,'hit',event.targetId,animation,frame);}}
+    const hit=()=>{if(this.disposed||this.answerActive)return;if(event.targetId){const a=this.actors.get(event.targetId);if(a){this.impactFeedback(event,event.targetId,bossEffect(animation,this.bossType),animation);void this.clip(event.targetId,event.heroHp===0?'defeat':'hit');if(event.heroHp===0){if(!this.knockedOut.has(event.targetId))this.cue(event,'defeat',event.targetId,animation,frame);this.knockedOut.add(event.targetId);}else this.cue(event,'hit',event.targetId,animation,frame);}}
      this.effects.play('red');if(event.phase>=2){this.effects.play('shake');if(!this.reduced&&this.effectsEnabled)this.cue(event,'shake','boss',animation,frame);}if(ultimate||animation==='breath')this.effects.play('dark');if(ultimate){this.effects.play('slow');this.effects.play('white');}};
     const from=this.actors.get('boss'),to=event.targetId?this.actors.get(event.targetId):undefined;
-    if(from&&to&&(ultimate||animation==='breath'))this.projectile(from,to,GAME_PALETTE.wine,hit,bossEffect('breath',this.bossType));else hit();
+    if(from&&to&&(ultimate||animation==='breath'))this.projectile(from,to,GAME_PALETTE.wine,hit,bossEffect('breath',this.bossType),'projectile',this.bossType==='shadow_dragon'&&animation==='breath'?'breath':undefined);else hit();
    };
    if(!this.bossDead)this.playBossStrike(animation,impact);
   }else if(event.type==='heal'&&event.actorId&&event.targetId&&event.heal>0){const a=this.actors.get(event.actorId),target=this.actors.get(event.targetId);this.knockedOut.delete(event.targetId);if(a&&target)this.projectile(a,target,GAME_PALETTE.mist,()=>{if(this.disposed||this.answerActive)return;this.impactFeedback(event,event.targetId!,'healing-light');this.cue(event,'heal',event.targetId!,'heal',0);},'healing-light');}
@@ -114,8 +121,8 @@ export class CombatScene {
    if(primary?.type==='hero_attack'&&primary.actorId){
     const a=this.actors.get(primary.actorId);if(!a)return;const animation=primary.seq%2?'attack_1':'attack_2',style=heroAttack(a.type as HeroType,animation);let impactTask:Promise<void>=Promise.resolve();let releaseImpact:()=>void=()=>{};
     const impactFinished=new Promise<void>(resolve=>{releaseImpact=resolve;});
-    const impact=()=>{if(!valid()){releaseImpact();return;}if(primary.damage>0)this.impactFeedback(primary,'boss',style.effect);if(death){this.bossDead=true;impactTask=this.clip('boss','death',false,undefined,()=>this.cue(death,'death','boss','death',0));this.effects.play('victory');this.fireworks();}else if(primary.damage>0&&!this.bossDead){this.cue(primary,'hit','boss',animation,7);impactTask=this.clip('boss','hit');this.effects.play('white');}releaseImpact();};
-    await this.clip(primary.actorId,animation,false,frame=>{const sound=heroSound(a.type as HeroType,animation);if(sound)this.cue(primary,sound,primary.actorId!,animation,frame);if(style.mode==='melee')impact();else this.projectile(a,this.actors.get('boss'),style.color,impact,style.effect,style.mode);},()=>{if(style.mode==='melee'&&!this.reduced){a.movement=0;a.movementDuration=a.type==='warrior'?700:1100;}});
+    const impact=()=>{if(!valid()){releaseImpact();return;}if(primary.damage>0)this.impactFeedback(primary,'boss',style.effect,animation);if(death){this.bossDead=true;impactTask=this.clip('boss','death',false,undefined,()=>this.cue(death,'death','boss','death',0));this.effects.play('victory');this.fireworks();}else if(primary.damage>0&&!this.bossDead){this.cue(primary,'hit','boss',animation,7);impactTask=this.clip('boss','hit');this.effects.play('white');}releaseImpact();};
+    await this.clip(primary.actorId,animation,false,frame=>{const sound=heroSound(a.type as HeroType,animation);if(sound)this.cue(primary,sound,primary.actorId!,animation,frame);if(style.mode==='melee')impact();else this.projectile(a,this.actors.get('boss'),style.color,impact,style.effect,style.mode,a.type==='wizard'&&animation==='attack_1'?'fireball':undefined);},()=>{if(style.mode==='melee'&&!this.reduced){a.movement=0;a.movementDuration=a.type==='warrior'?700:1100;}});
     if(!valid())return;
     // A missing sprite still yields a bounded visual result; no promise waits on a missing impact.
     if(a.clip===animation||this.reduced){await Promise.race([impactFinished,new Promise<void>(resolve=>setTimeout(resolve,400))]);}
@@ -124,8 +131,8 @@ export class CombatScene {
    }else if(primary?.type==='hero_hit'&&primary.targetId){
     const animation=this.bossAttackClip(primary);let target:Promise<void>=Promise.resolve();let resolveImpact:()=>void=()=>{};const arrived=new Promise<void>(resolve=>{resolveImpact=resolve;});
     if(!this.bossDead)await this.clip('boss',animation,false,frame=>{if(!valid()){resolveImpact();return;}const sound=bossSound(animation,this.bossType);if(sound)this.cue(primary,sound,'boss',animation,frame);
-     const hit=()=>{if(!valid()){resolveImpact();return;}this.impactFeedback(primary,primary.targetId!,bossEffect(animation,this.bossType));target=this.clip(primary.targetId!,primary.heroHp===0?'defeat':'hit');this.cue(primary,primary.heroHp===0?'defeat':'hit',primary.targetId!,animation,frame);this.effects.play('red');if(primary.phase>=2){this.effects.play('shake');if(!this.reduced&&this.effectsEnabled)this.cue(primary,'shake','boss',animation,frame);this.effects.play('dark');}if(animation==='ultimate'){this.effects.play('slow');this.effects.play('white');}resolveImpact();};
-     const boss=this.actors.get('boss');if(boss&&(animation==='breath'||animation==='ultimate'))this.projectile(boss,this.actors.get(primary.targetId!),GAME_PALETTE.wine,hit,bossEffect('breath',this.bossType));else hit();
+     const hit=()=>{if(!valid()){resolveImpact();return;}this.impactFeedback(primary,primary.targetId!,bossEffect(animation,this.bossType),animation);target=this.clip(primary.targetId!,primary.heroHp===0?'defeat':'hit');this.cue(primary,primary.heroHp===0?'defeat':'hit',primary.targetId!,animation,frame);this.effects.play('red');if(primary.phase>=2){this.effects.play('shake');if(!this.reduced&&this.effectsEnabled)this.cue(primary,'shake','boss',animation,frame);this.effects.play('dark');}if(animation==='ultimate'){this.effects.play('slow');this.effects.play('white');}resolveImpact();};
+     const boss=this.actors.get('boss');if(boss&&(animation==='breath'||animation==='ultimate'))this.projectile(boss,this.actors.get(primary.targetId!),GAME_PALETTE.wine,hit,bossEffect('breath',this.bossType),'projectile',this.bossType==='shadow_dragon'&&animation==='breath'?'breath':undefined);else hit();
     });
     await Promise.race([arrived,new Promise<void>(resolve=>setTimeout(resolve,400))]);await target;
    }else if(primary?.type==='heal'&&primary.actorId&&primary.targetId){
@@ -133,16 +140,91 @@ export class CombatScene {
    }else if(death){this.bossDead=true;await this.clip('boss','death',false,undefined,()=>this.cue(death,'death','boss','death',0));}
   })();this.answerTask=this.answerTask.then(()=>{if(valid())this.host.dataset.answerCompleted='true';});return this.answerTask;
  }
- finishAnswer(){this.feedback.clear();delete this.host.dataset.answerPlaying;this.answerActive=false;this.answerId='';this.queue.reset(this.highestSeq);for(const[id,a]of this.actors){if(a.movement!==undefined){a.movement=undefined;a.offsetX=0;a.offsetY=0;this.groundFrame(a,a.sprite.currentFrame);}if(a.sprite.playing&&!a.sprite.loop){a.sprite.gotoAndStop(a.sprite.totalFrames-1);a.complete?.();a.complete=undefined;if(a.hp>0&&!(id==='boss'&&this.bossDead))void this.clip(id,'idle');}}}
+ finishAnswer(){this.feedback.clear();this.animatedFx.clear();delete this.host.dataset.answerPlaying;this.answerActive=false;this.answerId='';this.queue.reset(this.highestSeq);for(const[id,a]of this.actors){if(a.movement!==undefined){a.movement=undefined;a.offsetX=0;a.offsetY=0;this.groundFrame(a,a.sprite.currentFrame);}if(a.sprite.playing&&!a.sprite.loop){a.sprite.gotoAndStop(a.sprite.totalFrames-1);a.complete?.();a.complete=undefined;if(a.hp>0&&!(id==='boss'&&this.bossDead))void this.clip(id,'idle');}}}
 
- private projectile(from:Actor,to:Actor|undefined,color:number,impact?:()=>void,effect?:EffectId,mode:AttackStyle["mode"]="projectile"){if(!to){impact?.();return;}if(this.reduced||this.particles.length>=8){impact?.();return;}const height=from.scale*(this.actorVisual(from).clips[from.clip]?.baseVisualHeight??from.height);const graphic=this.effectsEnabled&&effect?this.feedback.projectile(effect,height*.48)??new Graphics().circle(0,0,5).fill(color):new Graphics().circle(0,0,5).fill(color);if(graphic instanceof Sprite&&from.homeX<to.homeX&&from.type!=='boss')graphic.scale.x*=-1;this.vfx.addChild(graphic);this.particles.push({graphic,from,to,remaining:350,impact,mode,baseScale:{x:graphic.scale.x,y:graphic.scale.y}});}
- private impactFeedback(event:RaidEvent,target:string,effect:EffectId){const a=this.actors.get(target);if(!a)return;this.feedback.impact(event,target,effect,()=>{const height=a.scale*(this.actorVisual(a).clips[a.clip]?.baseVisualHeight??a.height);return {x:a.sprite.x,y:a.sprite.y-height*(a.type==='boss'?BOSS_DEFINITIONS[this.bossType].impactY:.5),height};});if(this.captureNext&&this.options.debug){this.captureNext=false;this.captureTimer=setTimeout(()=>{this.captureTimer=null;this.setPreviewPaused(true);},160);}}
- private fireworks(){if(this.reduced||!this.effectsEnabled||this.sparks.length)return;const count=this.quality==='low'?24:72,colors=[GAME_PALETTE.gold,GAME_PALETTE.mist,GAME_PALETTE.wine,GAME_PALETTE.mist];const w=this.profile?.imageWidth??this.app.screen.width,h=this.profile?.imageHeight??this.app.screen.height;for(let i=0;i<count;i++){const angle=i%24/24*Math.PI*2,g=new Graphics().circle(0,0,3).fill(colors[i%4]);g.position.set(w*(.25+Math.floor(i/24)*.22),h*(this.profileName==='phone'?.33:.4));this.vfx.addChild(g);this.sparks.push({graphic:g,vx:Math.cos(angle)*180,vy:Math.sin(angle)*180,remaining:1600});}}
+
+ private projectile(from: Actor, to: Actor | undefined, color: number, impact?: () => void, effect?: EffectId, mode: AttackStyle["mode"] = "projectile", animation?: AnimatedFxId) {
+  if (!to || this.reduced || this.particles.length >= 8) {
+   impact?.();
+   return;
+  }
+  const height = from.scale * (this.actorVisual(from).clips[from.clip]?.baseVisualHeight ?? from.height);
+  const facing = from.homeX <= to.homeX ? 1 : -1;
+  const player = this.effectsEnabled && animation
+   ? this.animatedFx.player(animation, height * (animation === "breath" ? .95 : .63), facing)
+   : null;
+  const fallback = !player && this.effectsEnabled && effect ? this.feedback.projectile(effect, height * .48) : null;
+  if (fallback && facing === 1 && from.type !== "boss") fallback.scale.x *= -1;
+  const graphic = player?.sprite ?? fallback ?? new Graphics().circle(0, 0, 5).fill(color);
+  this.vfx.addChildAt(graphic, 0);
+  this.particles.push({ graphic, from, to, remaining: 350, impact, mode, seek: player?.seek, animation: player ? animation : undefined, baseScale: { x: graphic.scale.x, y: graphic.scale.y } });
+ }
+
+ private impactFeedback(event: RaidEvent, target: string, effect: EffectId, clip?: BossClip | HeroClip) {
+  const actor = this.actors.get(target);
+  if (!actor) return;
+  const source = event.type === "hero_hit" ? this.actors.get("boss") : this.actors.get(event.actorId ?? "");
+  const look = event.type === "heal" ? HEAL_LOOK
+   : event.type === "hero_hit" && clip ? bossImpactLook(this.bossType, clip as BossClip)
+   : source && source.type !== "boss" && (clip === "attack_1" || clip === "attack_2")
+    ? HERO_IMPACT[source.type][clip] : undefined;
+  const anchor = () => {
+   const height = actor.scale * (this.actorVisual(actor).clips[actor.clip]?.baseVisualHeight ?? actor.height);
+   const impactY = actor.type === "boss" ? BOSS_DEFINITIONS[this.bossType].impactY : .5;
+   return { x: actor.sprite.x, y: actor.sprite.y - height * impactY, height };
+  };
+  this.feedback.impact(event, target, effect, anchor, () => {
+   if (!look || (event.type === "heal" && event.heal <= 0)) return;
+   const toRight = !source || source.homeX <= actor.homeX;
+   const cameraScale = Math.max(.01, this.camera.scale);
+   const pixelWidth = Math.max(24, Math.min(this.app.screen.width * .48, anchor().height * look.width * cameraScale));
+   const position = look.placement
+    ? () => ({ x: actor.sprite.x, y: actor.homeY + actor.offsetY })
+    : anchor;
+   if (this.animatedFx.play(look, pixelWidth / cameraScale, position, toRight ? 1 : -1)) return look.id;
+  });
+  this.captureImpactForReview();
+ }
+
+ private captureImpactForReview() {
+  if (this.captureNext && this.options.debug) {
+   this.captureNext = false;
+   this.captureTimer = setTimeout(() => { this.captureTimer = null; this.setPreviewPaused(true); }, 160);
+  }
+ }
+
+ private fireworks() {
+  if (this.reduced || !this.effectsEnabled || this.sparks.length) return;
+  const scale = Math.max(.01, this.camera.scale);
+  const screen = this.app.screen;
+  if (this.quality === "full") {
+   const effect = { id: "firework", width: 1 } as const;
+   const size = Math.min(screen.width * .31, screen.height * .34, 190) / scale;
+   const position = (x: number, y: number) => () => ({ x: (screen.width * x - this.camera.x) / scale, y: (screen.height * y - this.camera.y) / scale });
+   if (this.animatedFx.play(effect, size, position(.36, .31))) {
+    this.animatedFx.play(effect, size * .85, position(.67, .24));
+    this.captureImpactForReview();
+    return;
+   }
+  }
+  const count = this.quality === "low" ? 24 : 72;
+  const colors = [GAME_PALETTE.gold, GAME_PALETTE.mist, GAME_PALETTE.wine, GAME_PALETTE.mist];
+  const width = this.profile?.imageWidth ?? screen.width;
+  const height = this.profile?.imageHeight ?? screen.height;
+  for (let i = 0; i < count; i++) {
+   const angle = i % 24 / 24 * Math.PI * 2;
+   const graphic = new Graphics().circle(0, 0, 3).fill(colors[i % 4]);
+   graphic.position.set(width * (.25 + Math.floor(i / 24) * .22), height * (this.profileName === "phone" ? .33 : .4));
+   this.vfx.addChild(graphic);
+   this.sparks.push({ graphic, vx: Math.cos(angle) * 180, vy: Math.sin(angle) * 180, remaining: 1600 });
+  }
+ }
  private tick=()=>{
   if(this.disposed)return;const now=performance.now(),delta=Math.max(0,Math.min(1000,now-this.realTick));this.realTick=now;this.frameTimes.push(delta);if(this.frameTimes.length>120)this.frameTimes.shift();this.time+=delta;this.elapsed+=delta;if(this.elapsed>120){this.elapsed=0;if(!this.answerActive)this.queue.take().forEach(e=>this.present(e));}
   if(this.profile)this.layers.parallax(this.time,this.profile.imageWidth,this.reduced||!this.effectsEnabled,this.quality==='low',this.profile);
   for(const a of this.actors.values()){if(!this.reduced&&a.sprite.playing)a.sprite.update({deltaTime:delta*60/1000*this.effects.speed} as Ticker);if(a.movement!==undefined){a.movement+=delta;const t=Math.min(a.movement/(a.movementDuration??700),1),boss=this.actors.get('boss')!;const dx=boss.homeX-a.homeX,dy=boss.homeY-a.homeY,dist=Math.hypot(dx,dy)||1,reach=a.type==='warrior'?Math.min(dist*.4,a.height*.8):Math.max(0,dist-boss.height*.2-a.height*.3);a.offsetX=dx/dist*reach*Math.sin(t*Math.PI);a.offsetY=dy/dist*reach*Math.sin(t*Math.PI);if(this.profile&&!insidePolygon({u:(a.homeX+a.offsetX)/this.profile.imageWidth,v:(a.homeY+a.offsetY)/this.profile.imageHeight},this.profile.playablePolygon)){a.offsetX=0;a.offsetY=0;}this.groundFrame(a,a.sprite.currentFrame);if(t===1){a.movement=undefined;a.offsetX=0;a.offsetY=0;}}}
-  this.particles=this.particles.filter(p=>{p.remaining-=delta;const t=1-Math.max(0,p.remaining)/350;const x=p.from.homeX+p.from.offsetX-p.from.height*.2,y=p.from.homeY+p.from.offsetY-p.from.height*.55;p.graphic.position.set(x+(p.to.homeX-x)*t,y+(p.to.homeY-p.to.height*.45-y)*t);if(p.mode==='spinning')p.graphic.rotation=t*Math.PI*4;if(p.mode==='pulse'){p.graphic.scale.set(p.baseScale.x*(.7+t*.8),p.baseScale.y*(.7+t*.8));p.graphic.alpha=.95-t*.2;}if(p.remaining<=0){p.graphic.destroy();p.impact?.();return false;}return true;});
+  this.particles=this.particles.filter(p=>{p.remaining-=delta;const t=1-Math.max(0,p.remaining)/350;const x=p.from.homeX+p.from.offsetX+p.from.height*(p.animation==='breath'?.31:-.2),y=p.from.homeY+p.from.offsetY-p.from.height*.55;p.graphic.position.set(x+(p.to.homeX-x)*t,y+(p.to.homeY-p.to.height*.45-y)*t);p.seek?.(t);if(p.mode==='spinning')p.graphic.rotation=t*Math.PI*4;if(p.mode==='pulse'){p.graphic.scale.set(p.baseScale.x*(.7+t*.8),p.baseScale.y*(.7+t*.8));p.graphic.alpha=.95-t*.2;}if(p.remaining<=0){p.graphic.destroy();p.impact?.();return false;}return true;});
+  this.animatedFx.tick(delta);
   this.feedback.tick(delta);
   this.sparks=this.sparks.filter(p=>{p.remaining-=delta;p.vy+=delta*.08;p.graphic.x+=p.vx*delta/1000;p.graphic.y+=p.vy*delta/1000;p.graphic.alpha=Math.max(0,p.remaining/1600);if(p.remaining<=0){p.graphic.destroy();return false;}return true;});
   if(this.options.debug&&Math.floor(this.time/250)!==Math.floor((this.time-delta)/250))this.publishPlacement();
@@ -163,11 +245,11 @@ export class CombatScene {
   const clamp=(v:number)=>Math.max(0,Math.min(1,v));return {...p,cameraBounds:{left:clamp(bounds.left-.02),right:clamp(bounds.right+.02),top:clamp(bounds.top-.02),bottom:clamp(bounds.bottom+.02)}};
  }
  private resize(){if(this.disposed||!this.app.renderer)return;const width=Math.max(1,this.host.clientWidth),height=Math.max(1,this.host.clientHeight);this.app.renderer.resize(width,height);this.camera=this.profile?cameraFit(this.framingProfile()!,width,this.cameraHeight(),this.options.zoom,this.options.pan):{scale:1,x:0,y:0,imageWidth:width,imageHeight:height};this.cameraRoot.position.set(this.camera.x,this.camera.y);this.cameraRoot.scale.set(this.camera.scale);for(const[id,a]of this.actors)this.layoutActor(id,a);this.publishPlacement();}
- private publishPlacement(){if(!this.options.debug&&!this.options.onPlacement)return;const placement:Placement={profile:this.profileName,camera:this.camera,polygon:this.profile?.playablePolygon??[],fallback:!this.profile,actors:[...this.actors].map(([id,a])=>({id,type:a.type,foot:a.foot,...project(a.foot,this.camera),grounded:!this.profile||insidePolygon(a.foot,this.profile.playablePolygon),clip:a.clip,frame:a.sprite.currentFrame,scale:a.scale,anchorScreen:a.sprite.toGlobal({x:0,y:0}),shadowScreen:a.shadow.toGlobal({x:0,y:0})}))};if(this.options.debug){this.host.dataset.placement=JSON.stringify(placement);this.host.dataset.feedback=JSON.stringify(this.feedback.metrics());}this.options.onPlacement?.(placement);}
- private visibility=()=>{if(this.disposed)return;if(document.hidden){this.app.stop();this.queue.reset(this.highestSeq);this.feedback.clear();}else{this.realTick=performance.now();this.app.start();}};
+ private publishPlacement(){if(!this.options.debug&&!this.options.onPlacement)return;const placement:Placement={profile:this.profileName,camera:this.camera,polygon:this.profile?.playablePolygon??[],fallback:!this.profile,actors:[...this.actors].map(([id,a])=>({id,type:a.type,foot:a.foot,...project(a.foot,this.camera),grounded:!this.profile||insidePolygon(a.foot,this.profile.playablePolygon),clip:a.clip,frame:a.sprite.currentFrame,scale:a.scale,anchorScreen:a.sprite.toGlobal({x:0,y:0}),shadowScreen:a.shadow.toGlobal({x:0,y:0})}))};if(this.options.debug){this.host.dataset.placement=JSON.stringify(placement);this.host.dataset.feedback=JSON.stringify(this.feedback.metrics());this.host.dataset.animatedFx=JSON.stringify(this.animatedFx.metrics());}this.options.onPlacement?.(placement);}
+ private visibility=()=>{if(this.disposed)return;if(document.hidden){this.app.stop();this.queue.reset(this.highestSeq);this.feedback.clear();this.animatedFx.clear();}else{this.realTick=performance.now();this.app.start();}};
  previewClip(actorId:string,clip:BossClip|HeroClip){return this.clip(actorId,clip);}
  captureNextImpact(){if(this.options.debug&&!this.disposed)this.captureNext=true;}
  setPreviewPaused(paused:boolean){if(!this.options.debug||this.disposed)return;if(paused){this.app.stop();this.host.dataset.previewPaused='true';this.publishPlacement();}else{delete this.host.dataset.previewPaused;this.realTick=performance.now();this.app.start();}}
- metrics(){const sorted=[...this.frameTimes].sort((a,b)=>a-b);return {bossType:this.bossType,scene:SceneLayers.metrics(),sprites:this.loader.metrics(),actorCount:this.actors.size,particles:this.particles.length,sparks:this.sparks.length,feedback:this.feedback.metrics(),frameP50Ms:sorted[Math.floor(sorted.length*.5)]??0,frameP95Ms:sorted[Math.floor(sorted.length*.95)]??0};}
- destroy(){this.disposed=true;if(this.captureTimer)clearTimeout(this.captureTimer);this.profileGeneration++;cancelAnimationFrame(this.resizeFrame);this.observer?.disconnect();document.removeEventListener('visibilitychange',this.visibility);this.effects.destroy();this.feedback.destroy();for(const particle of this.particles){particle.impact?.();particle.graphic.destroy();}this.particles=[];this.actors.forEach(a=>{a.complete?.();a.release?.();});this.actors.clear();this.layers.destroy();if(this.app.renderer){this.app.ticker.remove(this.tick);this.app.destroy(true,{children:true,texture:false,textureSource:false});}this.loader.destroy();}
+ metrics(){const sorted=[...this.frameTimes].sort((a,b)=>a-b);return {bossType:this.bossType,scene:SceneLayers.metrics(),sprites:this.loader.metrics(),actorCount:this.actors.size,particles:this.particles.length,sparks:this.sparks.length,feedback:this.feedback.metrics(),animatedFx:this.animatedFx.metrics(),frameP50Ms:sorted[Math.floor(sorted.length*.5)]??0,frameP95Ms:sorted[Math.floor(sorted.length*.95)]??0};}
+ destroy(){this.disposed=true;if(this.captureTimer)clearTimeout(this.captureTimer);this.profileGeneration++;cancelAnimationFrame(this.resizeFrame);this.observer?.disconnect();document.removeEventListener('visibilitychange',this.visibility);this.effects.destroy();this.feedback.destroy();for(const particle of this.particles){particle.impact?.();particle.graphic.destroy();}this.particles=[];this.animatedFx.destroy();this.actors.forEach(a=>{a.complete?.();a.release?.();});this.actors.clear();this.layers.destroy();if(this.app.renderer){this.app.ticker.remove(this.tick);this.app.destroy(true,{children:true,texture:false,textureSource:false});}this.loader.destroy();}
 }

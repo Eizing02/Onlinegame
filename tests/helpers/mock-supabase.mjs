@@ -15,6 +15,10 @@ export async function startMockSupabase(port = 3111, raid = false) {
     return fixture;
   }
   let db = await createFixture();
+  const questionImages = new Map();
+  let imageBucketExists = true;
+  let failImageUpload = false;
+  let failQuestionOptions = false;
   if (raid) tables.add('boss_raid_sessions');
   const codes = new Map(), refreshes = new Map(), revoked = new Set();
   function json(response, body, status = 200) { response.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); response.end(JSON.stringify(body)); }
@@ -38,7 +42,37 @@ export async function startMockSupabase(port = 3111, raid = false) {
       const path = url.pathname;
       if (path === '/__test/reset') {
         await db.close(); db = await createFixture(); codes.clear(); refreshes.clear(); revoked.clear();
+        questionImages.clear(); imageBucketExists = true; failImageUpload = false; failQuestionOptions = false;
         return json(response, { ok: true });
+      }
+      if (path === '/__test/question-images') {
+        const fault = url.searchParams.get('fault');
+        if (fault === 'upload') failImageUpload = true;
+        if (fault === 'no-bucket') imageBucketExists = false;
+        if (fault === 'options') failQuestionOptions = true;
+        return json(response, { paths: [...questionImages.keys()] });
+      }
+      const publicImagePrefix = '/storage/v1/object/public/question-images/';
+      const uploadImagePrefix = '/storage/v1/object/question-images/';
+      if (path.startsWith(publicImagePrefix) && request.method === 'GET') {
+        const image = questionImages.get(decodeURIComponent(path.slice(publicImagePrefix.length)));
+        if (!image) return json(response, { message: 'Object not found' }, 404);
+        response.writeHead(200, { 'Content-Type': image.type });
+        response.end(image.bytes);
+        return;
+      }
+      if (path.startsWith(uploadImagePrefix) && request.method === 'POST') {
+        if (request.headers.authorization !== `Bearer ${mockKey}`) return json(response, { message: 'Private write' }, 403);
+        const parts = [];
+        for await (const chunk of request) parts.push(chunk);
+        if (failImageUpload) {
+          failImageUpload = false;
+          return json(response, { message: 'Fixture storage temporarily unavailable' }, 503);
+        }
+        if (!imageBucketExists) return json(response, { message: 'Bucket not found' }, 404);
+        const key = decodeURIComponent(path.slice(uploadImagePrefix.length));
+        questionImages.set(key, { bytes: Buffer.concat(parts), type: request.headers['content-type'] });
+        return json(response, { Key: 'question-images/' + key, Id: randomUUID() });
       }
       if (raid && path === '/__test/raid-bank') {
         for (let i=1;i<10;i++) await db.query('insert into questions(question_set_id,question_text,correct_answer,points,order_index,question_type) values($1,$2,$3,10,$4,$5)', [ids.set, i===1?'จริงหรือเท็จ: 1+1=2':i===2?'เลือกผลลัพธ์ของ $2+2$':`คำถามยาวเพื่อทดสอบการอ่าน ${'ข้อความภาษาไทย '.repeat(20)} ${i}`, '5', i, i===1?'true_false':i===2?'multiple_choice':'short_text']);
@@ -117,6 +151,16 @@ export async function startMockSupabase(port = 3111, raid = false) {
       }
       let text = ''; for await (const chunk of request) text += chunk;
       const body = text ? JSON.parse(text) : {};
+      if (path === '/storage/v1/bucket' && request.method === 'POST') {
+        if (request.headers.authorization !== `Bearer ${mockKey}`) return json(response, { message: 'Private write' }, 403);
+        imageBucketExists = true;
+        return json(response, { name: body.name });
+      }
+      if (path === '/storage/v1/object/question-images' && request.method === 'DELETE') {
+        if (request.headers.authorization !== `Bearer ${mockKey}`) return json(response, { message: 'Private write' }, 403);
+        for (const key of body.prefixes ?? []) questionImages.delete(key);
+        return json(response, []);
+      }
       if (path === '/auth/v1/token') {
         if (url.searchParams.get('grant_type') === 'refresh_token') {
           const current = refreshes.get(body.refresh_token);
@@ -177,6 +221,10 @@ export async function startMockSupabase(port = 3111, raid = false) {
             for (const row of rows) row.questions = (await db.query('select points from questions where question_set_id=$1', [row.id])).rows;
           }
         } else if (request.method === 'POST') {
+          if (failQuestionOptions && table === 'question_options') {
+            failQuestionOptions = false;
+            return json(response, { message: 'Fixture rejected option insert', code: '23514' }, 400);
+          }
           rows = [];
           for (const row of Array.isArray(body)?body:[body]) {
             const keys = Object.keys(row), values = keys.map(key=>row[key]);

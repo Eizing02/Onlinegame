@@ -2,6 +2,7 @@ import { test,expect,type Page } from '@playwright/test';
 import { browserRequest } from '../browser-request';
 import fs from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
+import sharp from 'sharp';
 import {profileForStage,type SceneDefinition} from '../../src/features/boss-raid/scenes/geometry';
 import registry from '../../src/features/boss-raid/scenes/registry.json';
 const fixture='http://127.0.0.1:3111';
@@ -13,6 +14,42 @@ async function join(page:Page,room:string) {
  await page.goto(`/join?room_code=${room}`);await page.getByRole('button',{name:/ทีม 1/}).click();await page.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();await expect(page).toHaveURL(new RegExp(`play/${room}/raid$`));
 }
 async function ready(page:Page,room:string){let state;await expect.poll(async()=>{state=await(await browserRequest(page,`/api/raid/${room}/snapshot`)).json();return Boolean(state.question)||Boolean(state.own?.finished)||state.status==='ended';}).toBe(true);return state!;}
+
+test("A newly uploaded question image opens for a Boss Raid student", async ({ browser, page, request }) => {
+ await request.post(fixture + '/__test/reset');
+ await login(page, 'piyawatpiwsiri@gmail.com');
+ await page.getByLabel('ชื่อชุดคำถาม').fill('รูปโจทย์ Boss Raid');
+ await page.getByRole('button', { name: 'สร้างชุดคำถาม' }).click();
+ await expect(page).toHaveURL(/\/teacher\/question-sets\/[\da-f-]+$/);
+ const setId = page.url().split('/').at(-1)!;
+ const png = await sharp({ create: { width: 80, height: 60, channels: 4, background: '#790d1680' } }).png().toBuffer();
+ await page.locator('#image_file').setInputFiles({ name: 'รูปโจทย์.png', mimeType: 'image/png', buffer: png });
+ await expect(page.getByText(/รูปพร้อมส่ง.*PNG/)).toBeVisible();
+ await page.getByLabel('คำถาม', { exact: true }).fill('อ่านรูปประกอบแล้วตอบ');
+ await page.getByLabel('คำตอบที่ถูก').fill('4');
+ await page.getByRole('button', { name: 'เพิ่มคำถาม', exact: true }).click();
+ await expect(page.getByText('เพิ่มคำถามแล้ว')).toBeVisible();
+ await page.goto('/teacher/rooms/new');
+ await page.locator('select[name="question_set_id"]').selectOption(setId);
+ await page.getByLabel('Boss Raid · Time Attack').check();
+ await page.getByRole('button', { name: 'สร้างห้อง Boss Raid', exact: true }).click();
+ await expect(page).toHaveURL(/\/raid\/dashboard$/);
+ const room = page.url().match(/rooms\/(\d{4})/)![1];
+ const pupil = await browser.newPage({ baseURL: 'http://127.0.0.1:3110', viewport: { width: 390, height: 844 } });
+ try {
+  await login(pupil, 'pupil@example.com', '01234');
+  await join(pupil, room);
+  await pupil.getByRole('button', { name: /นักรบ.*เลือกฮีโร่/ }).click();
+  await page.getByRole('button', { name: 'เริ่ม Boss Raid', exact: true }).click();
+  const illustration = pupil.getByRole('img', { name: 'รูปประกอบคำถามข้อ 1', exact: true });
+  await expect(illustration).toBeVisible();
+  await expect.poll(() => illustration.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBe(80);
+  await pupil.getByRole('button', { name: 'ขยายรูปคำถาม', exact: true }).click();
+  await expect(pupil.getByRole('dialog', { name: 'รูปคำถาม' })).toBeVisible();
+ } finally {
+  await pupil.close();
+ }
+});
 
 test('Google classroom Raid: independent answer, idempotency, visibility, spectator, reconnect, end and access guards',async({browser,page,request})=>{
  await request.post(`${fixture}/__test/reset`);await request.post(`${fixture}/__test/raid-bank`);

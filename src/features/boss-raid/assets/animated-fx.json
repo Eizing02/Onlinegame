@@ -1,0 +1,383 @@
+{
+  "revision": "5294518ce7c72e48b6100a744596e0acf57f2826",
+  "clips": {
+    "spark": {
+      "source": "impacts/hit-spark",
+      "from": 0.03,
+      "to": 0.46,
+      "durationMs": 420,
+      "count": 10,
+      "columns": 5,
+      "width": 99,
+      "height": 59,
+      "sheetWidth": 505,
+      "sheetHeight": 122,
+      "anchor": [
+        0.2323,
+        0.7966
+      ],
+      "bytes": 12559,
+      "sha256": "cf9ffb5df42cf4c07c00f692418ebb97bf99b2cfdcecf105958462eabb64b347"
+    },
+    "slash": {
+      "source": "melee/sword-slash",
+      "from": 0.02,
+      "to": 0.55,
+      "durationMs": 520,
+      "count": 12,
+      "columns": 5,
+      "width": 109,
+      "height": 91,
+      "sheetWidth": 555,
+      "sheetHeight": 279,
+      "anchor": [
+        0.2936,
+        0.9011
+      ],
+      "bytes": 40588,
+      "sha256": "80b6020c3d23a6748ec76c226cdc5c3f1364fab5f8077199b90eef981576f58b"
+    },
+    "thud": {
+      "source": "impacts/blunt-hit",
+      "from": 0.03,
+      "to": 0.78,
+      "durationMs": 580,
+      "count": 12,
+      "columns": 5,
+      "width": 95,
+      "height": 73,
+      "sheetWidth": 485,
+      "sheetHeight": 225,
+      "anchor": [
+        0.5684,
+        0.7945
+      ],
+      "bytes": 52162,
+      "sha256": "6eb23c2aa75bbe807aec58ee2978d885f729c06328e207fa6e1e5f8eb6152b3d"
+    },
+    "frost": {
+      "source": "ice/frost-nova",
+      "from": 0.38,
+      "to": 1.8,
+      "durationMs": 760,
+      "count": 15,
+      "columns": 5,
+      "width": 112,
+      "height": 56,
+      "sheetWidth": 570,
+      "sheetHeight": 174,
+      "anchor": [
+        0.5019,
+        0.7054
+      ],
+      "bytes": 77739,
+      "sha256": "eca4f04e470ac75dbc6618aa8be19538d858e1f825bd12e09bc3ad8750a45a7d"
+    },
+    "fireball": {
+      "source": "fire/fireball",
+      "from": 0.05,
+      "to": 0.65,
+      "durationMs": 350,
+      "count": 10,
+      "columns": 5,
+      "width": 112,
+      "height": 49,
+      "sheetWidth": 570,
+      "sheetHeight": 102,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bytes": 68416,
+      "sha256": "c35f0df0e4126288608c850f39d74848366545046c942ba787553d52c692fdb8"
+    },
+    "lightning": {
+      "source": "lightning/lightning-strike",
+      "from": 0.87,
+      "to": 1.68,
+      "durationMs": 720,
+      "count": 15,
+      "columns": 5,
+      "width": 69,
+      "height": 112,
+      "sheetWidth": 355,
+      "sheetHeight": 342,
+      "anchor": [
+        0.5,
+        0.8669
+      ],
+      "bytes": 110502,
+      "sha256": "e7a155021369be19aaaad6bf527b2a560edca27bca6c55165d3b5e8d447ee19b"
+    },
+    "sigil": {
+      "source": "shadow/hex-sigil",
+      "from": 0.85,
+      "to": 2.7,
+      "durationMs": 700,
+      "count": 14,
+      "columns": 5,
+      "width": 112,
+      "height": 99,
+      "sheetWidth": 570,
+      "sheetHeight": 303,
+      "anchor": [
+        0.5,
+        0.888
+      ],
+      "bytes": 86641,
+      "sha256": "707b3702af36cbd7d9ba38438fade9d525b8fa922bcb82411f35c9975487f3ab"
+    },
+    "heal": {
+      "source": "holy/heal-aoe",
+      "from": 0.26,
+      "to": 1.55,
+      "durationMs": 720,
+      "count": 14,
+      "columns": 5,
+      "width": 112,
+      "height": 51,
+      "sheetWidth": 570,
+      "sheetHeight": 159,
+      "anchor": [
+        0.4978,
+        0.7115
+      ],
+      "bytes": 84912,
+      "sha256": "dcf01a9d86b5022797d31b03fa35a33148a1a19d3e388d5f75cafd82e40d711c"
+    },
+    "star": {
+      "source": "holy/sunburst",
+      "from": 0.08,
+      "to": 0.8,
+      "durationMs": 540,
+      "count": 12,
+      "columns": 5,
+      "width": 100,
+      "height": 94,
+      "sheetWidth": 510,
+      "sheetHeight": 288,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bytes": 96757,
+      "sha256": "513bc2474587fa1ec9f53997cb54b4259adcc893dc72a8787dbdecc76dfc4f08"
+    },
+    "wind": {
+      "source": "water/ripples",
+      "from": 0.15,
+      "to": 1.24,
+      "durationMs": 580,
+      "count": 12,
+      "columns": 5,
+      "width": 112,
+      "height": 36,
+      "sheetWidth": 570,
+      "sheetHeight": 114,
+      "anchor": [
+        0.5,
+        0.525
+      ],
+      "bytes": 90186,
+      "sha256": "26724b954092cd538767ee22f4b53011419e30f23f7522b94bd437a6abdf0232"
+    },
+    "daggers": {
+      "source": "melee/dagger-flurry",
+      "from": 0.04,
+      "to": 0.83,
+      "durationMs": 620,
+      "count": 13,
+      "columns": 5,
+      "width": 112,
+      "height": 78,
+      "sheetWidth": 570,
+      "sheetHeight": 240,
+      "anchor": [
+        0.2,
+        0.8
+      ],
+      "bytes": 66793,
+      "sha256": "ef39edf8f11bb7d3d699cccdaad9081530644cfc8ac7831b726889e6cb2d8b20"
+    },
+    "spin": {
+      "source": "melee/spin-slash",
+      "from": 0.08,
+      "to": 0.54,
+      "durationMs": 520,
+      "count": 12,
+      "columns": 5,
+      "width": 112,
+      "height": 58,
+      "sheetWidth": 570,
+      "sheetHeight": 180,
+      "anchor": [
+        0.4124,
+        0.7935
+      ],
+      "bytes": 57955,
+      "sha256": "7628c9699a72ff5480096dcd9ec8a058ef7bbe7f80b0d4f0632596e28467dbef"
+    },
+    "plasma": {
+      "source": "explosions/plasma-explosion",
+      "from": 0.04,
+      "to": 0.59,
+      "durationMs": 620,
+      "count": 14,
+      "columns": 5,
+      "width": 112,
+      "height": 108,
+      "sheetWidth": 570,
+      "sheetHeight": 330,
+      "anchor": [
+        0.5,
+        0.4948
+      ],
+      "bytes": 165867,
+      "sha256": "f4f33a2c2da1eaec396d17e2aa42ee14d92a6f889381f3fe0f6ff42198164226"
+    },
+    "claws": {
+      "source": "melee/claw-swipe",
+      "from": 0.03,
+      "to": 0.55,
+      "durationMs": 520,
+      "count": 12,
+      "columns": 5,
+      "width": 67,
+      "height": 59,
+      "sheetWidth": 345,
+      "sheetHeight": 183,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bytes": 30555,
+      "sha256": "971b31dc2985286bbc92eb4d8f0dadf79adf7bf449be7fa6153fd7560bd5209e"
+    },
+    "breath": {
+      "source": "fire/fire-breath",
+      "from": 0,
+      "to": 0.64,
+      "durationMs": 350,
+      "count": 10,
+      "columns": 5,
+      "width": 112,
+      "height": 71,
+      "sheetWidth": 570,
+      "sheetHeight": 146,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bytes": 131065,
+      "sha256": "af72de7e2d01f6a7b1fb71d7560617978bc2781b92420fcf3ff054cab8cdbbb9"
+    },
+    "shadow": {
+      "source": "shadow/dark-explosion",
+      "from": 0.94,
+      "to": 2,
+      "durationMs": 820,
+      "count": 16,
+      "columns": 5,
+      "width": 112,
+      "height": 98,
+      "sheetWidth": 570,
+      "sheetHeight": 400,
+      "anchor": [
+        0.502,
+        0.8219
+      ],
+      "bytes": 182250,
+      "sha256": "18f58ca018c9fefc401a47c011adfc9daea1ebb9aaa2fcf15124df48822fa0c8"
+    },
+    "quake": {
+      "source": "nature/quake",
+      "from": 0.1,
+      "to": 1.16,
+      "durationMs": 730,
+      "count": 14,
+      "columns": 5,
+      "width": 112,
+      "height": 28,
+      "sheetWidth": 570,
+      "sheetHeight": 90,
+      "anchor": [
+        0.4926,
+        0.7681
+      ],
+      "bytes": 44822,
+      "sha256": "42eb22aa70df9c8cd55622bcedef44c3920faba5517258cea59b06a743c5a70a"
+    },
+    "stone": {
+      "source": "nature/earth-spike",
+      "from": 0.08,
+      "to": 1.44,
+      "durationMs": 860,
+      "count": 16,
+      "columns": 5,
+      "width": 112,
+      "height": 75,
+      "sheetWidth": 570,
+      "sheetHeight": 308,
+      "anchor": [
+        0.4744,
+        0.875
+      ],
+      "bytes": 76848,
+      "sha256": "6811db8317d9b38f54addc8e877eec776a3cef9141aff4859a572935065dc852"
+    },
+    "pincers": {
+      "source": "melee/double-slash",
+      "from": 0.04,
+      "to": 0.67,
+      "durationMs": 560,
+      "count": 12,
+      "columns": 5,
+      "width": 112,
+      "height": 105,
+      "sheetWidth": 570,
+      "sheetHeight": 321,
+      "anchor": [
+        0.1875,
+        0.8571
+      ],
+      "bytes": 54749,
+      "sha256": "2bdbda917e3ad349af6e9a486e54bf32fceae372067488eab22c972e665fee5d"
+    },
+    "crystal": {
+      "source": "ice/ice-spikes",
+      "from": 0.08,
+      "to": 1.83,
+      "durationMs": 1020,
+      "count": 18,
+      "columns": 5,
+      "width": 112,
+      "height": 41,
+      "sheetWidth": 570,
+      "sheetHeight": 172,
+      "anchor": [
+        0.3961,
+        0.8298
+      ],
+      "bytes": 99627,
+      "sha256": "25b53aa316dcc396b5bf6e179ae15c6ce1a83ca9fa8f25fade9b3defa5123a76"
+    },
+    "firework": {
+      "source": "explosions/firework-burst",
+      "from": 0.47,
+      "to": 1.88,
+      "durationMs": 1150,
+      "count": 18,
+      "columns": 5,
+      "width": 122,
+      "height": 138,
+      "sheetWidth": 620,
+      "sheetHeight": 560,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bytes": 267484,
+      "sha256": "51b75b18007e7626140b9d936c00a1ca63404ba7006951a5bd150fadf9fa4820"
+    }
+  }
+}

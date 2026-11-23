@@ -62,8 +62,8 @@ async function createGameRoom(page: Page) {
 
   await page.goto("http://127.0.0.1:3100/teacher/rooms/new");
   await page.getByLabel("ชื่อกิจกรรม").fill("Gameplay flow");
-  await page.getByLabel("จำนวนกลุ่ม").fill("2");
-  await page.getByLabel("จำนวนคนต่อกลุ่ม").fill("3");
+  await page.getByLabel("จำนวนทีม").fill("2");
+  await page.getByLabel("จำนวนคนต่อทีม").fill("3");
   await page.getByRole("button", { name: "สร้างห้องเกม" }).click();
   await expect(page).toHaveURL(/\/teacher\/rooms\/\d{4}\/dashboard$/);
 

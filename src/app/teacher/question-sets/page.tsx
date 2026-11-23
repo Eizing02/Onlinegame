@@ -1,5 +1,5 @@
 import { LoadingForm } from "@/components/ui/loading-form";
-import { BookOpenCheck, ListPlus, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { requireRole } from "@/lib/auth/session";
 
 import { createQuestionSetAction } from "@/app/teacher/actions";
@@ -7,10 +7,12 @@ import { AppShell } from "@/components/layout/app-shell";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Panel } from "@/components/ui/panel";
 import { getTeacherQuestionSets } from "@/lib/data/teacher";
+import { QuestionSetGrid } from "./question-set-grid";
 
 type QuestionSetsPageProps = {
   searchParams: Promise<{
     error?: string;
+    notice?: string;
   }>;
 };
 
@@ -44,6 +46,11 @@ export default async function QuestionSetsPage({
             {params.error}
           </div>
         ) : null}
+        {params.notice ? (
+          <div className="rounded-md border border-success bg-success/10 px-4 py-3 text-sm font-medium text-success">
+            {params.notice}
+          </div>
+        ) : null}
 
         <Panel>
           <LoadingForm className="grid gap-4 md:grid-cols-[1fr_1fr_auto]" action={createQuestionSetAction}>
@@ -54,8 +61,9 @@ export default async function QuestionSetsPage({
               <input
                 id="title"
                 name="title"
-                className="mt-2 h-11 w-full rounded-md border border-border px-3 outline-none focus:border-primary"
+                className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 outline-none focus:border-primary"
                 placeholder="เช่น วิทยาศาสตร์ ม.2"
+                required
               />
             </div>
             <div>
@@ -65,7 +73,7 @@ export default async function QuestionSetsPage({
               <input
                 id="description"
                 name="description"
-                className="mt-2 h-11 w-full rounded-md border border-border px-3 outline-none focus:border-primary"
+                className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 outline-none focus:border-primary"
                 placeholder="หัวข้อหรือรายละเอียดสั้น ๆ"
               />
             </div>
@@ -80,44 +88,7 @@ export default async function QuestionSetsPage({
           </LoadingForm>
         </Panel>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {data.questionSets.map((set) => (
-            <Panel key={set.id} className="space-y-4">
-              <div className="flex items-start gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-success/10 text-primary">
-                  <BookOpenCheck size={22} />
-                </span>
-                <div>
-              <h2 className="text-lg font-semibold">{set.title}</h2>
-                  <p className="mt-1 text-sm leading-6 text-muted">
-                    {set.description || "ยังไม่มีคำอธิบาย"}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between border-t border-border pt-4 text-sm">
-                <span className="font-medium">{set.questionCount} ข้อ</span>
-                <span className="text-muted">{set.totalPoints} คะแนน</span>
-              </div>
-              <ButtonLink
-                className="w-full"
-                href={`/teacher/question-sets/${set.id}`}
-                variant="secondary"
-              >
-                <span className="inline-flex items-center gap-2">
-                  <ListPlus size={18} />
-                  จัดการคำถาม
-                </span>
-              </ButtonLink>
-            </Panel>
-          ))}
-          {data.questionSets.length === 0 ? (
-            <Panel className="md:col-span-2">
-              <p className="text-sm text-muted">
-                ยังไม่มีชุดคำถาม เริ่มจากสร้างชุดคำถามแรกก่อน
-              </p>
-            </Panel>
-          ) : null}
-        </div>
+        <QuestionSetGrid questionSets={data.questionSets} />
       </section>
     </AppShell>
   );

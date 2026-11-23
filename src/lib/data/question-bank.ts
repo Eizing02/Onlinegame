@@ -5,6 +5,7 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 
 import { isSupabaseDataBackend } from "@/lib/data/backend";
+import { readQuestionImage } from "@/lib/image/read-question-image";
 import {
   addSupabaseQuestion,
   createSupabaseQuestionSet,
@@ -13,6 +14,7 @@ import {
   deleteSupabaseQuestionSet,
   getSupabaseQuestionSet,
   getSupabaseQuestionSetSummaries,
+  updateSupabaseQuestion,
 } from "@/lib/data/supabase-question-bank";
 
 const QUESTION_BANK_FILE = path.join(
@@ -46,6 +48,7 @@ export type CreateQuestionOptionInput = {
 };
 
 export type CreateQuestionInput = {
+  id?: string;
   questionText: string;
   correctAnswer: string;
   points: number;
@@ -55,6 +58,17 @@ export type CreateQuestionInput = {
   imageFile?: File | null;
   imageUrl?: string | null;
   imagePath?: string | null;
+};
+
+export type UpdateQuestionInput = {
+  questionText: string;
+  correctAnswer: string;
+  points: number;
+  timeLimitSeconds: number;
+  questionType?: QuestionType;
+  options?: CreateQuestionOptionInput[];
+  imageFile?: File | null;
+  removeImage?: boolean;
 };
 
 export type StoredQuestion = {
@@ -151,23 +165,6 @@ function normalizeQuestion(question: Partial<StoredQuestion>): StoredQuestion {
   };
 }
 
-function isImageFile(value: unknown): value is File {
-  return typeof File !== "undefined" && value instanceof File && value.size > 0;
-}
-
-function getSafeFileName(fileName: string) {
-  const parsed = path.parse(fileName || "question-image");
-  const baseName =
-    parsed.name
-      .normalize("NFKD")
-      .replace(/[^\w.-]+/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "") || "question-image";
-  const extension = parsed.ext.replace(/[^\w.]/g, "").toLowerCase();
-
-  return `${baseName}${extension}`;
-}
-
 async function storeLocalQuestionImage({
   imageFile,
   questionId,
@@ -179,27 +176,21 @@ async function storeLocalQuestionImage({
   questionSetId: string;
   teacherCode: string;
 }) {
-  if (!isImageFile(imageFile)) {
+  const image = await readQuestionImage(imageFile);
+  if (!image) {
     return { imageUrl: null, imagePath: null };
   }
 
-  if (!imageFile.type.startsWith("image/")) {
-    throw new Error("รองรับเฉพาะไฟล์รูปภาพเท่านั้น");
-  }
-
-  const safeFileName = getSafeFileName(imageFile.name);
   const relativePath = path.posix.join(
     "uploads",
     "question-images",
-    teacherCode,
+    Buffer.from(teacherCode, "utf8").toString("base64url"),
     questionSetId,
-    `${questionId}-${safeFileName}`,
+    `${questionId}.${image.extension}`,
   );
-  const absolutePath = path.join(process.cwd(), "public", relativePath);
-  const buffer = Buffer.from(await imageFile.arrayBuffer());
-
+  const absolutePath = path.join(getDataDirectory(), relativePath);
   await mkdir(path.dirname(absolutePath), { recursive: true });
-  await writeFile(absolutePath, buffer);
+  await writeFile(absolutePath, image.bytes);
 
   return {
     imageUrl: `/${relativePath}`,
@@ -217,14 +208,16 @@ async function removeLocalQuestionImages(questions: StoredQuestion[]) {
         return;
       }
 
-      const absolutePath = path.join(process.cwd(), "public", question.imagePath);
-
       try {
-        await unlink(absolutePath);
+        await unlink(path.join(getDataDirectory(), question.imagePath));
       } catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
           throw error;
         }
+        // Pre-existing uploads were written under public/.
+        await unlink(path.join(process.cwd(), "public", question.imagePath)).catch(legacyError => {
+          if ((legacyError as NodeJS.ErrnoException).code !== "ENOENT") throw legacyError;
+        });
       }
     }),
   );
@@ -360,8 +353,10 @@ export async function addLocalQuestion(
     return null;
   }
 
+  const questionId = question.id ?? randomUUID();
+  const saved = questionSet.questions.find(item => item.id === questionId);
+  if (saved) return saved;
   const now = new Date().toISOString();
-  const questionId = randomUUID();
   const image = await storeLocalQuestionImage({
     imageFile: question.imageFile,
     questionId,
@@ -389,8 +384,106 @@ export async function addLocalQuestion(
 
   questionSet.questions.push(nextQuestion);
   questionSet.updatedAt = now;
-  await writeQuestionBank(questionSets);
+  try {
+    await writeQuestionBank(questionSets);
+  } catch (error) {
+    if (image.imagePath) {
+      await unlink(path.join(/* turbopackIgnore: true */ getDataDirectory(), image.imagePath)).catch(cleanupError =>
+        console.error("Local question image cleanup failed", { questionId, cleanupError }),
+      );
+    }
+    throw error;
+  }
   return nextQuestion;
+
+  });
+}
+
+export async function updateLocalQuestion(
+  teacherCode: string,
+  questionSetId: string,
+  questionId: string,
+  question: UpdateQuestionInput,
+) {
+  return withLocalLock(async () => {
+
+  if (isSupabaseDataBackend()) {
+    return updateSupabaseQuestion(teacherCode, questionSetId, questionId, question);
+  }
+
+  const questionSets = await readQuestionBank();
+  const questionSet = questionSets.find(
+    (set) => set.teacherCode === teacherCode && set.id === questionSetId,
+  );
+
+  if (!questionSet) {
+    return null;
+  }
+
+  const targetIndex = questionSet.questions.findIndex(
+    (item) => item.id === questionId,
+  );
+
+  if (targetIndex < 0) {
+    return null;
+  }
+
+  const target = normalizeQuestion(questionSet.questions[targetIndex]);
+  const uploaded = question.imageFile
+    ? await storeLocalQuestionImage({
+        imageFile: question.imageFile,
+        questionId,
+        questionSetId,
+        teacherCode,
+      })
+    : null;
+  const nextImageUrl = uploaded
+    ? uploaded.imageUrl
+    : question.removeImage
+      ? null
+      : target.imageUrl;
+  const nextImagePath = uploaded
+    ? uploaded.imagePath
+    : question.removeImage
+      ? null
+      : target.imagePath;
+
+  const updatedQuestion: StoredQuestion = {
+    ...target,
+    questionText: question.questionText,
+    correctAnswer: question.correctAnswer,
+    questionType: normalizeQuestionType(question.questionType),
+    options: (question.options ?? []).map((option, index) => ({
+      id: randomUUID(),
+      optionText: option.optionText,
+      isCorrect: option.isCorrect,
+      orderIndex: option.orderIndex ?? index,
+    })),
+    imageUrl: nextImageUrl,
+    imagePath: nextImagePath,
+    points: question.points,
+    timeLimitSeconds: question.timeLimitSeconds,
+  };
+
+  questionSet.questions[targetIndex] = updatedQuestion;
+  questionSet.updatedAt = new Date().toISOString();
+
+  try {
+    await writeQuestionBank(questionSets);
+  } catch (error) {
+    if (uploaded?.imagePath) {
+      await unlink(path.join(/* turbopackIgnore: true */ getDataDirectory(), uploaded.imagePath)).catch((cleanupError) =>
+        console.error("Local question image cleanup failed", { questionId, cleanupError }),
+      );
+    }
+    throw error;
+  }
+
+  if (target.imagePath && target.imagePath !== nextImagePath) {
+    await removeLocalQuestionImages([target]);
+  }
+
+  return updatedQuestion;
 
   });
 }

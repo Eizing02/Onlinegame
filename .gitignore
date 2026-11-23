@@ -39,6 +39,7 @@ yarn-error.log*
 /data/question-sets.json
 /data/game-sessions.json
 /data/.auth-secret
+/data/uploads/
 /tmp
 /test-results
 /playwright-report

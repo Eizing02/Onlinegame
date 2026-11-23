@@ -13,14 +13,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 Use Impeccable whenever the task touches frontend UI/UX, layout, components, dashboard screens, forms, responsive behavior, animation, visual polish, design systems, accessibility, or product copy.
 
 Before UI work:
-- Run `node .agents/skills/impeccable/scripts/context.mjs` once per session, or with `--target <path>` for a specific route/file.
+- Run `.agents/skills/impeccable/scripts/impeccable context` once per session, or with `--target <path>` for a specific route/file. On Windows, run `.agents/skills/impeccable/scripts/impeccable.cmd context` instead.
 - If a command is chosen, read `.agents/skills/impeccable/reference/<command>.md` before acting.
-- Read the current product register guidance in `.agents/skills/impeccable/reference/product.md`.
+- Read the existing `PRODUCT.md` and `DESIGN.md` loaded by the context command. For product-context maintenance, use `.agents/skills/impeccable/reference/init.md`.
 - Inspect existing UI conventions first, especially `src/app/globals.css`, shared components, and representative pages.
 
 Command routing:
 - Use `/impeccable shape <feature>` to plan a new screen or flow before implementation.
-- Use `/impeccable craft <feature>` when designing and building a new UI feature end to end.
+- Treat new UI feature requests as ordinary design-and-build work; `/impeccable craft <feature>` is a deprecated alias in Impeccable 4.5.2.
 - Use `/impeccable polish <target>` for final spacing, hierarchy, hover/focus states, empty states, and overall finish.
 - Use `/impeccable critique <target>` for UX review and prioritized findings.
 - Use `/impeccable audit <target>` before deploy or handoff, especially for accessibility, responsive behavior, and production readiness.

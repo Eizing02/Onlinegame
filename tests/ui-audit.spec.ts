@@ -30,7 +30,7 @@ test('audit classroom routes, responsive states, ownership and stale answers',as
   await login(page,'admin','teacher-test-only');await expect(page).toHaveURL(/question-sets$/);await pair(page,'question-sets');
   await page.goto('/teacher/question-sets/11111111-1111-4111-8111-111111111111');await pair(page,'question-editor');
   await page.goto('/teacher/rooms/new');await pair(page,'new-room');
-  await page.getByLabel('ชื่อกิจกรรม').fill('ภารกิจวงโคจร');await page.getByLabel('จำนวนกลุ่ม').fill('2');await page.getByLabel('จำนวนคนต่อกลุ่ม').fill('4');await page.getByRole('button',{name:'สร้างห้องเกม'}).click();await expect(page).toHaveURL(/dashboard$/);
+  await page.getByLabel('ชื่อกิจกรรม').fill('ภารกิจวงโคจร');await page.getByLabel('จำนวนทีม').fill('2');await page.getByLabel('จำนวนคนต่อทีม').fill('4');await page.getByRole('button',{name:'สร้างห้องเกม'}).click();await expect(page).toHaveURL(/dashboard$/);
   const room=page.url().match(/rooms\/(\d{4})/)![1];
   const studentContext=await browser.newContext({baseURL:'http://127.0.0.1:3100'});const student=await studentContext.newPage();student.on('pageerror',e=>errors.push(e.message));
   await login(student,'02074','student-test-only');await expect(student).toHaveURL(/join$/);await pair(student,'join');

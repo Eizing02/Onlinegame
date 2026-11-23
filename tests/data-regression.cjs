@@ -41,6 +41,16 @@ const {newestSnapshot}=require('../src/lib/game/client-response.ts');
   fs.appendFileSync(path.join(directory,'student.csv'),'ADMIN,ซ้ำ,pass,ครู,teacher\n');
   await assert.rejects(accounts.getSheetAccounts(),/ACCOUNT_CODE_DUPLICATE/);
   const set=await bank.createLocalQuestionSet('admin','Concurrent classroom',null);
+  const imageQuestion = {questionText:'Invalid image',correctAnswer:'5',points:10,timeLimitSeconds:120};
+  for (const invalid of [
+    new File(['not an image'], 'forged.png', {type:'image/png'}),
+    new File([Buffer.from([137,80,78,71,13,10,26,10])], 'truncated.png', {type:'image/png'}),
+    new File([Buffer.alloc(3*1024**2)], 'oversized.png', {type:'image/png'}),
+  ]) {
+    await assert.rejects(bank.addLocalQuestion('admin',set.id,{...imageQuestion,imageFile:invalid}),/ไฟล์นี้ไม่ใช่รูป|2\.5 MB/);
+  }
+  assert.equal((await bank.getLocalQuestionSet('admin',set.id)).questions.length,0);
+  assert.equal(fs.existsSync(path.join(directory,'uploads')),false);
   await bank.addLocalQuestion('admin',set.id,{questionText:'2+3',correctAnswer:'5',points:10,timeLimitSeconds:120});
   const room=await game.createLocalGameSession({teacherCode:'admin',questionSetId:set.id,questionSetTitle:set.title,questionCount:1,activityName:null,teamCount:2,maxMembersPerTeam:4});
   const joined=await Promise.all(Array.from({length:8},(_,i)=>game.joinLocalGameSession({roomCode:room.roomCode,studentCode:`S${i}`,displayName:`Student ${i}`,teamId:room.teams[Math.floor(i/4)].id})));

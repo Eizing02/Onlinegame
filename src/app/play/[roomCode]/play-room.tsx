@@ -6,8 +6,10 @@ import { RevealMoment } from "@/components/game/reveal-moment";
 import { TeamStandings } from "@/components/game/team-standings";
 import { GameRules } from "@/components/game/game-rules";
 import { fetchRoom, newestSnapshot } from "@/lib/game/client-response";
+import { choiceLabel } from "@/lib/game/choice-labels";
 
 import {
+  BookOpenCheck,
   CheckCircle2,
   Clock,
   LogOut,
@@ -502,12 +504,12 @@ export function PlayRoom({
                       <button
                         className={
                           isCorrectOption
-                            ? "min-h-14 rounded-md border border-success bg-success/10 px-4 py-3 text-left font-semibold text-success shadow-sm"
+                            ? "min-h-14 rounded-md border-2 border-success bg-success/10 px-4 py-3 text-left font-semibold text-success"
                             : isWrongSelection
-                              ? "min-h-14 rounded-md border border-danger bg-danger/10 px-4 py-3 text-left font-semibold text-danger shadow-sm"
+                              ? "min-h-14 rounded-md border-2 border-danger bg-danger/10 px-4 py-3 text-left font-semibold text-danger"
                               : isSelected
-                                ? "min-h-14 rounded-md border border-primary bg-primary/10 px-4 py-3 text-left font-semibold text-primary shadow-sm"
-                                : "min-h-14 rounded-md border border-border bg-surface px-4 py-3 text-left font-semibold transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:bg-surface disabled:text-muted"
+                                ? "min-h-14 rounded-md border-2 border-primary bg-primary px-4 py-3 text-left font-semibold text-white"
+                                : "min-h-14 rounded-md border border-border bg-surface px-4 py-3 text-left font-semibold transition hover:border-primary hover:bg-panel-strong disabled:cursor-not-allowed disabled:bg-surface disabled:text-muted"
                         }
                         disabled={
                           !snapshot.canSubmitAnswer ||
@@ -524,8 +526,14 @@ export function PlayRoom({
                         }
                         type="button"
                       >
-                        <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded bg-white/80 text-sm text-muted">
-                          {String.fromCharCode(65 + optionIndex)}
+                        <span
+                          className={
+                            isSelected && !isCorrectOption && !isWrongSelection
+                              ? "mr-2 inline-flex h-7 w-7 items-center justify-center rounded bg-white/20 text-sm font-bold text-white"
+                              : "mr-2 inline-flex h-7 w-7 items-center justify-center rounded bg-panel text-sm font-bold text-foreground"
+                          }
+                        >
+                          {choiceLabel(optionIndex)}
                         </span>
                         <MathText className="inline" inline text={option.optionText} />
                       </button>
@@ -603,7 +611,7 @@ export function PlayRoom({
               )}
                       {snapshot.contribution && <div className="contribution-result" role="status"><strong>คำตอบนี้ช่วยทีม +{formatScore(snapshot.contribution.total)} คะแนน</strong><p>คะแนนคำตอบเฉลี่ย {formatScore(snapshot.contribution.base)}{snapshot.contribution.bonus > 0 ? " + พลังทีม " + formatScore(snapshot.contribution.bonus) : ""}{!snapshot.participant.isScoreEligible ? " · เข้าหลังเริ่ม จึงไม่ร่วมคะแนน" : ""}</p></div>}
             </div>
-          </div> : <div className="room-lobby"><Scene3D variant="planet"/><h2>พร้อมออกเดินทาง</h2><p>คุณเข้าห้องแล้วในชื่อ {snapshot.participant.displayName}</p><p>เมื่อครูเริ่มเกม คำถามจะแสดงตรงนี้</p><p className="text-muted">ดูสมาชิกและกติกาได้ที่เมนูทีม</p></div>}
+          </div> : <div className="room-lobby"><div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-[var(--selection-gold)] bg-panel text-primary"><BookOpenCheck size={32} aria-hidden="true"/></div><h2>พร้อมเริ่มเกมแล้ว</h2><p>คุณเข้าห้อง <strong>{snapshot.roomCode}</strong> ในชื่อ <strong>{snapshot.participant.displayName}</strong> · {snapshot.team.teamName}</p><p>เมื่อครูกดเริ่มเกม คำถามจะขึ้นที่หน้านี้ทันที</p><p className="text-muted">ดูรายชื่อเพื่อนและกติกาได้ที่แท็บทีม</p></div>}
           {snapshot.rulesVersion === 2 && snapshot.status !== 'ended' && <div className="play-power">
             <span>{snapshot.teamPower.active ? 'พลังทีมทำงาน · คะแนน ×1.5' : snapshot.teamPower.available ? 'พลังทีม +50% · ใช้ได้ 1 ข้อ' : 'ใช้พลังทีมไปแล้ว'}</span>
             {snapshot.teamPower.available && snapshot.isTeamCaptain && <button type="button" className="power-button" disabled={!snapshot.teamPower.canActivate || isPowerPending || isSubmitting} onClick={()=>void activatePower()}>{isPowerPending ? 'กำลังเปิดพลัง…' : 'ใช้พลังทีม +50%'}</button>}

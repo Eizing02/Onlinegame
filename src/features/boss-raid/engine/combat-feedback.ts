@@ -31,7 +31,7 @@ export class CombatFeedback {
   private floats: Float[] = [];
   private seen = new Set<string>();
   private disposed = false;
-  private shown: { seq: number; target: string; amount: number | null; effect: EffectId }[] = [];
+  private shown: { seq: number; target: string; amount: number | null; effect: EffectId; animated?: string }[] = [];
 
   constructor(private root: Container, private scale: () => number, private font: string,
     private reduced: boolean, private enabled: boolean) {}
@@ -70,17 +70,18 @@ export class CombatFeedback {
     return sprite;
   }
 
-  impact(event: RaidEvent, target: string, effect: EffectId, getAnchor: () => FeedbackAnchor) {
+  impact(event: RaidEvent, target: string, effect: EffectId, getAnchor: () => FeedbackAnchor, animate?: () => string | undefined) {
     const key = `${event.seq}:${target}`;
     if (this.disposed || this.seen.has(key)) return;
     this.seen.add(key);
     if (this.seen.size > 256) this.seen.delete(this.seen.values().next().value!);
     const amount = feedbackAmount(event);
-    this.shown.push({ seq: event.seq, target, amount, effect });
+    const animated = this.enabled && !this.reduced ? animate?.() : undefined;
+    this.shown.push({ seq: event.seq, target, amount, effect, ...(animated ? { animated } : {}) });
     if (this.shown.length > 32) this.shown.shift();
     const anchor = getAnchor(), screenScale = Math.max(.01, this.scale());
     const size = anchor.height * (target === "boss" ? .65 : .95);
-    const sprite = this.enabled ? this.projectile(effect, size) : null;
+    const sprite = this.enabled && !animated ? this.projectile(effect, size) : null;
     if (sprite) {
       const node = new Container(); node.addChild(sprite); this.root.addChild(node);
       const rotation = effect.includes("claw") || effect.includes("slash") ? (event.seq % 2 ? -.12 : .12) : 0;

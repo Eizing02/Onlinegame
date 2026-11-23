@@ -1,6 +1,8 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
+import { QUESTION_IMAGE_MIME } from "@/lib/image/question-image-policy";
+import { readQuestionImage } from "@/lib/image/read-question-image";
 import type {
   CreateQuestionInput,
   DeleteQuestionSetResult,
@@ -8,15 +10,11 @@ import type {
   StoredQuestion,
   StoredQuestionOption,
   StoredQuestionSet,
+  UpdateQuestionInput,
 } from "@/lib/data/question-bank";
 
 const QUESTION_IMAGE_BUCKET = "question-images";
-const QUESTION_IMAGE_MIME_TYPES = [
-  "image/png",
-  "image/jpeg",
-  "image/webp",
-  "image/gif",
-];
+export class QuestionImageStorageError extends Error {}
 
 type QuestionSetRow = {
   id: string;
@@ -116,26 +114,11 @@ function mapQuestion(
   };
 }
 
-function isImageFile(value: unknown): value is File {
-  return typeof File !== "undefined" && value instanceof File && value.size > 0;
-}
-
-function getSafeFileName(fileName: string) {
-  const safeName =
-    fileName
-      .normalize("NFKD")
-      .replace(/[^\w.-]+/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "") || "question-image";
-
-  return safeName.toLowerCase();
-}
-
 async function ensureQuestionImageBucket() {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.storage.createBucket(QUESTION_IMAGE_BUCKET, {
     public: true,
-    allowedMimeTypes: QUESTION_IMAGE_MIME_TYPES,
+    allowedMimeTypes: Object.keys(QUESTION_IMAGE_MIME),
   });
 
   if (
@@ -158,50 +141,37 @@ async function uploadQuestionImage({
   questionSetId: string;
   teacherCode: string;
 }) {
-  if (!isImageFile(imageFile)) {
+  const image = await readQuestionImage(imageFile);
+  if (!image) {
     return { imageUrl: null, imagePath: null };
   }
 
-  if (!imageFile.type.startsWith("image/")) {
-    throw new Error("รองรับเฉพาะไฟล์รูปภาพเท่านั้น");
-  }
-
   const supabase = createSupabaseAdminClient();
+  const digest = createHash("sha256").update(image.bytes).digest("hex");
   const imagePath = [
     teacherCode,
     questionSetId,
-    `${questionId}-${getSafeFileName(imageFile.name)}`,
+    `${questionId}-${digest.slice(0, 16)}.${image.extension}`,
   ].join("/");
-  const upload = await supabase.storage
-    .from(QUESTION_IMAGE_BUCKET)
-    .upload(imagePath, imageFile, {
+  const bucket = supabase.storage.from(QUESTION_IMAGE_BUCKET);
+  const upload = () => bucket.upload(imagePath, image.bytes, {
       cacheControl: "31536000",
-      contentType: imageFile.type,
+      contentType: image.mime,
       upsert: true,
     });
 
-  if (upload.error) {
-    if (upload.error.message.toLowerCase().includes("bucket")) {
+  try {
+    let { error } = await upload();
+    if (error && /bucket not found|bucket does not exist/i.test(error.message)) {
       await ensureQuestionImageBucket();
-      const retry = await supabase.storage
-        .from(QUESTION_IMAGE_BUCKET)
-        .upload(imagePath, imageFile, {
-          cacheControl: "31536000",
-          contentType: imageFile.type,
-          upsert: true,
-        });
-
-      if (retry.error) {
-        throw retry.error;
-      }
-    } else {
-      throw upload.error;
+      ({ error } = await upload());
     }
+    if (error) throw error;
+  } catch (error) {
+    throw new QuestionImageStorageError("Question image upload failed", { cause: error });
   }
 
-  const { data } = supabase.storage
-    .from(QUESTION_IMAGE_BUCKET)
-    .getPublicUrl(imagePath);
+  const { data } = bucket.getPublicUrl(imagePath);
 
   return {
     imageUrl: data.publicUrl,
@@ -222,6 +192,14 @@ async function removeQuestionImages(imagePaths: string[]) {
 
   if (error && !error.message.toLowerCase().includes("not found")) {
     throw error;
+  }
+}
+
+async function discardQuestionImage(questionId: string, imagePath: string | null) {
+  if (imagePath) {
+    await removeQuestionImages([imagePath]).catch(error => {
+      console.error("Question image cleanup failed", { questionId, error });
+    });
   }
 }
 
@@ -403,9 +381,20 @@ export async function addSupabaseQuestion(
   }
 
   const supabase = createSupabaseAdminClient();
-  const questionId = randomUUID();
+  const questionId = question.id ?? randomUUID();
   const questionType = question.questionType ?? "short_text";
   const questionOptions = question.options ?? [];
+  const saved = questionSet.questions.find(item => item.id === questionId);
+  if (saved) {
+    const required = saved.questionType === "short_text" ? 0 : saved.questionType === "true_false" ? 2 : 4;
+    if (saved.options.length >= required) return saved;
+    // A previous request may have committed the question before losing its response.
+    if (saved.questionType !== questionType || saved.correctAnswer !== question.correctAnswer ||
+        saved.questionText !== question.questionText || questionOptions.length !== required) {
+      throw new Error("Previous question submission is incomplete");
+    }
+    return saveSupabaseQuestionOptions(questionSetId, saved, questionOptions);
+  }
   const image = await uploadQuestionImage({
     imageFile: question.imageFile,
     questionId,
@@ -432,20 +421,10 @@ export async function addSupabaseQuestion(
     .single<QuestionRow>();
   let data = questionResult.data;
   let error = questionResult.error;
+  let status = questionResult.status;
 
-  if (error && isMissingQuestionMetadataError(error)) {
-    if (image.imagePath) {
-      await removeQuestionImages([image.imagePath]);
-    }
-
-    if (
-      image.imagePath ||
-      questionType !== "short_text" ||
-      questionOptions.length > 0
-    ) {
-      throw error;
-    }
-
+  if (error && isMissingQuestionMetadataError(error) &&
+      !image.imagePath && questionType === "short_text" && questionOptions.length === 0) {
     const fallbackResult = await supabase
       .from("questions")
       .insert({
@@ -465,39 +444,59 @@ export async function addSupabaseQuestion(
 
     data = fallbackResult.data;
     error = fallbackResult.error;
+    status = fallbackResult.status;
   }
 
   if (error) {
-    if (image.imagePath) {
-      await removeQuestionImages([image.imagePath]);
+    if (error.code === "23505") {
+      const current = (await getQuestions(questionSetId)).find(item => item.id === questionId);
+      if (current?.imagePath !== image.imagePath) await discardQuestionImage(questionId, image.imagePath);
+      if (current && current.options.length === questionOptions.length) return current;
+    } else if (status >= 400 && status < 500) {
+      // Only discard after a definite rejection. A transport error can follow a commit.
+      await discardQuestionImage(questionId, image.imagePath);
     }
-
     throw error;
   }
 
-  if (!data) {
-    return null;
-  }
+  if (!data) throw new Error("Question insert returned no row");
+  return saveSupabaseQuestionOptions(questionSetId, mapQuestion(data), questionOptions);
+}
 
-  if (questionOptions.length > 0) {
-    const { error: optionsError } = await supabase.from("question_options").insert(
-      questionOptions.map((option) => ({
-        question_id: data.id,
+async function saveSupabaseQuestionOptions(
+  questionSetId: string,
+  question: StoredQuestion,
+  options: NonNullable<CreateQuestionInput["options"]>,
+) {
+  const supabase = createSupabaseAdminClient();
+  if (options.length > 0) {
+    const result = await supabase.from("question_options").insert(
+      options.map((option) => ({
+        question_id: question.id,
         option_text: option.optionText,
         is_correct: option.isCorrect,
         order_index: option.orderIndex,
       })),
-    );
-
-    if (optionsError) {
-      await supabase.from("questions").delete().eq("id", data.id);
-
-      if (image.imagePath) {
-        await removeQuestionImages([image.imagePath]);
+    ).select("id, question_id, option_text, is_correct, order_index").returns<QuestionOptionRow[]>();
+    if (result.error) {
+      if (result.error.code === "23505") {
+        const saved = (await getQuestionOptions([question.id])).get(question.id) ?? [];
+        if (saved.length === options.length) return { ...question, options: saved };
+      } else if (result.status >= 400 && result.status < 500) {
+        const removed = await supabase.from("questions").delete()
+          .eq("question_set_id", questionSetId).eq("id", question.id);
+        if (removed.error) {
+          console.error("Question rollback failed", { questionId: question.id, error: removed.error });
+        } else {
+          await discardQuestionImage(question.id, question.imagePath);
+        }
       }
-
-      throw optionsError;
+      throw result.error;
     }
+    question = {
+      ...question,
+      options: (result.data ?? []).map(mapQuestionOption).sort((a, b) => a.orderIndex - b.orderIndex),
+    };
   }
 
   await supabase
@@ -505,12 +504,121 @@ export async function addSupabaseQuestion(
     .update({ updated_at: new Date().toISOString() })
     .eq("id", questionSetId);
 
-  const nextQuestionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
+  return question;
+}
 
-  return (
-    nextQuestionSet?.questions.find((storedQuestion) => storedQuestion.id === data.id) ??
-    mapQuestion(data)
-  );
+export async function updateSupabaseQuestion(
+  teacherCode: string,
+  questionSetId: string,
+  questionId: string,
+  question: UpdateQuestionInput,
+) {
+  const questionSet = await getSupabaseQuestionSet(teacherCode, questionSetId);
+
+  if (!questionSet) {
+    return null;
+  }
+
+  const target = questionSet.questions.find((item) => item.id === questionId);
+
+  if (!target) {
+    return null;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const questionType = question.questionType ?? "short_text";
+  const nextOptions = question.options ?? [];
+  const uploaded = question.imageFile
+    ? await uploadQuestionImage({
+        imageFile: question.imageFile,
+        questionId,
+        questionSetId,
+        teacherCode,
+      })
+    : null;
+  const nextImageUrl = uploaded
+    ? uploaded.imageUrl
+    : question.removeImage
+      ? null
+      : target.imageUrl;
+  const nextImagePath = uploaded
+    ? uploaded.imagePath
+    : question.removeImage
+      ? null
+      : target.imagePath;
+
+  const { data, error } = await supabase
+    .from("questions")
+    .update({
+      question_text: question.questionText,
+      correct_answer: question.correctAnswer,
+      question_type: questionType,
+      image_url: nextImageUrl,
+      image_path: nextImagePath,
+      points: question.points,
+      time_limit_seconds: question.timeLimitSeconds,
+    })
+    .eq("id", questionId)
+    .eq("question_set_id", questionSetId)
+    .select(
+      "id, question_text, correct_answer, question_type, image_url, image_path, points, time_limit_seconds, order_index, created_at",
+    )
+    .single<QuestionRow>();
+
+  if (error) {
+    if (uploaded?.imagePath) {
+      await discardQuestionImage(questionId, uploaded.imagePath);
+    }
+    throw error;
+  }
+
+  const { error: deleteOptionsError } = await supabase
+    .from("question_options")
+    .delete()
+    .eq("question_id", questionId);
+
+  if (deleteOptionsError && !isMissingQuestionOptionsTableError(deleteOptionsError)) {
+    throw deleteOptionsError;
+  }
+
+  let savedOptions: StoredQuestionOption[] = [];
+
+  if (nextOptions.length > 0) {
+    const insertResult = await supabase
+      .from("question_options")
+      .insert(
+        nextOptions.map((option) => ({
+          question_id: questionId,
+          option_text: option.optionText,
+          is_correct: option.isCorrect,
+          order_index: option.orderIndex,
+        })),
+      )
+      .select("id, question_id, option_text, is_correct, order_index")
+      .returns<QuestionOptionRow[]>();
+
+    if (insertResult.error) {
+      throw insertResult.error;
+    }
+
+    savedOptions = (insertResult.data ?? [])
+      .map(mapQuestionOption)
+      .sort((a, b) => a.orderIndex - b.orderIndex);
+  }
+
+  if (target.imagePath && target.imagePath !== nextImagePath) {
+    await discardQuestionImage(questionId, target.imagePath);
+  }
+
+  await supabase
+    .from("question_sets")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", questionSetId);
+
+  return {
+    ...mapQuestion(data),
+    options: savedOptions,
+  };
 }
 
 export async function deleteSupabaseQuestion(

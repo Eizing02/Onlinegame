@@ -6,12 +6,14 @@ import { RevealMoment } from "@/components/game/reveal-moment";
 import { TeamStandings } from "@/components/game/team-standings";
 import { GameRules } from "@/components/game/game-rules";
 import { fetchRoom, newestSnapshot } from "@/lib/game/client-response";
+import { choiceLabel } from "@/lib/game/choice-labels";
 
 import {
   BarChart3,
   ClipboardList,
   Clock,
   Eye,
+  EyeOff,
   FastForward,
   Lock,
   Play,
@@ -163,7 +165,11 @@ export function LiveRoomPanels({
   const [pendingCommand, setPendingCommand] = useState<TeacherCommand | null>(
     null,
   );
+  const [revealedAnswerKey, setRevealedAnswerKey] = useState<string | null>(null);
+  const [confirmEndNow, setConfirmEndNow] = useState(false);
   useBackgroundMusic(snapshot.status === "ended" ? null : AUDIO_ASSETS.background);
+  const currentAnswerKey = `${snapshot.currentQuestionIndex}:${snapshot.status}`;
+  const showTeacherAnswer = revealedAnswerKey === currentAnswerKey;
   const [nowMs, setNowMs] = useState(initialNow);
   const refreshTimerRef = useRef<number | null>(null);
   const pollIntervalMs = getTeacherPollInterval(snapshot.status);
@@ -367,35 +373,54 @@ export function LiveRoomPanels({
         {snapshot.currentQuestion?.roundMultiplier === 1.5 && <p className="final-round-banner">รอบสุดท้าย · คะแนนข้อนี้ ×1.5</p>}
         {(snapshot.status === "question_active" || snapshot.status === "answer_locked") && <p className="text-sm text-muted">คะแนนและอันดับยังไม่รวมข้อนี้ จะเปิดพร้อมกันเมื่อเฉลย</p>}
         <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium text-muted">สถานะห้อง</p>
-            <h2 className="mt-2 text-2xl font-semibold">
-              {statusLabel[snapshot.status]}
-            </h2>
-          </div>
-          <div className="flex flex-wrap justify-end gap-2">
-            <AudioControl />
+          <div className="flex flex-wrap items-center gap-2">
             <span
               className={`inline-flex h-11 items-center rounded-md border px-3 text-sm font-semibold ${statusBadgeClassName[snapshot.status]}`}
             >
-              {statusLabel[snapshot.status]}
+              สถานะ: {statusLabel[snapshot.status]}
             </span>
+          </div>
+          <div className="flex flex-wrap justify-end gap-2">
+            <AudioControl />
           </div>
         </div>
 
         {snapshot.status === "lobby" ? (
-          <div className="space-y-2 rounded-md border border-warning bg-warning/10 p-4 text-sm text-warning">
-            {!snapshot.canStart ? (
-              <p>ต้องมีนักเรียนอย่างน้อย 1 คนก่อนเริ่มเกม</p>
-            ) : null}
-            {snapshot.emptyTeamCount > 0 ? (
-              <p>มีทีมว่าง {snapshot.emptyTeamCount} ทีม แต่ยังเริ่มเกมได้</p>
-            ) : null}
-            {snapshot.incompleteTeamCount > 0 ? (
-              <p>
-                มีทีมที่ยังไม่ครบ {snapshot.incompleteTeamCount} ทีม
-                ระบบจะล็อกจำนวนสมาชิกตอนเริ่มเกม
+          <div className="space-y-3">
+            <div className="flex flex-col justify-between gap-2 rounded-xl border border-primary/35 bg-surface px-5 py-4 sm:flex-row sm:items-center">
+              <div>
+                <p className="text-xs font-semibold text-muted">
+                  รหัสเข้าห้องเรียน (แสดงหน้าห้อง)
+                </p>
+                <p className="mt-1 font-mono text-4xl font-bold tracking-[0.18em] text-primary sm:text-5xl">
+                  {snapshot.roomCode}
+                </p>
+              </div>
+              <p className="text-sm text-muted sm:text-right">
+                ให้นักเรียนกรอกเลข 4 หลักนี้ที่หน้าเข้าห้อง
+                <span className="mt-1 block font-semibold text-foreground">
+                  เข้าร่วมแล้ว {snapshot.answerProgress.totalParticipantCount} คน ·{" "}
+                  {snapshot.teamCount} ทีม
+                </span>
               </p>
+            </div>
+            {!snapshot.canStart ||
+            snapshot.emptyTeamCount > 0 ||
+            snapshot.incompleteTeamCount > 0 ? (
+              <div className="space-y-2 rounded-md border border-warning bg-warning/10 p-4 text-sm text-warning">
+                {!snapshot.canStart ? (
+                  <p>ต้องมีนักเรียนอย่างน้อย 1 คนก่อนเริ่มเกม</p>
+                ) : null}
+                {snapshot.emptyTeamCount > 0 ? (
+                  <p>มีทีมว่าง {snapshot.emptyTeamCount} ทีม แต่ยังเริ่มเกมได้</p>
+                ) : null}
+                {snapshot.incompleteTeamCount > 0 ? (
+                  <p>
+                    มีทีมที่ยังไม่ครบ {snapshot.incompleteTeamCount} ทีม
+                    ระบบจะล็อกจำนวนสมาชิกตอนเริ่มเกม
+                  </p>
+                ) : null}
+              </div>
             ) : null}
           </div>
         ) : null}
@@ -437,75 +462,107 @@ export function LiveRoomPanels({
           </div>
 
           <div className="teacher-question-area" tabIndex={0} role="region" aria-label="คำถามของครู">
-            <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm font-medium text-muted">คำถามปัจจุบัน</p>
-              {showQuestionTimer ? (
-                <span
-                  className={
-                    remainingSeconds <= 10
-                      ? "inline-flex h-11 items-center gap-2 rounded-md border border-danger bg-danger/10 px-3 text-sm font-semibold text-danger"
-                      : "inline-flex h-11 items-center gap-2 rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan"
-                  }
-                >
-                  <Clock size={17} />
-                  {formatRemainingTime(remainingSeconds)}
-                </span>
-              ) : null}
+              <div className="flex flex-wrap items-center gap-2">
+                {snapshot.currentQuestion &&
+                snapshot.status !== "showing_answer" &&
+                snapshot.status !== "ended" ? (
+                  <button
+                    aria-pressed={showTeacherAnswer}
+                    className="inline-flex h-11 items-center gap-2 rounded-md border border-border bg-surface px-3 text-xs font-semibold text-foreground transition hover:border-primary hover:text-primary"
+                    onClick={() =>
+                      setRevealedAnswerKey((prev) =>
+                        prev === currentAnswerKey ? null : currentAnswerKey,
+                      )
+                    }
+                    type="button"
+                  >
+                    {showTeacherAnswer ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showTeacherAnswer ? "ซ่อนคำตอบ (จอโปรเจกเตอร์)" : "แอบดูคำตอบ (เฉพาะครู)"}
+                  </button>
+                ) : null}
+                {showQuestionTimer ? (
+                  <span
+                    className={
+                      remainingSeconds <= 10
+                        ? "inline-flex h-11 items-center gap-2 rounded-md border border-danger bg-danger/10 px-3 text-sm font-semibold text-danger"
+                        : "inline-flex h-11 items-center gap-2 rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan"
+                    }
+                  >
+                    <Clock size={17} />
+                    {formatRemainingTime(remainingSeconds)}
+                  </span>
+                ) : null}
+              </div>
             </div>
             {snapshot.currentQuestion ? (
-              <>
-                <div className="mt-2 text-lg font-semibold leading-7">
-                  <span>
-                    ข้อ {snapshot.currentQuestion.questionNumber}/
-                    {snapshot.currentQuestion.totalQuestions}:{" "}
-                  </span>
-                  <MathText
-                    className="inline"
-                    inline
-                    text={snapshot.currentQuestion.questionText}
-                  />
-                </div>
-                {snapshot.currentQuestion.imageUrl ? (
-                  <QuestionImage
-                    alt={`รูปประกอบคำถามข้อ ${snapshot.currentQuestion.questionNumber}`}
-                    className="mt-4 bg-surface"
-                    src={snapshot.currentQuestion.imageUrl}
-                  />
-                ) : null}
-                <p className="mt-2 text-sm text-muted">
-                  {snapshot.currentQuestion.points} คะแนน •{" "}
-                  {snapshot.currentQuestion.timeLimitSeconds} วินาที
-                </p>
-                {snapshot.currentQuestion.options.length > 0 ? (
-                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {snapshot.currentQuestion.options.map((option, optionIndex) => (
-                      <div
-                        className={
-                          option.isCorrect
-                            ? "rounded-md border border-success bg-success/10 px-3 py-2 text-sm font-semibold text-success"
-                            : "rounded-md border border-border bg-surface px-3 py-2 text-sm font-semibold"
-                        }
-                        key={option.id}
-                      >
-                        <span className="mr-2 rounded bg-white/80 px-2 py-0.5 text-xs text-muted">
-                          {String.fromCharCode(65 + optionIndex)}
-                        </span>
-                        <MathText className="inline" inline text={option.optionText} />
+              (() => {
+                const isAnswerRevealed =
+                  snapshot.status === "showing_answer" ||
+                  snapshot.status === "ended" ||
+                  showTeacherAnswer;
+
+                return (
+                  <>
+                    <div className="mt-2 text-lg font-semibold leading-7">
+                      <span>
+                        ข้อ {snapshot.currentQuestion.questionNumber}/
+                        {snapshot.currentQuestion.totalQuestions}:{" "}
+                      </span>
+                      <MathText
+                        className="inline"
+                        inline
+                        text={snapshot.currentQuestion.questionText}
+                      />
+                    </div>
+                    {snapshot.currentQuestion.imageUrl ? (
+                      <QuestionImage
+                        alt={`รูปประกอบคำถามข้อ ${snapshot.currentQuestion.questionNumber}`}
+                        className="mt-4 bg-surface"
+                        src={snapshot.currentQuestion.imageUrl}
+                      />
+                    ) : null}
+                    <p className="mt-2 text-sm text-muted">
+                      {snapshot.currentQuestion.points} คะแนน •{" "}
+                      {snapshot.currentQuestion.timeLimitSeconds} วินาที
+                    </p>
+                    {snapshot.currentQuestion.options.length > 0 ? (
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        {snapshot.currentQuestion.options.map((option, optionIndex) => (
+                          <div
+                            className={
+                              isAnswerRevealed && option.isCorrect
+                                ? "rounded-md border border-success bg-success/10 px-3 py-2 text-sm font-semibold text-success"
+                                : "rounded-md border border-border bg-surface px-3 py-2 text-sm font-semibold"
+                            }
+                            key={option.id}
+                          >
+                            <span className="mr-2 rounded bg-white/80 px-2 py-0.5 text-xs text-muted">
+                              {choiceLabel(optionIndex)}
+                            </span>
+                            <MathText className="inline" inline text={option.optionText} />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                ) : null}
-                {snapshot.currentQuestion.correctAnswer ? (
-                  <div className="mt-2 text-sm font-semibold text-success">
-                    เฉลย:{" "}
-                    <MathText
-                      className="inline"
-                      inline
-                      text={snapshot.currentQuestion.correctAnswer}
-                    />
-                  </div>
-                ) : null}
-              </>
+                    ) : null}
+                    {snapshot.currentQuestion.correctAnswer && isAnswerRevealed ? (
+                      <div className="mt-2 text-sm font-semibold text-success">
+                        เฉลย:{" "}
+                        <MathText
+                          className="inline"
+                          inline
+                          text={snapshot.currentQuestion.correctAnswer}
+                        />
+                      </div>
+                    ) : snapshot.currentQuestion.correctAnswer ? (
+                      <p className="mt-2 text-xs text-muted">
+                        ซ่อนเฉลยอยู่เพื่อความปลอดภัยบนจอโปรเจกเตอร์ · จะเปิดอัตโนมัติเมื่อกดเฉลย
+                      </p>
+                    ) : null}
+                  </>
+                );
+              })()
             ) : (
               <p className="mt-2 text-sm text-muted">ยังไม่มีคำถามที่เปิดอยู่</p>
             )}
@@ -526,7 +583,7 @@ export function LiveRoomPanels({
               label="เริ่มเกม"
               pendingCommand={pendingCommand}
               runCommand={(command) => void runCommand(command)}
-              variant="primary"
+              variant={snapshot.status === "lobby" ? "primary" : "secondary"}
             />
             <ControlButton
               command="lock"
@@ -535,6 +592,7 @@ export function LiveRoomPanels({
               label="ล็อกคำตอบ"
               pendingCommand={pendingCommand}
               runCommand={(command) => void runCommand(command)}
+              variant={isQuestionActive ? "primary" : "secondary"}
             />
             <ControlButton
               command="reveal"
@@ -543,6 +601,7 @@ export function LiveRoomPanels({
               label="เฉลย"
               pendingCommand={pendingCommand}
               runCommand={(command) => void runCommand(command)}
+              variant={canReveal && !isQuestionActive ? "primary" : "secondary"}
             />
             <ControlButton
               command="next"
@@ -551,16 +610,42 @@ export function LiveRoomPanels({
               label={isLastQuestion ? "จบเกม" : "ข้อถัดไป"}
               pendingCommand={pendingCommand}
               runCommand={(command) => void runCommand(command)}
+              variant={canGoNext ? "primary" : "secondary"}
             />
-            <ControlButton
-              command="end"
-              disabled={snapshot.status === "ended"}
-              icon={Square}
-              label="จบเกมทันที"
-              pendingCommand={pendingCommand}
-              runCommand={(command) => void runCommand(command)}
-              variant="danger"
-            />
+            {confirmEndNow && snapshot.status !== "ended" ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-md border border-danger bg-danger px-4 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={pendingCommand !== null}
+                  onClick={() => {
+                    setConfirmEndNow(false);
+                    void runCommand("end");
+                  }}
+                  type="button"
+                >
+                  <Square size={17} />
+                  {pendingCommand === "end" ? "กำลังจบเกม..." : "ยืนยันจบเกมทันที"}
+                </button>
+                <button
+                  className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-surface px-4 text-sm font-semibold text-foreground transition hover:bg-panel-strong disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={pendingCommand !== null}
+                  onClick={() => setConfirmEndNow(false)}
+                  type="button"
+                >
+                  เล่นต่อ
+                </button>
+              </div>
+            ) : (
+              <button
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-danger bg-danger/10 px-4 text-sm font-semibold text-danger transition hover:bg-danger/15 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={snapshot.status === "ended" || pendingCommand !== null}
+                onClick={() => setConfirmEndNow(true)}
+                type="button"
+              >
+                <Square size={17} />
+                จบเกมทันที
+              </button>
+            )}
           </div>
         </div>
       </Panel>
@@ -589,42 +674,88 @@ export function LiveRoomPanels({
         </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-sm font-semibold">นักเรียนในห้อง</h2>
+            <h2 className="text-sm font-semibold">
+              นักเรียนในห้อง ({visibleParticipants.length} คน)
+            </h2>
             <span className="text-xs text-muted">{syncLabel}</span>
           </div>
-          {visibleParticipants.length > 0 ? (
-            visibleParticipants.map((participant) => (
-              <div
-                className="flex items-start gap-3 text-sm"
-                key={participant.id}
-              >
-                <span className="mt-1 h-8 w-8 shrink-0 rounded-full bg-success/10" />
-                <span>
-                  <span>{participant.displayName}</span>
-                  <span className="ml-2 text-muted">
-                    {participant.teamId
-                      ? teamNameById.get(participant.teamId)
-                      : "ยังไม่เลือกทีม"}
-                  </span>
-                  {participant.joinedAfterStart ? (
-                    <span className="block text-xs text-warning">
-                      เข้าหลังเริ่มเกม ไม่นับคะแนน
-                    </span>
-                  ) : null}
-                </span>
+          {(() => {
+            const unassigned = visibleParticipants.filter((p) => !p.teamId);
+            const assignedCount = visibleParticipants.length - unassigned.length;
+            return visibleParticipants.length > 0 ? (
+              <div className="space-y-3">
+                <p className="rounded-md border border-border bg-surface px-3 py-2 text-sm text-muted">
+                  เข้าทีมแล้ว{" "}
+                  <strong className="text-foreground">{assignedCount}</strong> /{" "}
+                  {visibleParticipants.length} คน
+                  {unassigned.length > 0
+                    ? ` · ยังไม่เลือกทีม ${unassigned.length} คน`
+                    : " · ทุกคนเข้าทีมครบแล้ว"}
+                </p>
+                {unassigned.length > 0 ? (
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-warning">
+                      ยังไม่เลือกทีม
+                    </p>
+                    {unassigned.map((participant) => (
+                      <div
+                        className="flex items-center gap-2.5 rounded-md border border-warning/40 bg-surface px-3 py-2 text-sm"
+                        key={participant.id}
+                      >
+                        <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-panel text-xs font-bold text-primary">
+                          {participant.displayName.slice(0, 1)}
+                        </span>
+                        <span className="font-medium">{participant.displayName}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+                <details
+                  className="rounded-md border border-border bg-surface px-3 py-1"
+                  open={visibleParticipants.length <= 12}
+                >
+                  <summary className="text-xs font-semibold">
+                    ดูรายชื่อนักเรียนทั้งหมด ({visibleParticipants.length} คน)
+                  </summary>
+                  <div className="mt-2 space-y-2 pb-2">
+                    {visibleParticipants.map((participant) => (
+                      <div
+                        className="flex items-center gap-2.5 text-sm"
+                        key={participant.id}
+                      >
+                        <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-panel text-xs font-bold text-primary">
+                          {participant.displayName.slice(0, 1)}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="font-medium">{participant.displayName}</span>
+                          <span className="ml-2 text-xs text-muted">
+                            {participant.teamId
+                              ? teamNameById.get(participant.teamId)
+                              : "ยังไม่เลือกทีม"}
+                          </span>
+                          {participant.joinedAfterStart ? (
+                            <span className="block text-xs text-warning">
+                              เข้าหลังเริ่มเกม ไม่นับคะแนน
+                            </span>
+                          ) : null}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </details>
               </div>
-            ))
-          ) : (
-            <p className="rounded-md border border-dashed border-border bg-surface p-3 text-sm text-muted">
-              ยังไม่มีนักเรียนเข้าห้อง
-            </p>
-          )}
+            ) : (
+              <p className="rounded-md border border-dashed border-border bg-surface p-3 text-sm text-muted">
+                ยังไม่มีนักเรียนเข้าห้อง
+              </p>
+            );
+          })()}
         </div>
       </Panel>
         <Panel>
           <div className="mb-4 flex items-center gap-2">
             <UsersRound size={20} className="text-primary" />
-            <h2 className="font-semibold">รายชื่อกลุ่ม</h2>
+            <h2 className="font-semibold">รายชื่อทีม</h2>
           </div>
           <div className="space-y-3">
             {showAnswerStatus ? (
@@ -652,7 +783,7 @@ export function LiveRoomPanels({
                 </div>
                 {team.lockedMemberCount !== null ? (
                   <p className="mt-1 text-xs text-muted">
-                    ตัวหารคะแนนเฉลี่ย {team.lockedMemberCount} คน
+                    สมาชิกที่นับคะแนน {team.lockedMemberCount} คน
                   </p>
                 ) : null}
                 {team.participants.length > 0 ? (
@@ -703,31 +834,41 @@ export function LiveRoomPanels({
         {label:'คะแนน',content:<div className="room-scroll teacher-scores" tabIndex={0} role="region" aria-label="คะแนนและอันดับทีม">        <Panel>
           <div className="mb-4 flex items-center gap-2">
             <BarChart3 size={20} className="text-warning" />
-            <h2 className="font-semibold">คะแนนแต่ละกลุ่ม</h2>
+            <h2 className="font-semibold">คะแนนแต่ละทีม</h2>
           </div>
           <div className="space-y-3">
-            {snapshot.teamSummaries.map((team) => (
-              <div
-                key={team.id}
-                className="rounded-md border border-border bg-surface p-3"
-              >
-                <div className="flex justify-between gap-3 text-sm">
-                  <span>{team.teamName}</span>
-                  <span>
-                    เฉลี่ย {formatScore(team.averageScore)} • รวม{" "}
-                    {team.rawScore}
-                  </span>
-                </div>
-                <div className="h-2 rounded-full bg-surface">
+            {(() => {
+              const maxAvgScore = Math.max(
+                1,
+                ...snapshot.teamSummaries.map((item) => item.averageScore),
+              );
+              return snapshot.teamSummaries.map((team) => {
+                const widthPct =
+                  team.averageScore > 0
+                    ? Math.max(4, Math.min(100, Math.round((team.averageScore / maxAvgScore) * 100)))
+                    : 0;
+                return (
                   <div
-                    className="h-2 rounded-full bg-primary"
-                    style={{
-                      width: `${Math.min(team.averageScore * 10, 100)}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+                    key={team.id}
+                    className="rounded-md border border-border bg-surface p-3"
+                  >
+                    <div className="flex justify-between gap-3 text-sm font-medium">
+                      <span>{team.teamName}</span>
+                      <span className="font-mono text-foreground">
+                        เฉลี่ย {formatScore(team.averageScore)} • รวม{" "}
+                        {team.rawScore}
+                      </span>
+                    </div>
+                    <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-panel">
+                      <div
+                        className="h-full rounded-full bg-primary transition-[width] duration-300"
+                        style={{ width: `${widthPct}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              });
+            })()}
           </div>
         </Panel>
 

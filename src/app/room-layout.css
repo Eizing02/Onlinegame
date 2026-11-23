@@ -35,7 +35,7 @@
 .student-play-screen > .final-round-banner { margin:0; padding:5px 10px; font-size:.8rem; }
 .student-play-screen > [role="status"] { max-height:72px; overflow:auto; padding:8px 12px; font-size:.8rem; }
 .student-arena { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:20px; padding:16px; background:var(--panel); border-radius:16px; }
-.question-reading { min-height:0; overflow:auto; overscroll-behavior:contain; font-size:clamp(1.1rem,2vw,1.65rem); line-height:1.6; padding:4px; }
+.question-reading { min-height:0; overflow:auto; overscroll-behavior:contain; font-size:clamp(18px,2vw,24px); line-height:1.65; padding:4px; }
 .question-reading > .room-question-image { margin-top:12px; }
 .room-question-image img { max-height:180px; }
 .question-reading > .text-warning { font-size:.875rem; }
@@ -57,7 +57,7 @@
 .play-power .power-button { width:auto; padding:8px 12px; font-size:.8rem; }
 .room-eligibility { font-size:.75rem; }
 .room-lobby { flex:1; min-height:0; overflow:auto; text-align:center; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
-.room-lobby h2 { font-size:1.6rem; font-weight:800; }
+.room-lobby h2 { font-size:24px; font-weight:700; }
 .room-lobby .scene-3d { height:min(200px,25vh); flex-shrink:0; }
 .expanded-question { max-width:900px; font-size:1.2rem; line-height:1.8; }
 .expanded-question h2 { font-weight:800; margin-bottom:16px; }
