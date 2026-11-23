@@ -188,7 +188,7 @@ async function storeLocalQuestionImage({
     questionSetId,
     `${questionId}.${image.extension}`,
   );
-  const absolutePath = path.join(getDataDirectory(), relativePath);
+  const absolutePath = path.join(/* turbopackIgnore: true */ getDataDirectory(), relativePath);
   await mkdir(path.dirname(absolutePath), { recursive: true });
   await writeFile(absolutePath, image.bytes);
 
@@ -209,13 +209,13 @@ async function removeLocalQuestionImages(questions: StoredQuestion[]) {
       }
 
       try {
-        await unlink(path.join(getDataDirectory(), question.imagePath));
+        await unlink(path.join(/* turbopackIgnore: true */ getDataDirectory(), question.imagePath));
       } catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
           throw error;
         }
         // Pre-existing uploads were written under public/.
-        await unlink(path.join(process.cwd(), "public", question.imagePath)).catch(legacyError => {
+        await unlink(path.join(/* turbopackIgnore: true */ process.cwd(), "public", question.imagePath)).catch(legacyError => {
           if ((legacyError as NodeJS.ErrnoException).code !== "ENOENT") throw legacyError;
         });
       }

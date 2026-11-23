@@ -19,7 +19,9 @@ export async function GET(
   }
 
   try {
-    const bytes = await readFile(path.join(getDataDirectory(), "uploads", "question-images", teacherCode, questionSetId, fileName));
+    const bytes = await readFile(
+      path.join(/* turbopackIgnore: true */ getDataDirectory(), "uploads", "question-images", teacherCode, questionSetId, fileName),
+    );
     const mime = questionImageMime(bytes);
     if (!mime) return new Response(null, { status: 404 });
     return new Response(new Uint8Array(bytes), {
