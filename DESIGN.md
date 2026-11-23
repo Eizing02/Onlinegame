@@ -18,6 +18,8 @@ colors:
   primary-blue: "#25475A"
   cyan: "#25475A"
   success: "#25475A"
+  pin-valid: "#1F7A4C"
+  pin-valid-ink: "#145334"
   warning: "#634417"
   danger: "#790D16"
   selection-gold: "#D0A04A"

@@ -12,6 +12,7 @@ async function login(page:Page,email:string,code?:string) {
 }
 async function join(page:Page,room:string) {
  await page.goto(`/join?room_code=${room}`);await page.getByRole('button',{name:/ทีม 1/}).click();await page.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();await expect(page).toHaveURL(new RegExp(`play/${room}/raid$`));
+ const notice=page.locator('.captain-notice-dialog');if(await notice.isVisible().catch(()=>false)){await notice.getByRole('button',{name:'เข้าใจแล้ว',exact:true}).click();}
 }
 async function ready(page:Page,room:string){let state;await expect.poll(async()=>{state=await(await browserRequest(page,`/api/raid/${room}/snapshot`)).json();return Boolean(state.question)||Boolean(state.own?.finished)||state.status==='ended';}).toBe(true);return state!;}
 

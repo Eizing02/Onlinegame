@@ -91,14 +91,25 @@ test("student selects a team and appears on teacher dashboard", async ({
   await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
   await expect(page).toHaveURL(/\/join$/);
 
+  // Invalid PIN triggers red shake & alert without leaving /join
+  await page.getByLabel("รหัสห้อง").fill("0000");
+  await expect(page.locator(".join-message[role=alert]")).toContainText("ไม่พบห้อง");
+  await expect(page.locator('.join-pin-slot[data-state="invalid"]')).toHaveCount(4);
+
+  // Valid PIN auto-verifies, triggers green wave, and opens team selection
   await page.getByLabel("รหัสห้อง").fill(roomCode);
-  await page.getByRole("button", { name: "ค้นหาห้อง" }).click();
   await expect(page).toHaveURL(new RegExp(`/join\\?room_code=${roomCode}$`));
   await page.getByRole("button", { name: /กลุ่ม 1/ }).click();await page.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();
   await expect(page).toHaveURL(new RegExp(`/play/${roomCode}$`));
   await expect(page.getByRole("heading", {name:"กลุ่ม 1",exact:true})).toBeVisible();
   await expect(page.getByText("รอครูเริ่มเกม", { exact: true })).toBeVisible();
-  await page.getByRole("tab",{name:"ทีม",exact:true}).click();
+  // First member in the team receives the captain modal with rename instructions
+  const captainDialog = page.locator(".captain-notice-dialog");
+  await expect(captainDialog).toBeVisible();
+  await expect(captainDialog).toContainText("คุณคือหัวหน้าทีม");
+  await expect(captainDialog).toContainText("วิธีเปลี่ยนชื่อทีม");
+  await captainDialog.getByRole("button", { name: "ไปเปลี่ยนชื่อทีมเลย" }).click();
+  await expect(captainDialog).toHaveCount(0);
   await expect(page.getByText("ร่วมคะแนน", { exact: true }).first()).toBeVisible();
 
   await context.clearCookies();

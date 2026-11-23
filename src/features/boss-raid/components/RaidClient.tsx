@@ -18,6 +18,7 @@ import { RaidQuestionModal, type QuestionState } from "./RaidQuestionModal";
 import { RaidResults } from "./RaidResults";
 import { RaidAudioSettings } from "./RaidAudioSettings";
 import { RaidStudentHud } from "./RaidStudentHud";
+import { CaptainNoticeModal } from "@/components/game/captain-notice-modal";
 import "../raid.css";
 type Submission={questionId:string;displayIndex:number;answerText:string|null;selectedOptionId:string|null;idempotencyKey:string};
 export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:string}) {
@@ -33,7 +34,17 @@ export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:s
  useBossWarmup(snapshot.team?.bossType,snapshot.status==="lobby");
  const {seconds}=useRaidClock(snapshot.deadline,snapshot.serverNow,snapshot.status==="ended");
  const [effectsEnabled,setEffectsEnabled]=useState(true),[settings,setSettings]=useState(false),[reduced,setReduced]=useState(false),[quality,setQuality]=useState<"full"|"low">("full");
+ const [isCaptainNoticeOpen,setIsCaptainNoticeOpen]=useState(false);
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;if(timer.current)clearTimeout(timer.current);};},[]);
+ useEffect(()=>{
+  if(snapshot.status!=="lobby"||!snapshot.isTeamCaptain||!snapshot.canRenameTeam||!snapshot.team?.id)return;
+  const storageKey=`captain-notice:${snapshot.sessionId}:${snapshot.team.id}`;
+  let shouldOpen=false;
+  try{if(window.localStorage.getItem(storageKey))return;window.localStorage.setItem(storageKey,"seen");shouldOpen=true;}catch{shouldOpen=true;}
+  if(!shouldOpen)return;
+  const id=window.setTimeout(()=>setIsCaptainNoticeOpen(true),0);
+  return()=>window.clearTimeout(id);
+ },[snapshot.status,snapshot.isTeamCaptain,snapshot.canRenameTeam,snapshot.sessionId,snapshot.team?.id]);
  const finish=useCallback(async function finish(){active.current=null;await refresh();if(!alive.current)return;const current=getCurrent(),last=submitted.current;if(current.status==="running"&&last&&(current.own?.cursor??0)<=last.displayIndex){setError("คำตอบบันทึกแล้ว กำลังรอเชื่อมต่อเพื่อเปิดโจทย์ถัดไป");timer.current=setTimeout(()=>void finish(),1000);return;}busy.current=false;setPending(false);setError("");setState("open");},[refresh,getCurrent]);
  const begin=useCallback((presentation:RaidPresentation,recovery=false,now?:string)=>{
   if(seen.current.has(presentation.id))return;seen.current.add(presentation.id);if(seen.current.size>100)seen.current.delete(seen.current.values().next().value!);
@@ -83,6 +94,17 @@ export function RaidClient({initial,sessionId}:{initial:RaidSnapshot;sessionId:s
    {snapshot.status!=="ended"&&tab==="team"&&state!=="presenting"&&<><RaidTeamPanel snapshot={snapshot} name={nameDraft?.teamId===snapshot.team?.id?nameDraft!.value:snapshot.team?.name??""} onName={value=>{setNameDraft({teamId:snapshot.team!.id,value});setTeamNotice("");}} onSave={()=>void rename()} pending={pending}/>{teamNotice&&<p role="status" className="raid-save-notice">{teamNotice}</p>}</>}
    {(snapshot.status==="ended"||tab==="results"&&state!=="presenting")&&<RaidResults snapshot={snapshot}/>}
   </div>
+  <CaptainNoticeModal
+   open={isCaptainNoticeOpen&&snapshot.status==="lobby"&&Boolean(snapshot.canRenameTeam)&&Boolean(snapshot.team)}
+   mode="raid"
+   teamName={snapshot.team?.name??""}
+   onClose={()=>setIsCaptainNoticeOpen(false)}
+   onGoRename={()=>{
+    setIsCaptainNoticeOpen(false);
+    setTab("team");
+    window.requestAnimationFrame(()=>{document.getElementById("raid-team-name")?.focus();});
+   }}
+  />
   {showQuestion&&question&&<RaidQuestionModal key={question.id} question={question} score={snapshot.own?.score??0} deadline={snapshot.deadline} serverNow={snapshot.serverNow} total={snapshot.questionCount} syncing={foreground} state={state} warnings={snapshot.warnings} visibilityEnabled={snapshot.visibilityEnabled} feedback={state==="error"?feedback:""} error={error} heroes={hud.heroes} ownId={hud.ownId} partyOpen={partyOpen} onPartyToggle={hud.onToggle} bossType={snapshot.team?.bossType} bossHp={snapshot.team?.bossHp} bossMaxHp={snapshot.team?.bossMaxHp} autoConfirm={(snapshot.rulesVersion??1)>=2} onSubmit={(answerText,selectedOptionId)=>{setHeldQuestion(question);const payload={questionId:question.id,displayIndex:question.displayIndex,answerText,selectedOptionId,idempotencyKey:crypto.randomUUID()};submitted.current=payload;void resolve(payload);}} onRetry={()=>{if(submitted.current)void resolve(submitted.current);else void refresh();}}/>}
  </div>;
 }

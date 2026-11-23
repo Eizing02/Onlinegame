@@ -1,6 +1,6 @@
-import { Search, ArrowLeft, DoorOpen, Swords, Sparkles } from "lucide-react";
+import { ArrowLeft, DoorOpen, Swords, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { findRoomAction, leaveTeamAction } from "@/app/join/actions";
+import { leaveTeamAction } from "@/app/join/actions";
 import { AppShell } from "@/components/layout/app-shell";
 import { Wallpaper } from "@/components/game/wallpaper";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -8,6 +8,7 @@ import { LoadingForm } from "@/components/ui/loading-form";
 import { requireRole } from "@/lib/auth/session";
 import { getJoinableGameSession, getTeamSummaries } from "@/lib/data/game-sessions";
 import { isValidRoomCode, normalizeRoomCode } from "@/lib/game/room-code";
+import { RoomPinForm } from "./room-pin-form";
 import { TeamPicker } from "./team-picker";
 
 type JoinPageProps = {
@@ -56,7 +57,7 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
             </Link>
           )}
         </header>
-        {(query.error || roomError) && (
+        {game && (query.error || roomError) && (
           <p className="form-error join-message" role="alert">
             {query.error || roomError}
           </p>
@@ -143,26 +144,11 @@ export default async function JoinPage({ searchParams }: JoinPageProps) {
         ) : (
           <div className="join-code-panel">
             <h2>กรอกรหัสห้องจากครู</h2>
-            <p>รหัสตัวเลข 4 หลัก แล้วเลือกทีมในหน้าถัดไป</p>
-            <LoadingForm action={findRoomAction} loadingLabel="กำลังค้นหาห้อง…">
-              <label htmlFor="room_code">รหัสห้อง</label>
-              <input
-                id="room_code"
-                name="room_code"
-                defaultValue={roomCode}
-                inputMode="numeric"
-                pattern="[0-9]{4}"
-                maxLength={4}
-                placeholder="1234"
-                required
-                autoFocus
-                autoComplete="off"
-              />
-              <button className="game-button" type="submit">
-                <Search size={19} aria-hidden="true" />
-                ค้นหาห้อง
-              </button>
-            </LoadingForm>
+            <p>ใส่รหัสตัวเลข 4 หลัก แล้วระบบจะพาไปเลือกทีมทันที</p>
+            <RoomPinForm
+              initialCode={roomCode}
+              initialError={query.error || roomError}
+            />
           </div>
         )}
       </section>

@@ -3,8 +3,36 @@
 import { redirect } from "next/navigation";
 
 import { requireRole } from "@/lib/auth/session";
-import { joinLocalGameSession, leaveLocalTeam } from "@/lib/data/game-sessions";
+import { getJoinableGameSession, joinLocalGameSession, leaveLocalTeam } from "@/lib/data/game-sessions";
 import { isValidRoomCode, normalizeRoomCode } from "@/lib/game/room-code";
+
+function normalizeThaiDigits(value: string) {
+  return value.replace(/[\u0E50-\u0E59]/g, (digit) =>
+    String(digit.charCodeAt(0) - 0x0e50),
+  );
+}
+
+export type CheckRoomResult =
+  | { ok: true; roomCode: string }
+  | { ok: false; error: string };
+
+export async function checkRoomAction(
+  rawRoomCode: string,
+): Promise<CheckRoomResult> {
+  await requireRole("student");
+  const roomCode = normalizeRoomCode(normalizeThaiDigits(rawRoomCode ?? ""));
+
+  if (!isValidRoomCode(roomCode)) {
+    return { ok: false, error: "รหัสห้องต้องเป็นตัวเลข 4 หลัก" };
+  }
+
+  const game = await getJoinableGameSession(roomCode);
+  if (!game) {
+    return { ok: false, error: "ไม่พบห้องนี้ หรือห้องจบเกมแล้ว" };
+  }
+
+  return { ok: true, roomCode: game.roomCode };
+}
 
 function getFormString(formData: FormData, key: string) {
   const value = formData.get(key);

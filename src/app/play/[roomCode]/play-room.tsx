@@ -18,9 +18,9 @@ import {
   Maximize2,
   PartyPopper,
   Send,
-  Trophy,
   XCircle,
 } from "lucide-react";
+import { CaptainNoticeModal } from "@/components/game/captain-notice-modal";
 import { Scene3D } from "@/components/game/scene-3d";
 import { Modal } from "@/components/ui/modal";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -115,6 +115,7 @@ export function PlayRoom({
   useBackgroundMusic(snapshot.status === "ended" ? null : AUDIO_ASSETS.background);
   const [isPowerPending, setIsPowerPending] = useState(false);
   const [isCaptainNoticeOpen, setIsCaptainNoticeOpen] = useState(false);
+  const [tabOverride, setTabOverride] = useState<{ key: string; index: number } | null>(null);
   const [closedResultSessionId, setClosedResultSessionId] = useState<
     string | null
   >(null);
@@ -447,11 +448,27 @@ export function PlayRoom({
     }
   }
 
+  const roomResetKey =
+    snapshot.sessionId +
+    ":" +
+    snapshot.currentQuestionIndex +
+    ":" +
+    (snapshot.status === "lobby"
+      ? "lobby"
+      : snapshot.status === "ended"
+        ? "ended"
+        : "game");
+
   return (
     <>
       {(isSubmitting||isTeamUpdating||isPowerPending)&&<LoadingIndicator overlay label="กำลังบันทึก…"/>}
       <RevealMoment eventKey={snapshot.status === "showing_answer" ? snapshot.sessionId + ":" + snapshot.currentQuestionIndex : null} correct={Boolean(snapshot.currentAnswer?.isCorrect)} title={snapshot.currentAnswer?.isCorrect ? "ตอบถูก!" : "เฉลยแล้ว ลุยข้อต่อไป"} detail={snapshot.currentAnswer?.isCorrect && snapshot.contribution ? "คำตอบนี้ช่วยทีม +" + formatScore(snapshot.contribution.total) + " คะแนน" : "ดูคำตอบที่ถูก แล้วเตรียมพร้อมไปด้วยกัน"} />
-      <RoomTabs defaultIndex={snapshot.status === 'ended' ? 2 : 0} resetKey={snapshot.sessionId + ':' + snapshot.currentQuestionIndex + ':' + (snapshot.status === 'lobby' ? 'lobby' : snapshot.status === 'ended' ? 'ended' : 'game')} header={<>
+      <RoomTabs
+        defaultIndex={snapshot.status === 'ended' ? 2 : 0}
+        resetKey={roomResetKey}
+        activeIndex={tabOverride?.key === roomResetKey ? tabOverride.index : undefined}
+        onActiveIndexChange={(index) => setTabOverride({ key: roomResetKey, index })}
+        header={<>
         <div className="room-identity"><h1>{snapshot.team.teamName}</h1><p>ห้อง {snapshot.roomCode} · {snapshot.activityName || snapshot.questionSetTitle}</p></div>
         <div className="room-live-status">{snapshot.currentQuestion && <span>ข้อ {snapshot.currentQuestion.questionNumber}/{snapshot.currentQuestion.totalQuestions} · {snapshot.currentQuestion.points} คะแนน</span>}{remainingSeconds !== null && snapshot.status === 'question_active' && <strong className={remainingSeconds <= 10 ? 'text-warning' : 'text-cyan'}><Clock size={16} />{formatRemainingTime(remainingSeconds)}</strong>}</div>
         <AudioControl />
@@ -715,28 +732,23 @@ export function PlayRoom({
               ) : null}
 </div></Modal>}
 
-      {isCaptainNoticeOpen ? (
-        <div className="fixed left-1/2 top-24 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-xl border border-cyan/35 bg-panel p-4 text-center shadow-sm">
-          <div className="flex items-start gap-3 text-left">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-warning/40 bg-warning/15 text-warning">
-              <Trophy size={26} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="text-base font-semibold">หัวหน้ากลุ่ม</h2>
-              <p className="mt-1 text-sm leading-6 text-muted">
-                คุณเป็นหัวหน้าทีม เปลี่ยนชื่อได้ที่เมนูทีมก่อนครูเริ่มเกม และใช้พลังได้ที่หน้าเล่น
-              </p>
-              <button
-                className="mt-3 inline-flex h-9 items-center justify-center rounded-md border border-cyan/40 bg-cyan/10 px-3 text-sm font-semibold text-cyan transition hover:border-cyan hover:bg-cyan/20"
-                onClick={() => setIsCaptainNoticeOpen(false)}
-                type="button"
-              >
-                เข้าใจแล้ว
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <CaptainNoticeModal
+        open={
+          isCaptainNoticeOpen &&
+          snapshot.status === "lobby" &&
+          snapshot.canRenameTeam
+        }
+        mode="classic"
+        teamName={snapshot.team.teamName}
+        onClose={() => setIsCaptainNoticeOpen(false)}
+        onGoRename={() => {
+          setIsCaptainNoticeOpen(false);
+          setTabOverride({ key: roomResetKey, index: 1 });
+          window.requestAnimationFrame(() => {
+            document.getElementById("team_name")?.focus();
+          });
+        }}
+      />
 
       {snapshot.status === "ended" && isResultOpen ? (
         <Modal title="ผลการแข่งขัน" onClose={() => setClosedResultSessionId(snapshot.sessionId)}>

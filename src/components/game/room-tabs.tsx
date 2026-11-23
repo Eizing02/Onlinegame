@@ -7,10 +7,29 @@ import { useExperience } from "./experience";
 type RoomTab = { label: string; content: ReactNode; icon?: LucideIcon };
 
 /** Panels stay mounted: navigating never discards an answer draft or subscription. */
-export function RoomTabs({ header, tabs, resetKey = "room", defaultIndex = 0 }: { header: ReactNode; tabs: RoomTab[]; resetKey?: string; defaultIndex?: number }) {
+export function RoomTabs({
+  header,
+  tabs,
+  resetKey = "room",
+  defaultIndex = 0,
+  activeIndex,
+  onActiveIndexChange,
+}: {
+  header: ReactNode;
+  tabs: RoomTab[];
+  resetKey?: string;
+  defaultIndex?: number;
+  activeIndex?: number;
+  onActiveIndexChange?: (index: number) => void;
+}) {
   const id = useId();
   const [selection, setSelection] = useState({ key: resetKey, index: defaultIndex, direction: 1 });
-  const active = selection.key === resetKey ? selection.index : defaultIndex;
+  const active =
+    activeIndex !== undefined
+      ? activeIndex
+      : selection.key === resetKey
+        ? selection.index
+        : defaultIndex;
   const root = useRef<HTMLDivElement>(null);
   const touch = useRef<{ x: number; y: number; time: number } | null>(null);
   const { mode } = useExperience();
@@ -18,6 +37,7 @@ export function RoomTabs({ header, tabs, resetKey = "room", defaultIndex = 0 }: 
   function select(index: number, focus = false) {
     if (index < 0 || index >= tabs.length) return;
     setSelection({ key: resetKey, index, direction: index >= active ? 1 : -1 });
+    onActiveIndexChange?.(index);
     if (focus) root.current?.querySelector<HTMLButtonElement>(`[data-tab-index="${index}"]`)?.focus();
   }
   useEffect(() => {

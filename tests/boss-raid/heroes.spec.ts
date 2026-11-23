@@ -10,19 +10,22 @@ test('Ten-hero lobby: responsive pages, independent swipe, duplicates, role pari
  const room=page.url().match(/rooms\/(\d{4})/)![1],context=await browser.newContext({baseURL:'http://127.0.0.1:3110',hasTouch:true}),otherContext=await browser.newContext({baseURL:'http://127.0.0.1:3110'});
  try{
   const pupil=await context.newPage(),other=await otherContext.newPage();await login(pupil,'pupil@example.com','01234');await pupil.goto(`/join?room_code=${room}`);await pupil.getByRole('button',{name:/ทีม 1/}).click();await pupil.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();await expect(pupil).toHaveURL(/\/raid$/);
+  await expect(pupil.locator('.captain-notice-dialog')).toBeVisible();
+  await pupil.getByRole('button',{name:'เข้าใจแล้ว',exact:true}).click();
   await expect(pupil.locator('.raid-hero-picker button')).toHaveCount(10);
   const requests:string[]=[];pupil.on('request',r=>requests.push(r.url()));await pupil.reload();await expect(pupil.getByRole('heading',{name:'เลือกฮีโร่ของคุณ'})).toBeVisible();
+  await expect(pupil.locator('.captain-notice-dialog')).toHaveCount(0);
   for(const [name,width,height]of [['desktop',1366,768],['tablet',768,1024],['phone',390,844],['small-phone',320,568],['landscape',844,390]] as const){
-   await pupil.setViewportSize({width,height});await pupil.getByRole('region',{name:'รายชื่อตัวละคร เลื่อนภายในได้'}).focus();await pupil.keyboard.press('End');
-   const hero=pupil.getByRole('button',{name:/นักธนูสายลม.*เลือกฮีโร่/});await expect(hero).toBeVisible();
+   await pupil.setViewportSize({width,height});
+   const hero=pupil.getByRole('button',{name:/นักธนูสายลม.*เลือกฮีโร่/});await hero.scrollIntoViewIfNeeded();await expect(hero).toBeVisible();
    expect(await pupil.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1)).toBe(true);
    await pupil.screenshot({path:`${evidence}/hero-lobby-${name}.png`});
   }
   expect(requests.some(url=>/\/heroes\/[^/]+\/idle\.png/.test(url))).toBe(false);
-  await pupil.setViewportSize({width:390,height:844});const region=pupil.getByRole('region',{name:'รายชื่อตัวละคร เลื่อนภายในได้'});await region.focus();await pupil.keyboard.press('Home');
-  await region.dispatchEvent('touchstart',{touches:[{identifier:1,clientX:280,clientY:200}]});await region.dispatchEvent('touchend',{changedTouches:[{identifier:1,clientX:100,clientY:204}]});
-  await expect(pupil.getByRole('button',{name:/นักธนูสายลม.*เลือกฮีโร่/})).toBeVisible();await expect(pupil.getByRole('heading',{name:'เลือกฮีโร่ของคุณ'})).toBeVisible();
-  await pupil.getByRole('button',{name:/นักธนูสายลม.*เลือกฮีโร่/}).click();await expect(pupil.getByRole('button',{name:/นักธนูสายลม.*คุณเลือกตัวนี้/})).toHaveAttribute('aria-pressed','true');
+  await pupil.setViewportSize({width:390,height:844});
+  await expect(pupil.locator('.raid-hero-pagination')).toHaveCount(0);
+  const heroBtn=pupil.getByRole('button',{name:/นักธนูสายลม.*เลือกฮีโร่/});await heroBtn.scrollIntoViewIfNeeded();await expect(heroBtn).toBeVisible();await expect(pupil.getByRole('heading',{name:'เลือกฮีโร่ของคุณ'})).toBeVisible();
+  await heroBtn.click();await expect(pupil.getByRole('button',{name:/นักธนูสายลม.*คุณเลือกตัวนี้/})).toHaveAttribute('aria-pressed','true');
   await expect(pupil.locator('.app-loading-overlay')).toHaveCount(0);await pupil.screenshot({path:evidence+'/hero-selected-phone.png'});
   const audit=await new AxeBuilder({page:pupil}).include('.raid-expanded-lobby').withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(audit.violations).toEqual([]);
   await login(other,'other@example.com','01235');await other.goto(`/join?room_code=${room}`);await other.getByRole('button',{name:/ทีม 1/}).click();await other.getByRole('button',{name:/^ยืนยันเข้าทีม/}).click();await other.getByRole('button',{name:/นักธนูสายลม.*เลือกฮีโร่/}).click();
