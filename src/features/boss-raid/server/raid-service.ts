@@ -33,7 +33,7 @@ async function rpc<T>(name: string, args: Record<string, unknown>): Promise<T> {
  if (error) {
   // Never expose SQL, service credentials or frozen question content to the browser.
   if (error.message.includes("RAID_INVALID_QUESTION_SET")) throw new Error("ชุดคำถามต้องมีคะแนนรวมมากกว่า 0 และตัวเลือกที่ถูกต้องครบทุกข้อ");
-  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009–014 หรือลองอีกครั้ง");
+  throw new Error("ระบบ Boss Raid ยังไม่พร้อม กรุณาตรวจ migration 009–015 หรือลองอีกครั้ง");
  }
  return data as T;
 }

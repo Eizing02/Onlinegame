@@ -104,5 +104,14 @@ try {
  await db.query('update questions set points=0 where question_set_id=$1',[ids.set]);
  await assert.rejects(()=>call('start_boss_raid',[active.roomCode,'ADMIN']),/RAID_INVALID_QUESTION_SET/);checks++;
  eq((await db.query('select count(*)::int n from boss_raid_questions where session_id=$1',[active.sessionId])).rows[0].n,0);
+ // Six-player Boss Raid v2 capacity (migration 015): 6 members succeed, 7 rejected.
+ await call('finish_boss_raid',[active.sessionId,'ADMIN']);
+ await db.query('update questions set points=10 where question_set_id=$1',[ids.set]);
+ await db.exec("insert into accounts(user_code,display_name,password,role,grade) values('01239','นักเรียน หก','fixture','student','ม.6')");
+ eq((await call('create_boss_raid_room',['ADMIN',ids.set,'หกคนเกิน',1,7,180,true,2])).code,'INVALID_SETTINGS');
+ active=await call('create_boss_raid_room',['ADMIN',ids.set,'หกคน',1,6,180,true,2]);eq(active.ok,true);
+ for(const code of [...students,'01239']) eq((await call('join_boss_raid',[active.roomCode,code,null,null])).ok,true);
+ eq((await call('start_boss_raid',[active.roomCode,'ADMIN'])).ok,true);
+ const sixSnap=await snap('01239');eq(sixSnap.team.memberCount,6);eq(sixSnap.team.heroes.length,6);eq(sixSnap.team.bossMaxHp,900);
  console.log(`Boss Raid SQL: ${checks} checks passed (isolated PGlite; no production access; multi-connection race tests require staging).`);
 } catch(e) { console.error(e.message,e.where??'');process.exitCode=1; } finally {await db.close();}

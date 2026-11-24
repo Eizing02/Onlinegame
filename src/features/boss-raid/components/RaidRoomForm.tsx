@@ -109,7 +109,7 @@ export function RaidRoomForm({
           name="max_members_per_team"
           type="number"
           min={1}
-          max={raid ? 5 : 12}
+          max={raid ? 6 : 12}
           defaultValue={5}
           required
         />
